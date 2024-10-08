@@ -1,15 +1,14 @@
 package com.snapgames.demo;
 
+import com.snapgames.demo.gfx.Renderer;
 import com.snapgames.demo.io.InputListener;
 import com.snapgames.demo.physic.PhysicEngine;
 import com.snapgames.demo.scene.PlayScene;
 import com.snapgames.demo.scene.Scene;
-import com.snapgames.utils.Log;
+import com.snapgames.demo.utils.Log;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -25,8 +24,6 @@ public class Test001App extends JPanel {
     private final ResourceBundle messages = ResourceBundle.getBundle("i18n/messages");
     private final Properties config = new Properties();
 
-    private JFrame window;
-
     public static boolean exit = false;
     private String title = "Test001";
     private Dimension windowSize = new Dimension(640, 400);
@@ -34,6 +31,8 @@ public class Test001App extends JPanel {
 
     private InputListener inputListener;
     private PhysicEngine physicEngine;
+    private Renderer renderer;
+
     private Map<String, Scene> scenes = new HashMap<>();
     private Scene activeScene;
 
@@ -68,27 +67,25 @@ public class Test001App extends JPanel {
             Log.info(String.format("Configuration|Argument: %s", s));
         });
 
-
         inputListener = new InputListener(this);
-
-        window = new JFrame(title);
-        window.setPreferredSize(windowSize);
-        window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        window.addKeyListener(inputListener);
-        window.setFocusTraversalKeysEnabled(true);
-        window.setContentPane(this);
-        window.pack();
-        window.createBufferStrategy(3);
-        window.setVisible(true);
-
         physicEngine = new PhysicEngine(this);
+        renderer = new Renderer(this);
+        renderer.createWindow(title, windowSize);
+        renderer.setInputListener(inputListener);
+
         Scene scene = new PlayScene(this, "play");
         addScene(scene);
+
         activateScene("play");
     }
 
+
     private void activateScene(String sceneName) {
         this.activeScene = scenes.get(sceneName);
+        if (activeScene != null) {
+            activeScene.dispose();
+        }
+        activeScene.create();
     }
 
     private void addScene(Scene scene) {
@@ -116,7 +113,7 @@ public class Test001App extends JPanel {
     }
 
     private void loop() {
-        activeScene.create();
+
         long startTime = System.nanoTime();
         long endTime = startTime;
         long elapsed = 0;
@@ -124,7 +121,7 @@ public class Test001App extends JPanel {
             elapsed = endTime - startTime;
             startTime = endTime;
             input(activeScene);
-            physicEngine.update(activeScene, elapsed);
+            update(activeScene, elapsed);
             render(activeScene);
             endTime = System.nanoTime();
         }
@@ -133,7 +130,7 @@ public class Test001App extends JPanel {
 
 
     public void input(Scene scene) {
-        activeScene.input(inputListener);
+        scene.input(inputListener);
     }
 
     public void update(Scene scene, long elapsed) {
@@ -141,28 +138,11 @@ public class Test001App extends JPanel {
     }
 
     public void render(Scene scene) {
-        BufferStrategy bf = window.getBufferStrategy();
-
-        Graphics2D g = (Graphics2D) bf.getDrawGraphics();
-        // clear display
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, windowSize.width, windowSize.height);
-
-        // draw the scene
-        scene.getEntities().values().forEach(e -> {
-            g.setColor(e.getColor());
-            g.fill(new Rectangle2D.Double(e.x, e.y, e.width, e.height));
-        });
-
-        g.dispose();
-
-        bf.show();
+        renderer.render(scene);
     }
 
     private void dispose() {
-        if (window != null && window.isEnabled() && window.isActive()) {
-            window.dispose();
-        }
+        renderer.dispose();
         Log.info("End of application ");
     }
 

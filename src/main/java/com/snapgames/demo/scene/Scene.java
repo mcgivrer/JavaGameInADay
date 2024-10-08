@@ -18,4 +18,6 @@ public interface Scene {
     String getName();
 
     void input(InputListener inputListener);
+
+    void dispose();
 }

@@ -14,7 +14,7 @@ public class Entity extends Rectangle2D.Double {
 
     public double ax, ay;
     public double dx, dy;
-    public Material material = Material.DEFAULT;
+    private Material material = Material.DEFAULT;
     long id = index++;
     String name = "entity_" + (id);
     Color color = Color.RED;
@@ -62,6 +62,10 @@ public class Entity extends Rectangle2D.Double {
 
     public double getMass() {
         return mass;
+    }
+
+    public Material getMaterial() {
+        return material;
     }
 
     public Entity setMass(double m) {

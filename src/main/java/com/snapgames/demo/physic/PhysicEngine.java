@@ -42,8 +42,8 @@ public class PhysicEngine implements Serializable {
         e.x += e.dx * (elapsed * 0.0000001);
         e.y += e.dy * (elapsed * 0.0000001);
 
-        e.dx *= e.material.friction;
-        e.dy *= e.material.friction;
+        e.dx *= e.getMaterial().friction;
+        e.dy *= e.getMaterial().friction;
 
         e.dx = Math.signum(e.dx) * Math.min(Math.abs(e.dx), 8.0);
         e.dy = Math.signum(e.dy) * Math.min(Math.abs(e.dy), 8.0);
@@ -58,19 +58,19 @@ public class PhysicEngine implements Serializable {
         if (!w.contains(e)) {
             if (e.x < w.x) {
                 e.x = w.x;
-                e.dx = -e.material.elasticity * e.dx;
+                e.dx *= -e.getMaterial().elasticity;
             }
             if (e.x + e.width > w.width) {
                 e.x = w.width - e.width;
-                e.dx = -e.material.elasticity * e.dx;
+                e.dx *= -e.getMaterial().elasticity;
             }
             if (e.y < w.y) {
                 e.y = w.y;
-                e.dy = -e.material.elasticity * e.dy;
+                e.dy *= -e.getMaterial().elasticity;
             }
-            if (e.y + e.height > w.height) {
+            if (e.y > w.height - e.height) {
                 e.y = w.height - e.height;
-                e.dy = -e.material.elasticity * e.dy;
+                e.dy *= -e.getMaterial().elasticity;
             }
         }
     }

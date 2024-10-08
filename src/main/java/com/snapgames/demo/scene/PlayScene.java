@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayScene implements Scene {
-    private final Test001App test001App;
+    private final Test001App app;
     public Map<String, Entity> entities = new ConcurrentHashMap<String, Entity>();
     private String name;
 
@@ -29,20 +29,21 @@ public class PlayScene implements Scene {
         return world;
     }
 
-    public PlayScene(Test001App test001App, String name) {
-        this.test001App = test001App;
+    public PlayScene(Test001App app, String name) {
+        this.app = app;
         this.name = name;
     }
 
     @Override
     public void create() {
-        world = new World("earth", -9.81).setSize(620, 360).setPosition(10, 20);
+        Dimension windowSize = app.getWindowSize();
+        world = new World("earth", -9.81).setSize(640, 400).setPosition(0, 0);
         Entity player = new Entity("player")
                 .setSize(16, 32)
-                .setPosition(test001App.getWindowSize().getWidth() * 0.5, test001App.getWindowSize().getHeight() * 0.5)
+                .setPosition(windowSize.getWidth() * 0.5, windowSize.getHeight() * 0.5)
                 .setColor(Color.BLUE)
-                .setMass(80)
-                .setMaterial(new Material("player_mat", 1.0, 0.998, 0.1));
+                .setMass(8)
+                .setMaterial(new Material("player_mat", 1.0, 0.998, 0.76));
         add(player);
         WorldArea area1 = (WorldArea) new WorldArea("water")
                 .setColor(new Color(0.2f, 0.1f, 0.7f, 0.7f))
@@ -64,7 +65,7 @@ public class PlayScene implements Scene {
 
     @Override
     public void input(InputListener inputListener) {
-        double speed = 120.0;
+        double speed = 60.0;
         Entity player = getEntities().get("player");
         if (inputListener.isKeyPressed(KeyEvent.VK_UP)) {
             player.addForce(0.0, -speed * 2);
@@ -78,6 +79,11 @@ public class PlayScene implements Scene {
         if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
             player.addForce(speed, 0.0);
         }
+    }
+
+    @Override
+    public void dispose() {
+
     }
 
 
