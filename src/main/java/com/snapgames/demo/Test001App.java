@@ -2,21 +2,18 @@ package com.snapgames.demo;
 
 import com.snapgames.demo.entity.Entity;
 import com.snapgames.demo.io.InputListener;
-import com.snapgames.demo.physic.Material;
 import com.snapgames.demo.physic.World;
-import com.snapgames.demo.physic.WorldArea;
+import com.snapgames.demo.scene.Scene;
 import com.snapgames.utils.Log;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -35,12 +32,10 @@ public class Test001App extends JPanel {
     private String title = "Test001";
     private Dimension windowSize = new Dimension(640, 400);
 
-    private Map<String, Entity> entities = new ConcurrentHashMap<>();
-
 
     private InputListener inputListener;
-
-    private World world = new World();
+    private Map<String, Scene> scenes = new HashMap<>();
+    private Scene activeScene;
 
     public Test001App() {
         super();
@@ -85,6 +80,19 @@ public class Test001App extends JPanel {
         window.pack();
         window.createBufferStrategy(3);
         window.setVisible(true);
+
+
+        Scene scene = new Scene(this, "play");
+        addScene(scene);
+        activateScene("play");
+    }
+
+    private void activateScene(String sceneName) {
+        this.activeScene = scenes.get(sceneName);
+    }
+
+    private void addScene(Scene scene) {
+        scenes.put(scene.getName(), scene);
     }
 
     private void parseAttributes(List<Map.Entry<Object, Object>> collect) {
@@ -108,46 +116,25 @@ public class Test001App extends JPanel {
     }
 
     private void loop() {
-        create();
+        activeScene.create();
         long startTime = System.nanoTime();
         long endTime = startTime;
         long elapsed = 0;
         while (!exit) {
             elapsed = endTime - startTime;
             startTime = endTime;
-            input();
-            update(elapsed);
-            render();
+            input(activeScene);
+            update(activeScene, elapsed);
+            render(activeScene);
             endTime = System.nanoTime();
         }
         dispose();
     }
 
-    private void create() {
-        world = new World("earth", -9.81).setSize(620, 360).setPosition(10, 20);
-        Entity player = new Entity("player")
-                .setSize(16, 32)
-                .setPosition(windowSize.getWidth() * 0.5, windowSize.getHeight() * 0.5)
-                .setColor(Color.BLUE)
-                .setMass(80)
-                .setMaterial(new Material("player_mat", 1.0, 0.998, 0.1));
-        add(player);
-        WorldArea area1 = (WorldArea) new WorldArea("water")
-                .setColor(new Color(0.2f, 0.1f, 0.7f, 0.7f))
-                .setSize(world.width, 40)
-                .setPosition(0, world.height - 40);
-        world.addArea(area1);
-        add(area1);
-    }
 
-    private void add(Entity entity) {
-        entities.put(entity.getName(), entity);
-    }
-
-
-    public void input() {
+    public void input(Scene scene) {
         double speed = 120.0;
-        Entity player = entities.get("player");
+        Entity player = scene.getEntities().get("player");
         if (inputListener.isKeyPressed(KeyEvent.VK_UP)) {
             player.addForce(0.0, -speed * 2);
         }
@@ -162,24 +149,24 @@ public class Test001App extends JPanel {
         }
     }
 
-    public void update(long elapsed) {
-        entities.values().forEach(e -> {
-            applyWorldEffects(world, e);
-            applyPhysicRules(elapsed, e);
-            keepEntityIntoWorld(world, e);
+    public void update(Scene scene, long elapsed) {
+        scene.getEntities().values().forEach(e -> {
+            applyWorldEffects(scene, e);
+            applyPhysicRules(scene, elapsed, e);
+            keepEntityIntoWorld(scene, e);
         });
     }
 
-    private void applyWorldEffects(World w, Entity e) {
-        world.getAreas().forEach(a -> {
+    private void applyWorldEffects(Scene scene, Entity e) {
+        scene.getWorld().getAreas().forEach(a -> {
             if (a.contains(e)) {
                 e.getForces().addAll(a.getForces());
             }
         });
     }
 
-    private void applyPhysicRules(long elapsed, Entity e) {
-        e.addForce(0.0, -world.getGravity());
+    private void applyPhysicRules(Scene scene, long elapsed, Entity e) {
+        e.addForce(0.0, -scene.getWorld().getGravity());
         e.getForces().forEach(f -> {
             e.ax += f.getX();
             e.ay += f.getY();
@@ -202,9 +189,9 @@ public class Test001App extends JPanel {
         e.getForces().clear();
     }
 
-    private void keepEntityIntoWorld(World w, Entity e) {
-        if (!world.contains(e)) {
-            Rectangle2D penetration = world.createIntersection(e);
+    private void keepEntityIntoWorld(Scene scene, Entity e) {
+        World w = scene.getWorld();
+        if (!w.contains(e)) {
             if (e.x < w.x) {
                 e.x = w.x;
                 e.dx = -e.material.elasticity * e.dx;
@@ -221,11 +208,10 @@ public class Test001App extends JPanel {
                 e.y = w.height - e.height;
                 e.dy = -e.material.elasticity * e.dy;
             }
-
         }
     }
 
-    public void render() {
+    public void render(Scene scene) {
         BufferStrategy bf = window.getBufferStrategy();
 
         Graphics2D g = (Graphics2D) bf.getDrawGraphics();
@@ -234,7 +220,7 @@ public class Test001App extends JPanel {
         g.fillRect(0, 0, windowSize.width, windowSize.height);
 
         // draw the scene
-        entities.values().forEach(e -> {
+        scene.getEntities().values().forEach(e -> {
             g.setColor(e.getColor());
             g.fill(new Rectangle2D.Double(e.x, e.y, e.width, e.height));
         });
@@ -256,4 +242,7 @@ public class Test001App extends JPanel {
         app.run(argc);
     }
 
+    public Dimension getWindowSize() {
+        return windowSize;
+    }
 }
