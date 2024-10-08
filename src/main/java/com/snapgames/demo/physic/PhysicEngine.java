@@ -14,17 +14,20 @@ public class PhysicEngine implements Serializable {
     }
 
     public void update(Scene scene, long elapsed) {
-        scene.getEntities().values().forEach(e -> {
-            applyWorldEffects(scene, e);
-            applyPhysicRules(scene, elapsed, e);
-            keepEntityIntoWorld(scene, e);
-        });
+        scene.getEntities().values().stream()
+                .filter(e -> e.isActive() && !(e instanceof WorldArea))
+                .forEach(e -> {
+                    applyWorldEffects(scene, e);
+                    applyPhysicRules(scene, elapsed, e);
+                    keepEntityIntoWorld(scene, e);
+                });
     }
 
     public void applyWorldEffects(Scene scene, Entity e) {
         scene.getWorld().getAreas().forEach(a -> {
-            if (a.contains(e)) {
+            if (a.contains(e) || a.intersects(e)) {
                 e.getForces().addAll(a.getForces());
+                e.setContact(true);
             }
         });
     }
@@ -42,9 +45,10 @@ public class PhysicEngine implements Serializable {
         e.x += e.dx * (elapsed * 0.0000001);
         e.y += e.dy * (elapsed * 0.0000001);
 
-        e.dx *= e.getMaterial().friction;
-        e.dy *= e.getMaterial().friction;
-
+        if (e.hasContact()){
+            e.dx *= e.getMaterial().friction;
+            e.dy *= e.getMaterial().friction;
+        }
         e.dx = Math.signum(e.dx) * Math.min(Math.abs(e.dx), 8.0);
         e.dy = Math.signum(e.dy) * Math.min(Math.abs(e.dy), 8.0);
 

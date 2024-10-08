@@ -20,6 +20,9 @@ public class Entity extends Rectangle2D.Double {
     Color color = Color.RED;
     private double mass = 1.0;
 
+    private boolean active = true;
+    private boolean contact = false;
+
     public Entity() {
     }
 
@@ -85,5 +88,22 @@ public class Entity extends Rectangle2D.Double {
 
     public List<Point2D> getForces() {
         return forces;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Entity setContact(boolean c) {
+        this.contact = c;
+        return this;
+    }
+
+    public boolean hasContact() {
+        return contact;
     }
 }

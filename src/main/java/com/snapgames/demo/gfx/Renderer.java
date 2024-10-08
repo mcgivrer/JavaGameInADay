@@ -45,7 +45,7 @@ public class Renderer implements Serializable {
         g.fillRect(0, 0, app.getWindowSize().width, app.getWindowSize().height);
 
         // draw the scene
-        scene.getEntities().values().forEach(e -> {
+        scene.getEntities().values().stream().filter(Entity::isActive).forEach(e -> {
             drawEntity(g, e);
         });
 

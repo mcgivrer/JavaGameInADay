@@ -45,12 +45,27 @@ public class PlayScene implements Scene {
                 .setMass(8)
                 .setMaterial(new Material("player_mat", 1.0, 0.998, 0.76));
         add(player);
+        generate("star_%d", windowSize, 100, 4, 4);
         WorldArea area1 = (WorldArea) new WorldArea("water")
                 .setColor(new Color(0.2f, 0.1f, 0.7f, 0.7f))
                 .setSize(world.width, 40)
-                .setPosition(0, world.height - 40);
+                .setPosition(0, world.height - 40)
+                .addForce(0.2, -6);
         world.addArea(area1);
         add(area1);
+    }
+
+    private void generate(String tempateName, Dimension windowSize, int nb, double maxW, double maxH) {
+        Material starMat = new Material("star_mat", 1.0, 1.0, 1.0);
+        for (int i = 0; i < nb; i++) {
+            Entity star = new Entity(tempateName.formatted(i))
+                    .setSize(Math.random() * maxW, Math.random() * maxH)
+                    .setPosition(windowSize.getWidth() * Math.random(), windowSize.getHeight() * Math.random())
+                    .setColor(Color.WHITE)
+                    .setMass(0.01)
+                    .setMaterial(starMat);
+            add(star);
+        }
     }
 
     @Override
