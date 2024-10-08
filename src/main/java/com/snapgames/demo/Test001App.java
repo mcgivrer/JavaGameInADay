@@ -1,14 +1,13 @@
 package com.snapgames.demo;
 
-import com.snapgames.demo.entity.Entity;
 import com.snapgames.demo.io.InputListener;
-import com.snapgames.demo.physic.World;
+import com.snapgames.demo.physic.PhysicEngine;
+import com.snapgames.demo.scene.PlayScene;
 import com.snapgames.demo.scene.Scene;
 import com.snapgames.utils.Log;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
@@ -34,6 +33,7 @@ public class Test001App extends JPanel {
 
 
     private InputListener inputListener;
+    private PhysicEngine physicEngine;
     private Map<String, Scene> scenes = new HashMap<>();
     private Scene activeScene;
 
@@ -81,8 +81,8 @@ public class Test001App extends JPanel {
         window.createBufferStrategy(3);
         window.setVisible(true);
 
-
-        Scene scene = new Scene(this, "play");
+        physicEngine = new PhysicEngine(this);
+        Scene scene = new PlayScene(this, "play");
         addScene(scene);
         activateScene("play");
     }
@@ -124,7 +124,7 @@ public class Test001App extends JPanel {
             elapsed = endTime - startTime;
             startTime = endTime;
             input(activeScene);
-            update(activeScene, elapsed);
+            physicEngine.update(activeScene, elapsed);
             render(activeScene);
             endTime = System.nanoTime();
         }
@@ -133,82 +133,11 @@ public class Test001App extends JPanel {
 
 
     public void input(Scene scene) {
-        double speed = 120.0;
-        Entity player = scene.getEntities().get("player");
-        if (inputListener.isKeyPressed(KeyEvent.VK_UP)) {
-            player.addForce(0.0, -speed * 2);
-        }
-        if (inputListener.isKeyPressed(KeyEvent.VK_DOWN)) {
-            player.addForce(0.0, speed);
-        }
-        if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
-            player.addForce(-speed, 0.0);
-        }
-        if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
-            player.addForce(speed, 0.0);
-        }
+        activeScene.input(inputListener);
     }
 
     public void update(Scene scene, long elapsed) {
-        scene.getEntities().values().forEach(e -> {
-            applyWorldEffects(scene, e);
-            applyPhysicRules(scene, elapsed, e);
-            keepEntityIntoWorld(scene, e);
-        });
-    }
-
-    private void applyWorldEffects(Scene scene, Entity e) {
-        scene.getWorld().getAreas().forEach(a -> {
-            if (a.contains(e)) {
-                e.getForces().addAll(a.getForces());
-            }
-        });
-    }
-
-    private void applyPhysicRules(Scene scene, long elapsed, Entity e) {
-        e.addForce(0.0, -scene.getWorld().getGravity());
-        e.getForces().forEach(f -> {
-            e.ax += f.getX();
-            e.ay += f.getY();
-        });
-
-        e.dx = 0.5 * e.ax / e.getMass();
-        e.dy = 0.5 * e.ay / e.getMass();
-
-        e.x += e.dx * (elapsed * 0.0000001);
-        e.y += e.dy * (elapsed * 0.0000001);
-
-        e.dx *= e.material.friction;
-        e.dy *= e.material.friction;
-
-        e.dx = Math.signum(e.dx) * Math.min(Math.abs(e.dx), 8.0);
-        e.dy = Math.signum(e.dy) * Math.min(Math.abs(e.dy), 8.0);
-
-        e.ax = 0.0;
-        e.ay = 0.0;
-        e.getForces().clear();
-    }
-
-    private void keepEntityIntoWorld(Scene scene, Entity e) {
-        World w = scene.getWorld();
-        if (!w.contains(e)) {
-            if (e.x < w.x) {
-                e.x = w.x;
-                e.dx = -e.material.elasticity * e.dx;
-            }
-            if (e.x + e.width > w.width) {
-                e.x = w.width - e.width;
-                e.dx = -e.material.elasticity * e.dx;
-            }
-            if (e.y < w.y) {
-                e.y = w.y;
-                e.dy = -e.material.elasticity * e.dy;
-            }
-            if (e.y + e.height > w.height) {
-                e.y = w.height - e.height;
-                e.dy = -e.material.elasticity * e.dy;
-            }
-        }
+        physicEngine.update(scene, elapsed);
     }
 
     public void render(Scene scene) {
