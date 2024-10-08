@@ -1,5 +1,5 @@
 package com.snapgames.demo;
-   
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -7,35 +7,38 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
+
 /**
  * Main class for Project test001
  *
- * @author Frédéric Delorme frederic.delorme@gmail.com
+ * @author FrÃ©dÃ©ric Delorme frederic.delorme@gmail.com
  * @since 1.0.0
  */
-public class {
-    private ResourceBundle messages = ResourceBundle.getBundle("i18n/messages");
-    private Properties config = new Properties();
-  
+public class Test001App {
+    private final ResourceBundle messages = ResourceBundle.getBundle("i18n/messages");
+    private final Properties config = new Properties();
+
     private static boolean exit = false;
     private static int debug = 0;
     private static String debugFilter = "";
     private static String loggerFilter = "ERR,WARN,INFO";
-  
-    public (){
+
+    public Test001App() {
         info("Initialization application %s (%s) %n- running on JDK %s %n- at %s %n- with classpath = %s%n",
-            messages.getString("app.name"),
-            messages.getString("app.version"),
-            System.getProperty("java.version"),
-            System.getProperty("java.home"),
-            System.getProperty("java.class.path"));
+                messages.getString("app.name"),
+                messages.getString("app.version"),
+                System.getProperty("java.version"),
+                System.getProperty("java.home"),
+                System.getProperty("java.class.path"));
     }
-    public void run(String[] args){
+
+    public void run(String[] args) {
         init(args);
         loop();
         dispose();
     }
-    private void init(String[] args){
+
+    private void init(String[] args) {
         List<String> lArgs = Arrays.asList(args);
         try {
             config.load(this.getClass().getResourceAsStream("/config.properties"));
@@ -48,21 +51,37 @@ public class {
         }
         lArgs.forEach(s -> {
             info(String.format("Configuration|Argument: %s", s));
-        }); 
+        });
     }
-    private void loop(){
-        while(!exit){
-            // will loop until exit=true or CTRL+C
+
+    private void loop() {
+        while (!exit) {
+            input();
+            update();
+            render();
         }
     }
-    private void dispose(){
+
+    private void render() {
+    }
+
+    private void update() {
+        
+    }
+
+    private void input() {
+    
+    }
+
+    private void dispose() {
         info("End of application ");
     }
-    public static void main(String[] argc){
-         app = new ();
+
+    public static void main(String[] argc) {
+        Test001App app = new Test001App();
         app.run(argc);
     }
-    
+
     public static void log(String level, String message, Object... args) {
         if (loggerFilter.contains(level)) {
             String dateFormatted = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(LocalDateTime.now());
