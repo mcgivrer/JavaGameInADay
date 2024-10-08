@@ -3,10 +3,16 @@ package com.snapgames.demo.entity;
 import com.snapgames.demo.physic.Material;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Entity extends Rectangle2D.Double {
     private static long index = 0;
+    List<Point2D> forces = new ArrayList<>();
+
+    public double ax, ay;
     public double dx, dy;
     public Material material = Material.DEFAULT;
     long id = index++;
@@ -61,5 +67,19 @@ public class Entity extends Rectangle2D.Double {
     public Entity setMass(double m) {
         this.mass = m;
         return this;
+    }
+
+    public Entity addForce(double fx, double fy) {
+        forces.add(new Point2D.Double(fx, fy));
+        return this;
+    }
+
+    public Entity addForce(Point2D f) {
+        forces.add(f);
+        return this;
+    }
+
+    public List<Point2D> getForces() {
+        return forces;
     }
 }

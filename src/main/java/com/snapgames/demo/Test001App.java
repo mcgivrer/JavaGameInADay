@@ -1,15 +1,17 @@
 package com.snapgames.demo;
 
 import com.snapgames.demo.entity.Entity;
+import com.snapgames.demo.io.InputListener;
 import com.snapgames.demo.physic.Material;
 import com.snapgames.demo.physic.World;
+import com.snapgames.demo.physic.WorldArea;
 import com.snapgames.utils.Log;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.util.*;
@@ -23,20 +25,22 @@ import java.util.stream.Collectors;
  * @author Frédéric Delorme frederic.delorme@gmail.com
  * @since 1.0.0
  */
-public class Test001App extends JPanel implements KeyListener {
+public class Test001App extends JPanel {
     private final ResourceBundle messages = ResourceBundle.getBundle("i18n/messages");
     private final Properties config = new Properties();
 
     private JFrame window;
 
-    private static boolean exit = false;
-    private boolean[] keys = new boolean[1024];
+    public static boolean exit = false;
     private String title = "Test001";
     private Dimension windowSize = new Dimension(640, 400);
 
     private Map<String, Entity> entities = new ConcurrentHashMap<>();
 
-    private World world = new World("earth", -0.981).setSize(620, 360).setPosition(10, 20);
+
+    private InputListener inputListener;
+
+    private World world = new World();
 
     public Test001App() {
         super();
@@ -70,10 +74,12 @@ public class Test001App extends JPanel implements KeyListener {
         });
 
 
+        inputListener = new InputListener(this);
+
         window = new JFrame(title);
         window.setPreferredSize(windowSize);
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        window.addKeyListener(this);
+        window.addKeyListener(inputListener);
         window.setFocusTraversalKeysEnabled(true);
         window.setContentPane(this);
         window.pack();
@@ -118,13 +124,20 @@ public class Test001App extends JPanel implements KeyListener {
     }
 
     private void create() {
+        world = new World("earth", -9.81).setSize(620, 360).setPosition(10, 20);
         Entity player = new Entity("player")
-                .setSize(16, 16)
+                .setSize(16, 32)
                 .setPosition(windowSize.getWidth() * 0.5, windowSize.getHeight() * 0.5)
                 .setColor(Color.BLUE)
-                .setMass(10)
+                .setMass(80)
                 .setMaterial(new Material("player_mat", 1.0, 0.998, 0.1));
         add(player);
+        WorldArea area1 = (WorldArea) new WorldArea("water")
+                .setColor(new Color(0.2f, 0.1f, 0.7f, 0.7f))
+                .setSize(world.width, 40)
+                .setPosition(0, world.height - 40);
+        world.addArea(area1);
+        add(area1);
     }
 
     private void add(Entity entity) {
@@ -132,56 +145,87 @@ public class Test001App extends JPanel implements KeyListener {
     }
 
 
-    private void input() {
+    public void input() {
+        double speed = 120.0;
         Entity player = entities.get("player");
-        if (isKeyPressed(KeyEvent.VK_UP)) {
-            player.dy = -2.0;
+        if (inputListener.isKeyPressed(KeyEvent.VK_UP)) {
+            player.addForce(0.0, -speed * 2);
         }
-        if (isKeyPressed(KeyEvent.VK_DOWN)) {
-            player.dy = 2.0;
+        if (inputListener.isKeyPressed(KeyEvent.VK_DOWN)) {
+            player.addForce(0.0, speed);
         }
-        if (isKeyPressed(KeyEvent.VK_LEFT)) {
-            player.dx = -2.0;
+        if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
+            player.addForce(-speed, 0.0);
         }
-        if (isKeyPressed(KeyEvent.VK_RIGHT)) {
-            player.dx = 2.0;
+        if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
+            player.addForce(speed, 0.0);
         }
     }
 
-    private void update(long elapsed) {
+    public void update(long elapsed) {
         entities.values().forEach(e -> {
-            e.x += e.dx * (elapsed * 0.0000001);
-            e.y += (e.dy - (world.getGravity()*(e.getMass()))) * (elapsed * 0.0000001);
-
+            applyWorldEffects(world, e);
+            applyPhysicRules(elapsed, e);
             keepEntityIntoWorld(world, e);
-
-            e.dx *= e.material.friction;
-            e.dy *= e.material.friction;
         });
+    }
+
+    private void applyWorldEffects(World w, Entity e) {
+        world.getAreas().forEach(a -> {
+            if (a.contains(e)) {
+                e.getForces().addAll(a.getForces());
+            }
+        });
+    }
+
+    private void applyPhysicRules(long elapsed, Entity e) {
+        e.addForce(0.0, -world.getGravity());
+        e.getForces().forEach(f -> {
+            e.ax += f.getX();
+            e.ay += f.getY();
+        });
+
+        e.dx = 0.5 * e.ax / e.getMass();
+        e.dy = 0.5 * e.ay / e.getMass();
+
+        e.x += e.dx * (elapsed * 0.0000001);
+        e.y += e.dy * (elapsed * 0.0000001);
+
+        e.dx *= e.material.friction;
+        e.dy *= e.material.friction;
+
+        e.dx = Math.signum(e.dx) * Math.min(Math.abs(e.dx), 8.0);
+        e.dy = Math.signum(e.dy) * Math.min(Math.abs(e.dy), 8.0);
+
+        e.ax = 0.0;
+        e.ay = 0.0;
+        e.getForces().clear();
     }
 
     private void keepEntityIntoWorld(World w, Entity e) {
         if (!world.contains(e)) {
-            if (e.x > w.width) {
-                e.x = w.width - e.width;
-                e.dy = -e.material.elasticity * e.dy;
-            }
-            if (e.y > w.height) {
-                e.y = w.height - e.height;
-                e.dy = -e.material.elasticity * e.dy;
-            }
+            Rectangle2D penetration = world.createIntersection(e);
             if (e.x < w.x) {
                 e.x = w.x;
+                e.dx = -e.material.elasticity * e.dx;
+            }
+            if (e.x + e.width > w.width) {
+                e.x = w.width - e.width;
                 e.dx = -e.material.elasticity * e.dx;
             }
             if (e.y < w.y) {
                 e.y = w.y;
                 e.dy = -e.material.elasticity * e.dy;
             }
+            if (e.y + e.height > w.height) {
+                e.y = w.height - e.height;
+                e.dy = -e.material.elasticity * e.dy;
+            }
+
         }
     }
 
-    private void render() {
+    public void render() {
         BufferStrategy bf = window.getBufferStrategy();
 
         Graphics2D g = (Graphics2D) bf.getDrawGraphics();
@@ -192,7 +236,7 @@ public class Test001App extends JPanel implements KeyListener {
         // draw the scene
         entities.values().forEach(e -> {
             g.setColor(e.getColor());
-            g.fill(new Ellipse2D.Double(e.x, e.y, e.width, e.height));
+            g.fill(new Rectangle2D.Double(e.x, e.y, e.width, e.height));
         });
 
         g.dispose();
@@ -212,26 +256,4 @@ public class Test001App extends JPanel implements KeyListener {
         app.run(argc);
     }
 
-
-    private boolean isKeyPressed(int keyCode) {
-        return keys[keyCode];
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        keys[e.getKeyCode()] = true;
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        if (isKeyPressed(KeyEvent.VK_Q) || isKeyPressed(KeyEvent.VK_ESCAPE)) {
-            exit = true;
-        }
-        keys[e.getKeyCode()] = false;
-    }
 }

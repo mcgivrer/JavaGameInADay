@@ -13,13 +13,17 @@ public class Log {
 
     private static int debug = 0;
     private static String debugFilter = "";
-    private static String loggerFilter = "ERR,WARN,INFO";
+    private static String loggerFilter = "ERR,WARN,INFO,DEBUG";
 
     public static void log(String level, String message, Object... args) {
         if (loggerFilter.contains(level)) {
             String dateFormatted = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(LocalDateTime.now());
             System.out.printf(dateFormatted + "|" + level + "|" + message + "%n", args);
         }
+    }
+
+    public static void debug(String message, Object... args) {
+        log("DEBUG", message, args);
     }
 
     public static void info(String message, Object... args) {
