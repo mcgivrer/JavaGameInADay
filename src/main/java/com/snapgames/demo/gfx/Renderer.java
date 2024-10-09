@@ -2,6 +2,8 @@ package com.snapgames.demo.gfx;
 
 import com.snapgames.demo.Game;
 import com.snapgames.demo.entity.Entity;
+import com.snapgames.demo.entity.GameObject;
+import com.snapgames.demo.entity.TextObject;
 import com.snapgames.demo.io.InputListener;
 import com.snapgames.demo.scene.Scene;
 
@@ -11,6 +13,9 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
+import java.util.Optional;
+
+import static com.snapgames.demo.utils.Log.error;
 
 public class Renderer implements Serializable {
     private final Game app;
@@ -71,9 +76,26 @@ public class Renderer implements Serializable {
         }
     }
 
-    public void drawEntity(Graphics2D g, Entity e) {
-        g.setColor(e.getColor());
-        g.fill(new Rectangle2D.Double(e.x, e.y, e.width, e.height));
+    public void drawEntity(Graphics2D g, Entity<?> e) {
+        switch (e.getClass().getSimpleName()) {
+            case "GameObject", "WorldArea" -> {
+
+                g.setColor(e.getColor());
+                g.fill(new Rectangle2D.Double(e.x, e.y, e.width, e.height));
+            }
+            case "TextObject" -> {
+                TextObject te = (TextObject) e;
+                g.setColor(te.getColor());
+                if (Optional.ofNullable(te.getFont()).isPresent()) {
+                    g.setFont(te.getFont());
+                }
+                g.drawString(te.getText(), (int) e.x, (int) e.y);
+            }
+
+            default -> {
+                error("Unknown object class %s", e.getClass());
+            }
+        }
     }
 
     public void dispose() {

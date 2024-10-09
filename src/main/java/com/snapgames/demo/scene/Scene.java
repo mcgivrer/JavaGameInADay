@@ -7,7 +7,7 @@ import com.snapgames.demo.physic.World;
 import java.util.Map;
 
 public interface Scene {
-    Map<String, Entity> getEntities();
+    Map<String, Entity<?>> getEntities();
 
     World getWorld();
 
@@ -20,4 +20,6 @@ public interface Scene {
     void input(InputListener inputListener);
 
     void dispose();
+
+    void load();
 }

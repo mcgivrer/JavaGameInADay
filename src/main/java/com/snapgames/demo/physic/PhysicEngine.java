@@ -26,7 +26,7 @@ public class PhysicEngine implements Serializable {
                 });
     }
 
-    public void applyWorldEffects(Scene scene, Entity e) {
+    public void applyWorldEffects(Scene scene, Entity<?> e) {
         scene.getWorld().getAreas().forEach(a -> {
             if (a.contains(e) || a.intersects(e)) {
                 e.getForces().addAll(a.getForces());
@@ -35,7 +35,7 @@ public class PhysicEngine implements Serializable {
         });
     }
 
-    public void applyPhysicRules(Scene scene, long elapsed, Entity e) {
+    public void applyPhysicRules(Scene scene, long elapsed, Entity<?> e) {
         e.addForce(0.0, -scene.getWorld().getGravity() / e.getMass());
         e.getForces().forEach(f -> {
             e.ax += f.getX();
@@ -61,7 +61,7 @@ public class PhysicEngine implements Serializable {
         e.ay = 0;
     }
 
-    public void keepEntityIntoWorld(Scene scene, Entity e) {
+    public void keepEntityIntoWorld(Scene scene, Entity<?> e) {
         World w = scene.getWorld();
         if (!w.contains(e) || w.intersects(e)) {
             if (e.x < w.x) {

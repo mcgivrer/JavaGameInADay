@@ -2,7 +2,10 @@ package com.snapgames.demo.scene;
 
 import com.snapgames.demo.Game;
 import com.snapgames.demo.entity.Entity;
+import com.snapgames.demo.entity.GameObject;
+import com.snapgames.demo.entity.TextObject;
 import com.snapgames.demo.io.InputListener;
+import com.snapgames.demo.io.ResourceManager;
 import com.snapgames.demo.physic.Material;
 import com.snapgames.demo.physic.PhysicType;
 import com.snapgames.demo.physic.World;
@@ -16,17 +19,34 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayScene extends AbstractScene {
 
+    private Font scoreFont;
+
     public PlayScene(Game app, String name) {
         super(app, name);
+    }
+
+    public void load() {
+        scoreFont = ResourceManager.get("/assets/fonts/upheavtt.ttf");
     }
 
     @Override
     public void create() {
         Dimension windowSize = app.getWindowSize();
+
+
         world = new World("earth", -0.981)
                 .setSize(320, 200)
                 .setPosition(0, 0);
-        Entity player = new Entity("player")
+
+        TextObject score = new TextObject("score")
+                .setPosition(10, 32)
+                .setFont(scoreFont.deriveFont(18.0f))
+                .setText("00000")
+                .setColor(Color.WHITE)
+                .setPhysicType(PhysicType.STATIC);
+        add(score);
+
+        GameObject player = new GameObject("player")
                 .setSize(16, 32)
                 .setPosition(world.getWidth() * 0.5, world.getHeight() * 0.5)
                 .setColor(Color.BLUE)
@@ -61,7 +81,7 @@ public class PlayScene extends AbstractScene {
                           Material mat,
                           PhysicType pt) {
         for (int i = 0; i < nb; i++) {
-            Entity star = new Entity(tempateName.formatted(i))
+            GameObject star = new GameObject(tempateName.formatted(i))
                     .setSize(maxW * Math.random(), maxH * Math.random())
                     .setPosition(windowSize.getWidth() * Math.random(), windowSize.getHeight() * Math.random())
                     .setColor(color)

@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractScene implements Scene {
     protected final Game app;
-    public Map<String, Entity> entities = new ConcurrentHashMap<String, Entity>();
+    public Map<String, Entity<?>> entities = new ConcurrentHashMap<>();
     public World world = new World();
     protected String name;
 
@@ -20,7 +20,7 @@ public abstract class AbstractScene implements Scene {
         this.name = name;
     }
 
-    public Map<String, Entity> getEntities() {
+    public Map<String, Entity<?>> getEntities() {
         return entities;
     }
 
@@ -39,6 +39,11 @@ public abstract class AbstractScene implements Scene {
     public void input(InputListener inputListener) {
 
     }
+
+    public void load() {
+    }
+
+    public abstract void create();
 
     public void dispose() {
 

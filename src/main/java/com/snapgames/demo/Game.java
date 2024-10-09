@@ -92,6 +92,7 @@ public class Game extends JPanel {
         if (activeScene != null) {
             activeScene.dispose();
         }
+        activeScene.load();
         activeScene.create();
     }
 

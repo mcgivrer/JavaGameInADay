@@ -9,7 +9,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Entity extends Rectangle2D.Double {
+public class Entity<T> extends Rectangle2D.Double {
     private static long index = 0;
     List<Point2D> forces = new ArrayList<>();
 
@@ -33,9 +33,9 @@ public class Entity extends Rectangle2D.Double {
         setName(name);
     }
 
-    private Entity setName(String name) {
+    private T setName(String name) {
         this.name = name;
-        return this;
+        return (T) this;
     }
 
     public String getName() {
@@ -46,24 +46,24 @@ public class Entity extends Rectangle2D.Double {
         return color;
     }
 
-    public Entity setPosition(double x, double y) {
+    public T setPosition(double x, double y) {
         super.setRect(x, y, width, height);
-        return this;
+        return (T) this;
     }
 
-    public Entity setSize(double w, double h) {
+    public T setSize(double w, double h) {
         super.setRect(x, y, w, h);
-        return this;
+        return (T) this;
     }
 
-    public Entity setColor(Color c) {
+    public T setColor(Color c) {
         this.color = c;
-        return this;
+        return (T) this;
     }
 
-    public Entity setMaterial(Material mat) {
+    public T setMaterial(Material mat) {
         this.material = mat;
-        return this;
+        return (T) this;
     }
 
     public double getMass() {
@@ -74,19 +74,19 @@ public class Entity extends Rectangle2D.Double {
         return material;
     }
 
-    public Entity setMass(double m) {
+    public T setMass(double m) {
         this.mass = m;
-        return this;
+        return (T) this;
     }
 
-    public Entity addForce(double fx, double fy) {
+    public T addForce(double fx, double fy) {
         forces.add(new Point2D.Double(fx, fy));
-        return this;
+        return (T) this;
     }
 
-    public Entity addForce(Point2D f) {
+    public T addForce(Point2D f) {
         forces.add(f);
-        return this;
+        return (T) this;
     }
 
     public List<Point2D> getForces() {
@@ -97,13 +97,14 @@ public class Entity extends Rectangle2D.Double {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public T setActive(boolean active) {
         this.active = active;
+        return (T) this;
     }
 
-    public Entity setContact(boolean c) {
+    public T setContact(boolean c) {
         this.contact = c;
-        return this;
+        return (T) this;
     }
 
     public boolean hasContact() {
@@ -115,8 +116,8 @@ public class Entity extends Rectangle2D.Double {
         return physicType;
     }
 
-    public Entity setPhysicType(PhysicType physicType) {
+    public T setPhysicType(PhysicType physicType) {
         this.physicType = physicType;
-        return this;
+        return (T) this;
     }
 }

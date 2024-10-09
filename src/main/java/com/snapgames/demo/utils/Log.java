@@ -38,6 +38,13 @@ public class Log {
         log("ERR", message, args);
     }
 
+    public static void error(Class<?> className, String message, Object... args) {
+        log("ERR", className + "|" + message, args);
+    }
+    public static void warn(Class<?> className, String message, Object... args) {
+        log("WARN", className + "|" + message, args);
+    }
+
     /**
      * Compare the current debug level to the required one
      *
