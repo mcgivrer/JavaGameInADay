@@ -85,7 +85,7 @@ public class Game extends JPanel {
 
         switchScene(defaultSceneName);
     }
-    
+
     public void switchScene(String sceneName) {
         if (activeScene != null) {
             activeScene.dispose();
@@ -177,6 +177,6 @@ public class Game extends JPanel {
     }
 
     public String getDefaultScene() {
-        return "play";
+        return defaultSceneName;
     }
 }
