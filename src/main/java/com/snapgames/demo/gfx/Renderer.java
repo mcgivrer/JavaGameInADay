@@ -1,6 +1,6 @@
 package com.snapgames.demo.gfx;
 
-import com.snapgames.demo.Test001App;
+import com.snapgames.demo.Game;
 import com.snapgames.demo.entity.Entity;
 import com.snapgames.demo.io.InputListener;
 import com.snapgames.demo.scene.Scene;
@@ -12,12 +12,12 @@ import java.awt.image.BufferStrategy;
 import java.io.Serializable;
 
 public class Renderer implements Serializable {
-    private final Test001App app;
+    private final Game app;
 
 
     private JFrame window;
 
-    public Renderer(Test001App app) {
+    public Renderer(Game app) {
         this.app = app;
     }
 
@@ -44,6 +44,9 @@ public class Renderer implements Serializable {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, app.getWindowSize().width, app.getWindowSize().height);
 
+        // draw a background grid.
+        drawGrid(g, app.getWindowSize(), 16, 16, new Color(0.2f,0.2f,0.2f));
+
         // draw the scene
         scene.getEntities().values().stream().filter(Entity::isActive).forEach(e -> {
             drawEntity(g, e);
@@ -52,6 +55,15 @@ public class Renderer implements Serializable {
         g.dispose();
 
         bf.show();
+    }
+
+    private void drawGrid(Graphics2D g, Dimension windowSize, int tileW, int tileH, Color color) {
+        g.setColor(color);
+        for (int iy = 0; iy < windowSize.height; iy += tileH) {
+            for (int ix = 0; ix < windowSize.width; ix += tileW) {
+                g.drawRect(ix, iy, tileW, tileH);
+            }
+        }
     }
 
     public void drawEntity(Graphics2D g, Entity e) {

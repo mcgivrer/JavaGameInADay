@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @author Frédéric Delorme frederic.delorme@gmail.com
  * @since 1.0.0
  */
-public class Test001App extends JPanel {
+public class Game extends JPanel {
     private final ResourceBundle messages = ResourceBundle.getBundle("i18n/messages");
     private final Properties config = new Properties();
 
@@ -36,7 +36,7 @@ public class Test001App extends JPanel {
     private Map<String, Scene> scenes = new HashMap<>();
     private Scene activeScene;
 
-    public Test001App() {
+    public Game() {
         super();
         Log.info("Initialization application %s (%s) %n- running on JDK %s %n- at %s %n- with classpath = %s%n",
                 messages.getString("app.name"),
@@ -114,7 +114,7 @@ public class Test001App extends JPanel {
 
     private void loop() {
 
-        long startTime = System.nanoTime();
+        long startTime = System.currentTimeMillis();
         long endTime = startTime;
         long elapsed = 0;
         while (!exit) {
@@ -123,7 +123,7 @@ public class Test001App extends JPanel {
             input(activeScene);
             update(activeScene, elapsed);
             render(activeScene);
-            endTime = System.nanoTime();
+            endTime = System.currentTimeMillis();
         }
         dispose();
     }
@@ -147,7 +147,7 @@ public class Test001App extends JPanel {
     }
 
     public static void main(String[] argc) {
-        Test001App app = new Test001App();
+        Game app = new Game();
         app.run(argc);
     }
 

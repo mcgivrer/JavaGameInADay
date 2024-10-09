@@ -1,16 +1,16 @@
 package com.snapgames.demo.io;
 
-import com.snapgames.demo.Test001App;
+import com.snapgames.demo.Game;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.Serializable;
 
 public class InputListener implements KeyListener, Serializable {
-    private final Test001App app;
+    private final Game app;
     public boolean[] keys = new boolean[1024];
 
-    public InputListener(Test001App app) {
+    public InputListener(Game app) {
         this.app = app;
     }
 

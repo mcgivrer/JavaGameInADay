@@ -1,15 +1,15 @@
 package com.snapgames.demo.physic;
 
-import com.snapgames.demo.Test001App;
+import com.snapgames.demo.Game;
 import com.snapgames.demo.entity.Entity;
 import com.snapgames.demo.scene.Scene;
 
 import java.io.Serializable;
 
 public class PhysicEngine implements Serializable {
-    private final Test001App app;
+    private final Game app;
 
-    public PhysicEngine(Test001App app) {
+    public PhysicEngine(Game app) {
         this.app = app;
     }
 
@@ -42,8 +42,8 @@ public class PhysicEngine implements Serializable {
         e.dx = 0.5 * e.ax / e.getMass();
         e.dy = 0.5 * e.ay / e.getMass();
 
-        e.x += e.dx * (elapsed * 0.0000001);
-        e.y += e.dy * (elapsed * 0.0000001);
+        e.x += e.dx * (elapsed);
+        e.y += e.dy * (elapsed);
 
         if (e.hasContact()){
             e.dx *= e.getMaterial().friction;
