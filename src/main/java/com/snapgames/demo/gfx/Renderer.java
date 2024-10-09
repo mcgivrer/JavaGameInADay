@@ -96,6 +96,8 @@ public class Renderer implements Serializable {
                 error("Unknown object class %s", e.getClass());
             }
         }
+
+        e.getBehaviors().forEach(b -> b.draw(g, e));
     }
 
     public void dispose() {

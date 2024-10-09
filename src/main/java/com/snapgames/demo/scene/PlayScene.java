@@ -1,5 +1,6 @@
 package com.snapgames.demo.scene;
 
+import com.snapgames.demo.Behavior;
 import com.snapgames.demo.Game;
 import com.snapgames.demo.entity.Entity;
 import com.snapgames.demo.entity.GameObject;
@@ -14,8 +15,6 @@ import com.snapgames.demo.physic.WorldArea;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayScene extends AbstractScene {
 
@@ -51,7 +50,25 @@ public class PlayScene extends AbstractScene {
                 .setPosition(world.getWidth() * 0.5, world.getHeight() * 0.5)
                 .setColor(Color.BLUE)
                 .setMass(8)
-                .setMaterial(new Material("player_mat", 1.0, 0.92, 0.66));
+                .setMaterial(new Material("player_mat", 1.0, 0.92, 0.66))
+                .add(new Behavior<Entity<?>>() {
+                    @Override
+                    public void input(InputListener inputListener, Entity<?> player) {
+                        double speed = 0.2;
+                        if (inputListener.isKeyPressed(KeyEvent.VK_UP)) {
+                            player.addForce(0.0, -speed * 2);
+                        }
+                        if (inputListener.isKeyPressed(KeyEvent.VK_DOWN)) {
+                            player.addForce(0.0, speed);
+                        }
+                        if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
+                            player.addForce(-speed, 0.0);
+                        }
+                        if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
+                            player.addForce(speed, 0.0);
+                        }
+                    }
+                });
         add(player);
 
         generate("star_%d", world, 100, 1, 1,
@@ -89,24 +106,6 @@ public class PlayScene extends AbstractScene {
                     .setMaterial(mat)
                     .setPhysicType(pt);
             add(star);
-        }
-    }
-
-    @Override
-    public void input(InputListener inputListener) {
-        double speed = 0.2;
-        Entity player = getEntities().get("player");
-        if (inputListener.isKeyPressed(KeyEvent.VK_UP)) {
-            player.addForce(0.0, -speed * 2);
-        }
-        if (inputListener.isKeyPressed(KeyEvent.VK_DOWN)) {
-            player.addForce(0.0, speed);
-        }
-        if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
-            player.addForce(-speed, 0.0);
-        }
-        if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
-            player.addForce(speed, 0.0);
         }
     }
 }

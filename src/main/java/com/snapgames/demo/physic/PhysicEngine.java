@@ -23,6 +23,7 @@ public class PhysicEngine implements Serializable {
                         applyPhysicRules(scene, elapsed, e);
                         keepEntityIntoWorld(scene, e);
                     }
+                    e.getBehaviors().forEach(b->b.update(e,elapsed));
                 });
     }
 

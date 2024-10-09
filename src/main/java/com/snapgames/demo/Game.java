@@ -152,6 +152,10 @@ public class Game extends JPanel {
 
     public void input(Scene scene) {
         scene.input(inputListener);
+
+        scene.getEntities().values()
+                .forEach(e -> e.getBehaviors()
+                        .forEach(b -> b.input(inputListener, e)));
     }
 
     public void update(Scene scene, long elapsed) {

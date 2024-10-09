@@ -1,5 +1,6 @@
 package com.snapgames.demo.entity;
 
+import com.snapgames.demo.Behavior;
 import com.snapgames.demo.physic.Material;
 import com.snapgames.demo.physic.PhysicType;
 import com.snapgames.demo.utils.Node;
@@ -24,7 +25,9 @@ public class Entity<T> extends Node<T> {
     private boolean active = true;
     private boolean contact = false;
 
-    Color color = Color.RED;
+    private Color color = Color.RED;
+
+    private List<Behavior<Entity<?>>> behaviors = new ArrayList<>();
 
     public Entity() {
         super();
@@ -112,5 +115,14 @@ public class Entity<T> extends Node<T> {
     public T setPhysicType(PhysicType physicType) {
         this.physicType = physicType;
         return (T) this;
+    }
+
+    public T add(Behavior<Entity<?>> b) {
+        this.behaviors.add(b);
+        return (T) this;
+    }
+
+    public List<Behavior<Entity<?>>> getBehaviors() {
+        return this.behaviors;
     }
 }
