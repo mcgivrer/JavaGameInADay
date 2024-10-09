@@ -83,15 +83,15 @@ public class Game extends JPanel {
         Scene scene = new PlayScene(this, "play");
         addScene(scene);
 
-        activateScene("play");
+        switchScene("play");
     }
 
 
-    public void activateScene(String sceneName) {
-        this.activeScene = scenes.get(sceneName);
+    public void switchScene(String sceneName) {
         if (activeScene != null) {
             activeScene.dispose();
         }
+        this.activeScene = scenes.get(sceneName);
         activeScene.load();
         activeScene.create();
     }

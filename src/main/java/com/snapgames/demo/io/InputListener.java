@@ -34,7 +34,7 @@ public class InputListener implements KeyListener, Serializable {
             app.exit = true;
         }
         if (isKeyPressed(KeyEvent.VK_Z) && e.isControlDown()) {
-            app.activateScene(app.getDefaultScene());
+            app.switchScene(app.getDefaultScene());
         }
         keys[e.getKeyCode()] = false;
     }

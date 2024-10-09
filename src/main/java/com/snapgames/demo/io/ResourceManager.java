@@ -1,6 +1,5 @@
 package com.snapgames.demo.io;
 
-import com.snapgames.demo.Game;
 import com.snapgames.demo.utils.Log;
 
 import javax.imageio.ImageIO;
