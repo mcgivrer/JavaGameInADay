@@ -1,6 +1,7 @@
 package com.snapgames.demo.entity;
 
 import com.snapgames.demo.physic.Material;
+import com.snapgames.demo.physic.PhysicType;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -19,6 +20,8 @@ public class Entity extends Rectangle2D.Double {
     String name = "entity_" + (id);
     Color color = Color.RED;
     private double mass = 1.0;
+
+    private PhysicType physicType = PhysicType.DYNAMIC;
 
     private boolean active = true;
     private boolean contact = false;
@@ -105,5 +108,15 @@ public class Entity extends Rectangle2D.Double {
 
     public boolean hasContact() {
         return contact;
+    }
+
+
+    public PhysicType getPhysicType() {
+        return physicType;
+    }
+
+    public Entity setPhysicType(PhysicType physicType) {
+        this.physicType = physicType;
+        return this;
     }
 }

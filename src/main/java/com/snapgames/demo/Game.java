@@ -9,6 +9,7 @@ import com.snapgames.demo.utils.Log;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -21,20 +22,26 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 public class Game extends JPanel {
+    private static final double FPS = 60.0;
     private final ResourceBundle messages = ResourceBundle.getBundle("i18n/messages");
     private final Properties config = new Properties();
 
+    // Configuration values
     public static boolean exit = false;
     private String title = "Test001";
     private Dimension windowSize = new Dimension(640, 400);
+    private Dimension bufferSize = new Dimension(320, 200);
+    private Rectangle2D.Double playArea = new Rectangle2D.Double(0, 0, 640, 400);
 
-
+    // Services
     private InputListener inputListener;
     private PhysicEngine physicEngine;
     private Renderer renderer;
 
+    // Scene Management
     private Map<String, Scene> scenes = new HashMap<>();
     private Scene activeScene;
+    private String defaultSceneName;
 
     public Game() {
         super();
@@ -69,7 +76,7 @@ public class Game extends JPanel {
 
         inputListener = new InputListener(this);
         physicEngine = new PhysicEngine(this);
-        renderer = new Renderer(this);
+        renderer = new Renderer(this, bufferSize);
         renderer.createWindow(title, windowSize);
         renderer.setInputListener(inputListener);
 
@@ -80,7 +87,7 @@ public class Game extends JPanel {
     }
 
 
-    private void activateScene(String sceneName) {
+    public void activateScene(String sceneName) {
         this.activeScene = scenes.get(sceneName);
         if (activeScene != null) {
             activeScene.dispose();
@@ -105,6 +112,17 @@ public class Game extends JPanel {
                     String[] values = ((String) e.getValue()).split("x");
                     windowSize = new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
                 }
+                case "app.render.buffer.size" -> {
+                    String[] values = ((String) e.getValue()).split("x");
+                    bufferSize = new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
+                }
+                case "app.physic.world.play.area.size" -> {
+                    String[] values = ((String) e.getValue()).split("x");
+                    playArea = new Rectangle2D.Double(0, 0, Double.parseDouble(values[0]), Double.parseDouble(values[1]));
+                }
+                case "app.scene.default" -> {
+                    defaultSceneName = (String) e.getValue();
+                }
                 default -> {
                     Log.error("Configuration|Unknown value %s=%s", e.getKey(), e.getValue());
                 }
@@ -124,8 +142,12 @@ public class Game extends JPanel {
             update(activeScene, elapsed);
             render(activeScene);
             endTime = System.currentTimeMillis();
+            try {
+                Thread.sleep((long) (elapsed < (1000 / FPS) ? (1000 / FPS) - elapsed : 1));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
-        dispose();
     }
 
 
@@ -153,5 +175,9 @@ public class Game extends JPanel {
 
     public Dimension getWindowSize() {
         return windowSize;
+    }
+
+    public String getDefaultScene() {
+        return "play";
     }
 }

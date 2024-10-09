@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
 public class Renderer implements Serializable {
@@ -17,8 +18,11 @@ public class Renderer implements Serializable {
 
     private JFrame window;
 
-    public Renderer(Game app) {
+    private BufferedImage drawbuffer;
+
+    public Renderer(Game app, Dimension bufferSize) {
         this.app = app;
+        drawbuffer = new BufferedImage(bufferSize.width, bufferSize.height, BufferedImage.TYPE_INT_ARGB);
     }
 
     public void createWindow(String title, Dimension size) {
@@ -39,13 +43,13 @@ public class Renderer implements Serializable {
     public void render(Scene scene) {
         BufferStrategy bf = window.getBufferStrategy();
 
-        Graphics2D g = (Graphics2D) bf.getDrawGraphics();
+        Graphics2D g = (Graphics2D) drawbuffer.createGraphics();
         // clear display
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, app.getWindowSize().width, app.getWindowSize().height);
+        g.fillRect(0, 0, drawbuffer.getWidth(), drawbuffer.getHeight());
 
         // draw a background grid.
-        drawGrid(g, app.getWindowSize(), 16, 16, new Color(0.2f,0.2f,0.2f));
+        drawGrid(g, scene.getWorld(), 16, 16, new Color(0.2f, 0.2f, 0.2f));
 
         // draw the scene
         scene.getEntities().values().stream().filter(Entity::isActive).forEach(e -> {
@@ -53,14 +57,15 @@ public class Renderer implements Serializable {
         });
 
         g.dispose();
-
+        bf.getDrawGraphics().drawImage(drawbuffer, 0, 0, app.getWindowSize().width, app.getWindowSize().height,
+                0, 0, drawbuffer.getWidth(), drawbuffer.getHeight(), null);
         bf.show();
     }
 
-    private void drawGrid(Graphics2D g, Dimension windowSize, int tileW, int tileH, Color color) {
+    private void drawGrid(Graphics2D g, Rectangle2D windowSize, int tileW, int tileH, Color color) {
         g.setColor(color);
-        for (int iy = 0; iy < windowSize.height; iy += tileH) {
-            for (int ix = 0; ix < windowSize.width; ix += tileW) {
+        for (int iy = 0; iy < windowSize.getWidth(); iy += tileH) {
+            for (int ix = 0; ix < windowSize.getWidth(); ix += tileW) {
                 g.drawRect(ix, iy, tileW, tileH);
             }
         }
