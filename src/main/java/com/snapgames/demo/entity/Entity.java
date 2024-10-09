@@ -2,6 +2,7 @@ package com.snapgames.demo.entity;
 
 import com.snapgames.demo.physic.Material;
 import com.snapgames.demo.physic.PhysicType;
+import com.snapgames.demo.utils.Node;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -9,16 +10,13 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Entity<T> extends Rectangle2D.Double {
-    private static long index = 0;
+public class Entity<T> extends Node<T> {
+
     List<Point2D> forces = new ArrayList<>();
 
     public double ax, ay;
     public double dx, dy;
     private Material material = Material.DEFAULT;
-    long id = index++;
-    String name = "entity_" + (id);
-    Color color = Color.RED;
     private double mass = 1.0;
 
     private PhysicType physicType = PhysicType.DYNAMIC;
@@ -26,21 +24,16 @@ public class Entity<T> extends Rectangle2D.Double {
     private boolean active = true;
     private boolean contact = false;
 
+    Color color = Color.RED;
+
     public Entity() {
+        super();
     }
 
     public Entity(String name) {
-        setName(name);
+        super(name);
     }
 
-    private T setName(String name) {
-        this.name = name;
-        return (T) this;
-    }
-
-    public String getName() {
-        return name;
-    }
 
     public Color getColor() {
         return color;

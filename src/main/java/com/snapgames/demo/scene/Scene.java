@@ -13,7 +13,7 @@ public interface Scene {
 
     void create();
 
-    void add(Entity entity);
+    void add(Entity<?> entity);
 
     String getName();
 

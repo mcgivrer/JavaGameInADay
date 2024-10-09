@@ -83,10 +83,9 @@ public class Game extends JPanel {
         Scene scene = new PlayScene(this, "play");
         addScene(scene);
 
-        switchScene("play");
+        switchScene(defaultSceneName);
     }
-
-
+    
     public void switchScene(String sceneName) {
         if (activeScene != null) {
             activeScene.dispose();
@@ -150,7 +149,6 @@ public class Game extends JPanel {
             }
         }
     }
-
 
     public void input(Scene scene) {
         scene.input(inputListener);

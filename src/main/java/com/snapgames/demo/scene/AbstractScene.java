@@ -4,20 +4,20 @@ import com.snapgames.demo.Game;
 import com.snapgames.demo.entity.Entity;
 import com.snapgames.demo.io.InputListener;
 import com.snapgames.demo.physic.World;
+import com.snapgames.demo.utils.Node;
 
 import java.awt.event.KeyEvent;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractScene implements Scene {
+public abstract class AbstractScene extends Node<AbstractScene> implements Scene {
     protected final Game app;
     public Map<String, Entity<?>> entities = new ConcurrentHashMap<>();
     public World world = new World();
-    protected String name;
 
     public AbstractScene(Game app, String name) {
+        super(name);
         this.app = app;
-        this.name = name;
     }
 
     public Map<String, Entity<?>> getEntities() {
@@ -28,12 +28,9 @@ public abstract class AbstractScene implements Scene {
         return world;
     }
 
-    public void add(Entity entity) {
+    public void add(Entity<?> entity) {
         entities.put(entity.getName(), entity);
-    }
-
-    public String getName() {
-        return name;
+        super.add(entity);
     }
 
     public void input(InputListener inputListener) {
