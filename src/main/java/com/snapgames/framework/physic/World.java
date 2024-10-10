@@ -1,24 +1,23 @@
 package com.snapgames.framework.physic;
 
+import com.snapgames.framework.entity.Entity;
+
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public class World extends Rectangle2D.Double {
-    private String name;
+public class World extends Entity<World> {
     private double gravity;
-    private List<WorldArea> areas = new ArrayList<>();
 
-    public World() {
+    public World(String name) {
+        super(name);
         this.gravity = 0.0;
         setRect(0, 0, 640, 400);
     }
 
     public World(String name, double gravity) {
-
-        this.name = name;
+        super(name);
         this.gravity = gravity;
-
     }
 
     public World setSize(double w, double h) {
@@ -35,12 +34,8 @@ public class World extends Rectangle2D.Double {
         return gravity;
     }
 
-    public Iterable<WorldArea> getAreas() {
-        return areas;
-    }
-
     public World addArea(WorldArea a) {
-        areas.add(a);
+        getChildren().add(a);
         return this;
     }
 }

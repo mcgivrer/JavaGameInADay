@@ -95,7 +95,7 @@ public class PlayScene extends AbstractScene {
                 Color.WHITE, 100000000,
                 Material.DEFAULT,
                 PhysicType.STATIC,
-                2);
+                5);
         generate("ball_%d", world, 5, 20, 20,
                 Color.RED, 5.0,
                 new Material("ball_mat", 1.0, 0.7, 0.8),
@@ -112,7 +112,7 @@ public class PlayScene extends AbstractScene {
         world.addArea(area1);
         add(area1);
         WorldArea sky = (WorldArea) new WorldArea("sky")
-                .setColor(new Color(0.2f, 0.6f, 1.0f, 0.9f))
+                .setColor(new Color(0.0f, 0.1f, 0.3f, 0.9f))
                 .setSize(world.width, world.height - 64)
                 .setPosition(0, 0)
                 .addForce(0.01, 0.0)
@@ -138,7 +138,7 @@ public class PlayScene extends AbstractScene {
         setActiveCamera(camera);
     }
 
-    private void generate(String tempateName, Rectangle2D windowSize,
+    private void generate(String templateName, Rectangle2D windowSize,
                           int nb, double maxW, double maxH,
                           Color color,
                           double mass,
@@ -146,7 +146,7 @@ public class PlayScene extends AbstractScene {
                           PhysicType pt,
                           int priority) {
         for (int i = 0; i < nb; i++) {
-            GameObject star = new GameObject(tempateName.formatted(i))
+            GameObject star = new GameObject(templateName.formatted(i))
                     .setSize(maxW * Math.random(), maxH * Math.random())
                     .setPosition(windowSize.getWidth() * Math.random(), windowSize.getHeight() * Math.random())
                     .setColor(color)

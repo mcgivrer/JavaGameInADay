@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractScene extends Node<AbstractScene> implements Scene {
     protected final Game app;
     protected Map<String, Entity<?>> entities = new ConcurrentHashMap<>();
-    protected World world = new World();
+    protected World world = new World("default");
 
     protected Camera activeCamera;
 

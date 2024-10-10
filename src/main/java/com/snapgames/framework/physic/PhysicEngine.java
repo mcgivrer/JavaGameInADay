@@ -46,9 +46,9 @@ public class PhysicEngine implements Serializable {
     }
 
     private void applyWorldEffects(Scene scene, Entity<?> e) {
-        scene.getWorld().getAreas().forEach(a -> {
+        scene.getWorld().getChildren().forEach(a -> {
             if (a.contains(e) || a.intersects(e)) {
-                e.getForces().addAll(a.getForces());
+                e.getForces().addAll(((WorldArea) a).getForces());
                 e.setContact(true);
             }
         });
