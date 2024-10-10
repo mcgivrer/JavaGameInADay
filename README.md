@@ -1,5 +1,7 @@
 # README
    
+[![Gitea action build](http://nextserver01:4000/frederic/JavaGameOnADay/actions/workflows/build.yml/badge.svg?branch=develop)](http://nextserver01:4000/frederic/JavaGameOnADay/actions?workflow=build.yml&actor=0&status=0)
+
 ## Context
 
 This is the readme file for Test001 (1.0.0)
