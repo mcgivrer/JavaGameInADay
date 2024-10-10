@@ -3,6 +3,7 @@ package com.snapgames.demo.gfx;
 import com.snapgames.demo.Game;
 import com.snapgames.demo.entity.Entity;
 import com.snapgames.demo.entity.GameObject;
+import com.snapgames.demo.entity.GridObject;
 import com.snapgames.demo.entity.TextObject;
 import com.snapgames.demo.io.InputListener;
 import com.snapgames.demo.scene.Scene;
@@ -13,6 +14,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Optional;
 
 import static com.snapgames.demo.utils.Log.error;
@@ -53,13 +55,13 @@ public class Renderer implements Serializable {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, drawbuffer.getWidth(), drawbuffer.getHeight());
 
-        // draw a background grid.
-        drawGrid(g, scene.getWorld(), 16, 16, new Color(0.2f, 0.2f, 0.2f));
-
         // draw the scene
-        scene.getEntities().values().stream().filter(Entity::isActive).forEach(e -> {
-            drawEntity(g, e);
-        });
+        scene.getEntities().values().stream()
+                .filter(Entity::isActive)
+                .sorted(Comparator.comparingInt(Entity::getPriority))
+                .forEach(e -> {
+                    drawEntity(g, scene, e);
+                });
 
         g.dispose();
         bf.getDrawGraphics().drawImage(drawbuffer, 0, 0, app.getWindowSize().width, app.getWindowSize().height,
@@ -67,16 +69,8 @@ public class Renderer implements Serializable {
         bf.show();
     }
 
-    private void drawGrid(Graphics2D g, Rectangle2D windowSize, int tileW, int tileH, Color color) {
-        g.setColor(color);
-        for (int iy = 0; iy < windowSize.getWidth(); iy += tileH) {
-            for (int ix = 0; ix < windowSize.getWidth(); ix += tileW) {
-                g.drawRect(ix, iy, tileW, tileH);
-            }
-        }
-    }
 
-    public void drawEntity(Graphics2D g, Entity<?> e) {
+    public void drawEntity(Graphics2D g, Scene scene, Entity<?> e) {
         switch (e.getClass().getSimpleName()) {
             case "GameObject", "WorldArea" -> {
 
@@ -91,6 +85,10 @@ public class Renderer implements Serializable {
                 }
                 g.drawString(te.getText(), (int) e.x, (int) e.y);
             }
+            case "GridObject" -> {
+                GridObject go = (GridObject) e;
+                drawGrid(g, scene.getWorld(), go.getTileWidth(), go.getTileHeight(), go.getColor());
+            }
 
             default -> {
                 error("Unknown object class %s", e.getClass());
@@ -98,6 +96,15 @@ public class Renderer implements Serializable {
         }
 
         e.getBehaviors().forEach(b -> b.draw(g, e));
+    }
+
+    private void drawGrid(Graphics2D g, Rectangle2D windowSize, int tileW, int tileH, Color color) {
+        g.setColor(color);
+        for (int iy = 0; iy < windowSize.getWidth(); iy += tileH) {
+            for (int ix = 0; ix < windowSize.getWidth(); ix += tileW) {
+                g.drawRect(ix, iy, tileW, tileH);
+            }
+        }
     }
 
     public void dispose() {

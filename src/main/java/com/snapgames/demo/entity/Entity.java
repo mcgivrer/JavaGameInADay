@@ -28,6 +28,7 @@ public class Entity<T> extends Node<T> {
     private Color color = Color.RED;
 
     private List<Behavior<Entity<?>>> behaviors = new ArrayList<>();
+    private int priority = 0;
 
     public Entity() {
         super();
@@ -124,5 +125,14 @@ public class Entity<T> extends Node<T> {
 
     public List<Behavior<Entity<?>>> getBehaviors() {
         return this.behaviors;
+    }
+
+    public T setPriority(int p) {
+        this.priority = p;
+        return (T) this;
+    }
+
+    public int getPriority() {
+        return this.priority;
     }
 }

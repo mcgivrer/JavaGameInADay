@@ -4,6 +4,7 @@ import com.snapgames.demo.Behavior;
 import com.snapgames.demo.Game;
 import com.snapgames.demo.entity.Entity;
 import com.snapgames.demo.entity.GameObject;
+import com.snapgames.demo.entity.GridObject;
 import com.snapgames.demo.entity.TextObject;
 import com.snapgames.demo.io.InputListener;
 import com.snapgames.demo.io.ResourceManager;
@@ -18,7 +19,7 @@ import java.awt.geom.Rectangle2D;
 
 public class PlayScene extends AbstractScene {
 
-    private Font scoreFont;
+    private Font scoreFont, textFont;
 
     public PlayScene(Game app, String name) {
         super(app, name);
@@ -26,6 +27,7 @@ public class PlayScene extends AbstractScene {
 
     public void load() {
         scoreFont = ResourceManager.get("/assets/fonts/upheavtt.ttf");
+        textFont = ResourceManager.get("/assets/fonts/Minecraftia-Regular.ttf");
     }
 
     @Override
@@ -34,16 +36,29 @@ public class PlayScene extends AbstractScene {
 
 
         world = new World("earth", -0.981)
-                .setSize(320, 200)
+                .setSize(800, 600)
                 .setPosition(0, 0);
+
+        GridObject go = new GridObject("grid").setTileSize(16, 16).setColor(Color.DARK_GRAY).setPriority(1);
+        add(go);
 
         TextObject score = new TextObject("score")
                 .setPosition(10, 32)
                 .setFont(scoreFont.deriveFont(18.0f))
                 .setText("00000")
                 .setColor(Color.WHITE)
-                .setPhysicType(PhysicType.STATIC);
+                .setPhysicType(PhysicType.STATIC)
+                .setPriority(100);
         add(score);
+
+        TextObject lives = new TextObject("lives")
+                .setPosition(320 - 30, 38)
+                .setFont(textFont.deriveFont(8.0f))
+                .setText("3")
+                .setColor(Color.RED)
+                .setPhysicType(PhysicType.STATIC)
+                .setPriority(100);
+        add(lives);
 
         GameObject player = new GameObject("player")
                 .setSize(16, 32)
@@ -51,6 +66,7 @@ public class PlayScene extends AbstractScene {
                 .setColor(Color.BLUE)
                 .setMass(8)
                 .setMaterial(new Material("player_mat", 1.0, 0.92, 0.66))
+                .setPriority(10)
                 .add(new Behavior<Entity<?>>() {
                     @Override
                     public void input(InputListener inputListener, Entity<?> player) {
@@ -74,18 +90,20 @@ public class PlayScene extends AbstractScene {
         generate("star_%d", world, 100, 1, 1,
                 Color.WHITE, 100000000,
                 Material.DEFAULT,
-                PhysicType.STATIC);
+                PhysicType.STATIC,
+                2);
         generate("ball_%d", world, 10, 20, 20,
                 Color.RED, 5.0,
                 new Material("ball_mat", 1.0, 0.7, 0.8),
-                PhysicType.DYNAMIC);
+                PhysicType.DYNAMIC, 5);
 
 
         WorldArea area1 = (WorldArea) new WorldArea("water")
                 .setColor(new Color(0.1f, 0.1f, 0.7f, 0.8f))
                 .setSize(world.width, 64)
                 .setPosition(0, world.height - 64)
-                .addForce(0.02, -0.16);
+                .addForce(0.02, -0.16)
+                .setPriority(20);
         world.addArea(area1);
         add(area1);
 
@@ -96,7 +114,8 @@ public class PlayScene extends AbstractScene {
                           Color color,
                           double mass,
                           Material mat,
-                          PhysicType pt) {
+                          PhysicType pt,
+                          int priority) {
         for (int i = 0; i < nb; i++) {
             GameObject star = new GameObject(tempateName.formatted(i))
                     .setSize(maxW * Math.random(), maxH * Math.random())
@@ -104,7 +123,8 @@ public class PlayScene extends AbstractScene {
                     .setColor(color)
                     .setMass(mass)
                     .setMaterial(mat)
-                    .setPhysicType(pt);
+                    .setPhysicType(pt)
+                    .setPriority(priority);
             add(star);
         }
     }
