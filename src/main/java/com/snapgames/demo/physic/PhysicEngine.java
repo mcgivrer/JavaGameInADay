@@ -16,7 +16,7 @@ public class PhysicEngine implements Serializable {
 
     public void update(Scene scene, long elapsed) {
         scene.getEntities().values().stream()
-                .filter(e -> e.isActive() && !(e instanceof WorldArea))
+                .filter(e -> e.isActive())
                 .forEach(e -> {
                     if (e.getPhysicType() == PhysicType.DYNAMIC) {
                         e.setContact(false);

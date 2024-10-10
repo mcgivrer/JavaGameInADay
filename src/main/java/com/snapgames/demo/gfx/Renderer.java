@@ -67,6 +67,11 @@ public class Renderer implements Serializable {
                 .forEach(e -> {
                     drawEntity(g, scene, e);
                 });
+
+        // draw World borders
+        g.setColor(Color.DARK_GRAY);
+        g.draw(scene.getWorld());
+
         if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
             g.translate(scene.getActiveCamera().x, scene.getActiveCamera().y);
         }
@@ -119,7 +124,7 @@ public class Renderer implements Serializable {
 
     private void drawGrid(Graphics2D g, Rectangle2D windowSize, int tileW, int tileH, Color color) {
         g.setColor(color);
-        for (int iy = 0; iy < windowSize.getWidth(); iy += tileH) {
+        for (int iy = 0; iy < windowSize.getHeight(); iy += tileH) {
             for (int ix = 0; ix < windowSize.getWidth(); ix += tileW) {
                 g.drawRect(ix, iy, tileW, tileH);
             }

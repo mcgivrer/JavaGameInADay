@@ -65,14 +65,14 @@ public class Game extends JPanel {
         try {
             config.load(this.getClass().getResourceAsStream("/config.properties"));
             config.forEach((k, v) -> {
-                Log.info("Configuration|%s=%s", k, v);
+                Log.info(Game.class, "%s=%s", k, v);
             });
             parseAttributes(config.entrySet().parallelStream().collect(Collectors.toList()));
         } catch (IOException e) {
-            Log.info("Configuration|Unable to read configuration file: %s", e.getMessage());
+            Log.info(Game.class, "Unable to read configuration file: %s", e.getMessage());
         }
         lArgs.forEach(s -> {
-            Log.info(String.format("Configuration|Argument: %s", s));
+            Log.info(Game.class, String.format("Argument: %s", s));
         });
 
         inputListener = new InputListener(this);
@@ -99,7 +99,7 @@ public class Game extends JPanel {
 
     private static void displaySceneTreeOnLog(Node<?> node, String space) {
         String spaces = space + "  ";
-        Log.debug("%s |_ Node<%s> named '%s'", spaces, node.getClass().getSimpleName(), node.getName());
+        Log.debug(Game.class, "%s |_ Node<%s> named '%s'", spaces, node.getClass().getSimpleName(), node.getName());
         node.getChildren().forEach(c -> displaySceneTreeOnLog(c, spaces));
     }
 

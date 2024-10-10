@@ -38,12 +38,22 @@ public class Log {
         log("ERR", message, args);
     }
 
-    public static void error(Class<?> className, String message, Object... args) {
-        log("ERR", className + "|" + message, args);
+    public static void debug(Class<?> className, String message, Object... args) {
+        log("DEBUG", className.getCanonicalName() + "|" + message, args);
     }
+
+    public static void info(Class<?> className, String message, Object... args) {
+        log("INFO", className.getCanonicalName() + "|" + message, args);
+    }
+
     public static void warn(Class<?> className, String message, Object... args) {
-        log("WARN", className + "|" + message, args);
+        log("WARN", className.getCanonicalName() + "|" + message, args);
     }
+
+    public static void error(Class<?> className, String message, Object... args) {
+        log("ERR", className.getCanonicalName() + "|" + message, args);
+    }
+
 
     /**
      * Compare the current debug level to the required one

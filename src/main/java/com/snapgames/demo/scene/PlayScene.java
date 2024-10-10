@@ -67,7 +67,7 @@ public class PlayScene extends AbstractScene {
                 });
         add(player);
 
-        Camera camera = new Camera("cam01").setViewPort(320, 200).setTWeen(0.2).setTarget(player);
+        Camera camera = new Camera("cam01").setViewPort(320, 200).setTween(0.2).setTarget(player);
         add(camera);
 
 
@@ -90,12 +90,12 @@ public class PlayScene extends AbstractScene {
                 .setFixedToCamera(camera)
                 .setPriority(100);
         add(lives);
-        generate("star_%d", world, 100, 1, 1,
+        generate("star_%d", world, 20, 1, 1,
                 Color.WHITE, 100000000,
                 Material.DEFAULT,
                 PhysicType.STATIC,
                 2);
-        generate("ball_%d", world, 10, 20, 20,
+        generate("ball_%d", world, 5, 20, 20,
                 Color.RED, 5.0,
                 new Material("ball_mat", 1.0, 0.7, 0.8),
                 PhysicType.DYNAMIC, 5);
@@ -105,11 +105,34 @@ public class PlayScene extends AbstractScene {
                 .setColor(new Color(0.1f, 0.1f, 0.7f, 0.8f))
                 .setSize(world.width, 64)
                 .setPosition(0, world.height - 64)
+                .setPhysicType(PhysicType.STATIC)
                 .addForce(0.02, -0.16)
                 .setPriority(20);
         world.addArea(area1);
         add(area1);
+        WorldArea sky = (WorldArea) new WorldArea("sky")
+                .setColor(new Color(0.2f, 0.6f, 1.0f, 0.9f))
+                .setSize(world.width, world.height - 64)
+                .setPosition(0, 0)
+                .addForce(0.01, 0.0)
+                .setPriority(2)
+                .setPhysicType(PhysicType.STATIC)
+                .add(new Behavior<Entity<?>>() {
+                    double cumul = 0;
 
+                    @Override
+                    public void update(Entity<?> e, double elapsed) {
+                        // change the wind direction every random ms
+                        cumul -= elapsed;
+                        if (cumul <= 0) {
+                            e.getForces().clear();
+                            e.addForce(0.05 - Math.random() * 0.1, 0);
+                            cumul = Math.random() * 1000;
+                        }
+                    }
+                });
+        world.addArea(sky);
+        add(sky);
         //activate our camera as the default one.
         setActiveCamera(camera);
     }

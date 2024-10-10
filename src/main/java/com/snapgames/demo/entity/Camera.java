@@ -19,12 +19,14 @@ public class Camera extends Entity<Camera> {
         return this;
     }
 
-    public Camera setTWeen(double tween) {
+    public Camera setTween(double tween) {
         this.tween = tween;
         return this;
     }
 
     public void update(double elapsed) {
+        //this.x += this.x + ((target.x - this.x) * tween * elapsed);
+        //this.y += this.y  + ((target.y - this.y) * tween * elapsed);
         this.x = target.x - ((this.width - target.width) * 0.5);
         this.y = target.y - ((this.height - target.height) * 0.5);
     }
