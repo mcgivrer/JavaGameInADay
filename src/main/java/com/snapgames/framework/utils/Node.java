@@ -1,4 +1,4 @@
-package com.snapgames.demo.utils;
+package com.snapgames.framework.utils;
 
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;

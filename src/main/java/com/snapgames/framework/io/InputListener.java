@@ -1,6 +1,6 @@
-package com.snapgames.demo.io;
+package com.snapgames.framework.io;
 
-import com.snapgames.demo.Game;
+import com.snapgames.framework.Game;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -34,7 +34,7 @@ public class InputListener implements KeyListener, Serializable {
             app.exit = true;
         }
         if (isKeyPressed(KeyEvent.VK_Z) && e.isControlDown()) {
-            app.switchScene(app.getDefaultScene());
+            app.getSceneManager().getActiveScene().reset();
         }
         keys[e.getKeyCode()] = false;
     }

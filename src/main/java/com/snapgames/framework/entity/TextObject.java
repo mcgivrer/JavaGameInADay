@@ -1,4 +1,4 @@
-package com.snapgames.demo.entity;
+package com.snapgames.framework.entity;
 
 import java.awt.*;
 

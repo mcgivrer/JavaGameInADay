@@ -1,7 +1,6 @@
-package com.snapgames.demo;
+package com.snapgames.framework;
 
-import com.snapgames.demo.entity.GameObject;
-import com.snapgames.demo.io.InputListener;
+import com.snapgames.framework.io.InputListener;
 
 import java.awt.*;
 

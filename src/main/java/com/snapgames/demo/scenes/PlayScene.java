@@ -1,14 +1,15 @@
-package com.snapgames.demo.scene;
+package com.snapgames.demo.scenes;
 
-import com.snapgames.demo.Behavior;
-import com.snapgames.demo.Game;
-import com.snapgames.demo.entity.*;
-import com.snapgames.demo.io.InputListener;
-import com.snapgames.demo.io.ResourceManager;
-import com.snapgames.demo.physic.Material;
-import com.snapgames.demo.physic.PhysicType;
-import com.snapgames.demo.physic.World;
-import com.snapgames.demo.physic.WorldArea;
+import com.snapgames.framework.Behavior;
+import com.snapgames.framework.Game;
+import com.snapgames.framework.entity.*;
+import com.snapgames.framework.io.InputListener;
+import com.snapgames.framework.io.ResourceManager;
+import com.snapgames.framework.physic.Material;
+import com.snapgames.framework.physic.PhysicType;
+import com.snapgames.framework.physic.World;
+import com.snapgames.framework.physic.WorldArea;
+import com.snapgames.framework.scene.AbstractScene;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;

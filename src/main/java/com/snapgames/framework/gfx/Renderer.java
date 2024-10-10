@@ -1,9 +1,9 @@
-package com.snapgames.demo.gfx;
+package com.snapgames.framework.gfx;
 
-import com.snapgames.demo.Game;
-import com.snapgames.demo.entity.*;
-import com.snapgames.demo.io.InputListener;
-import com.snapgames.demo.scene.Scene;
+import com.snapgames.framework.Game;
+import com.snapgames.framework.entity.*;
+import com.snapgames.framework.io.InputListener;
+import com.snapgames.framework.scene.Scene;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +15,7 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.snapgames.demo.utils.Log.error;
+import static com.snapgames.framework.utils.Log.error;
 
 public class Renderer implements Serializable {
     private final Game app;

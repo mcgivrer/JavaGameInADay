@@ -1,12 +1,26 @@
-package com.snapgames.demo.physic;
+package com.snapgames.framework.physic;
 
-import com.snapgames.demo.Game;
-import com.snapgames.demo.entity.Entity;
-import com.snapgames.demo.scene.Scene;
+import com.snapgames.framework.Game;
+import com.snapgames.framework.entity.Entity;
+import com.snapgames.framework.scene.Scene;
 
 import java.io.Serializable;
 import java.util.Optional;
 
+/**
+ * The {@link PhysicEngine} service compute everything about move and update of all the entities in a {@link Scene}.
+ * It will update any object position and animation and also move {@link com.snapgames.framework.entity.Camera} accordingly.
+ *
+ * <p>Usage:</p>
+ * <pre><code>
+ * PhysicEngine phy = new PhysicEngine(app);
+ * // layer in the game loop:
+ * phy.update(currentActiveScene, elapsedTimeSincePreviousCall);
+ * </code></pre>
+ *
+ * @author Frédéric Delorme
+ * @since 1.0.0
+ */
 public class PhysicEngine implements Serializable {
     private final Game app;
 
@@ -31,7 +45,7 @@ public class PhysicEngine implements Serializable {
         }
     }
 
-    public void applyWorldEffects(Scene scene, Entity<?> e) {
+    private void applyWorldEffects(Scene scene, Entity<?> e) {
         scene.getWorld().getAreas().forEach(a -> {
             if (a.contains(e) || a.intersects(e)) {
                 e.getForces().addAll(a.getForces());
@@ -40,7 +54,7 @@ public class PhysicEngine implements Serializable {
         });
     }
 
-    public void applyPhysicRules(Scene scene, long elapsed, Entity<?> e) {
+    private void applyPhysicRules(Scene scene, long elapsed, Entity<?> e) {
         e.addForce(0.0, -scene.getWorld().getGravity() / e.getMass());
         e.getForces().forEach(f -> {
             e.ax += f.getX();
@@ -66,7 +80,7 @@ public class PhysicEngine implements Serializable {
         e.ay = 0;
     }
 
-    public void keepEntityIntoWorld(Scene scene, Entity<?> e) {
+    private void keepEntityIntoWorld(Scene scene, Entity<?> e) {
         World w = scene.getWorld();
         if (!w.contains(e) || w.intersects(e)) {
             if (e.x < w.x) {
@@ -90,5 +104,9 @@ public class PhysicEngine implements Serializable {
                 e.setContact(true);
             }
         }
+    }
+
+    public void dispose() {
+
     }
 }

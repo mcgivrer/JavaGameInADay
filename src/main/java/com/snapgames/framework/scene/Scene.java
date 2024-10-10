@@ -1,9 +1,9 @@
-package com.snapgames.demo.scene;
+package com.snapgames.framework.scene;
 
-import com.snapgames.demo.entity.Camera;
-import com.snapgames.demo.entity.Entity;
-import com.snapgames.demo.io.InputListener;
-import com.snapgames.demo.physic.World;
+import com.snapgames.framework.entity.Camera;
+import com.snapgames.framework.entity.Entity;
+import com.snapgames.framework.io.InputListener;
+import com.snapgames.framework.physic.World;
 
 import java.util.List;
 import java.util.Map;
@@ -30,4 +30,6 @@ public interface Scene {
     List<Camera> getCameras();
 
     Camera getActiveCamera();
+
+    void reset();
 }

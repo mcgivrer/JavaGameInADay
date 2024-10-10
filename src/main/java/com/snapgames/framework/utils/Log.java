@@ -1,4 +1,4 @@
-package com.snapgames.demo.utils;
+package com.snapgames.framework.utils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

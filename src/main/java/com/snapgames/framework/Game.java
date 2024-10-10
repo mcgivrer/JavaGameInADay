@@ -1,12 +1,12 @@
-package com.snapgames.demo;
+package com.snapgames.framework;
 
-import com.snapgames.demo.gfx.Renderer;
-import com.snapgames.demo.io.InputListener;
-import com.snapgames.demo.physic.PhysicEngine;
-import com.snapgames.demo.scene.PlayScene;
-import com.snapgames.demo.scene.Scene;
-import com.snapgames.demo.utils.Log;
-import com.snapgames.demo.utils.Node;
+import com.snapgames.framework.gfx.Renderer;
+import com.snapgames.framework.io.InputListener;
+import com.snapgames.framework.physic.PhysicEngine;
+import com.snapgames.demo.scenes.PlayScene;
+import com.snapgames.framework.scene.Scene;
+import com.snapgames.framework.scene.SceneManager;
+import com.snapgames.framework.utils.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,11 +38,9 @@ public class Game extends JPanel {
     private InputListener inputListener;
     private PhysicEngine physicEngine;
     private Renderer renderer;
-
-    // Scene Management
-    private Map<String, Scene> scenes = new HashMap<>();
-    private Scene activeScene;
+    private SceneManager scnMgr;
     private String defaultSceneName;
+
 
     public Game() {
         super();
@@ -80,32 +78,15 @@ public class Game extends JPanel {
         renderer = new Renderer(this, bufferSize);
         renderer.createWindow(title, windowSize);
         renderer.setInputListener(inputListener);
+        scnMgr = new SceneManager(this);
 
         Scene scene = new PlayScene(this, "play");
-        addScene(scene);
+        scnMgr.addScene(scene);
+        scnMgr.setDefaultScene(defaultSceneName);
 
-        switchScene(defaultSceneName);
+        scnMgr.switchScene();
     }
 
-    public void switchScene(String sceneName) {
-        if (activeScene != null) {
-            activeScene.dispose();
-        }
-        this.activeScene = scenes.get(sceneName);
-        activeScene.load();
-        activeScene.create();
-        displaySceneTreeOnLog((Node<?>) activeScene, "");
-    }
-
-    private static void displaySceneTreeOnLog(Node<?> node, String space) {
-        String spaces = space + "  ";
-        Log.debug(Game.class, "%s |_ Node<%s> named '%s'", spaces, node.getClass().getSimpleName(), node.getName());
-        node.getChildren().forEach(c -> displaySceneTreeOnLog(c, spaces));
-    }
-
-    private void addScene(Scene scene) {
-        scenes.put(scene.getName(), scene);
-    }
 
     private void parseAttributes(List<Map.Entry<Object, Object>> collect) {
         collect.forEach(e -> {
@@ -144,11 +125,12 @@ public class Game extends JPanel {
         long endTime = startTime;
         long elapsed = 0;
         while (!exit) {
+            Scene scene = getSceneManager().getActiveScene();
             elapsed = endTime - startTime;
             startTime = endTime;
-            input(activeScene);
-            update(activeScene, elapsed);
-            render(activeScene);
+            input(scene);
+            update(scene, elapsed);
+            render(scene);
             endTime = System.currentTimeMillis();
             try {
                 Thread.sleep((long) (elapsed < (1000 / FPS) ? (1000 / FPS) - elapsed : 1));
@@ -160,7 +142,6 @@ public class Game extends JPanel {
 
     public void input(Scene scene) {
         scene.input(inputListener);
-
         scene.getEntities().values()
                 .forEach(e -> e.getBehaviors()
                         .forEach(b -> b.input(inputListener, e)));
@@ -175,7 +156,9 @@ public class Game extends JPanel {
     }
 
     private void dispose() {
+        physicEngine.dispose();
         renderer.dispose();
+        scnMgr.dispose();
         Log.info("End of application ");
     }
 
@@ -188,7 +171,7 @@ public class Game extends JPanel {
         return windowSize;
     }
 
-    public String getDefaultScene() {
-        return defaultSceneName;
+    public SceneManager getSceneManager() {
+        return scnMgr;
     }
 }

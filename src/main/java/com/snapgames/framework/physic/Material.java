@@ -1,4 +1,4 @@
-package com.snapgames.demo.physic;
+package com.snapgames.framework.physic;
 
 public class Material {
     public static final Material DEFAULT = new Material();

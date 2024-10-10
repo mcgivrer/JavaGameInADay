@@ -1,4 +1,4 @@
-package com.snapgames.demo.entity;
+package com.snapgames.framework.entity;
 
 public class Camera extends Entity<Camera> {
 

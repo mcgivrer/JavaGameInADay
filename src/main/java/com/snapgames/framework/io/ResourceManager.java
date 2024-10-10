@@ -1,6 +1,6 @@
-package com.snapgames.demo.io;
+package com.snapgames.framework.io;
 
-import com.snapgames.demo.utils.Log;
+import com.snapgames.framework.utils.Log;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

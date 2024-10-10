@@ -1,13 +1,12 @@
-package com.snapgames.demo.scene;
+package com.snapgames.framework.scene;
 
-import com.snapgames.demo.Game;
-import com.snapgames.demo.entity.Camera;
-import com.snapgames.demo.entity.Entity;
-import com.snapgames.demo.io.InputListener;
-import com.snapgames.demo.physic.World;
-import com.snapgames.demo.utils.Node;
+import com.snapgames.framework.Game;
+import com.snapgames.framework.entity.Camera;
+import com.snapgames.framework.entity.Entity;
+import com.snapgames.framework.io.InputListener;
+import com.snapgames.framework.physic.World;
+import com.snapgames.framework.utils.Node;
 
-import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,7 +41,6 @@ public abstract class AbstractScene extends Node<AbstractScene> implements Scene
     }
 
 
-
     public Camera getActiveCamera() {
         return activeCamera;
     }
@@ -63,5 +61,10 @@ public abstract class AbstractScene extends Node<AbstractScene> implements Scene
 
     public void dispose() {
 
+    }
+
+    public void reset() {
+        entities.clear();
+        create();
     }
 }

@@ -1,4 +1,4 @@
-package com.snapgames.demo.entity;
+package com.snapgames.framework.entity;
 
 /**
  * A Grid object to display a regular grid, mainly used in a visual debug context.

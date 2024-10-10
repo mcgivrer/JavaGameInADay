@@ -1,4 +1,4 @@
-package com.snapgames.demo.physic;
+package com.snapgames.framework.physic;
 
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;

@@ -1,9 +1,9 @@
-package com.snapgames.demo.entity;
+package com.snapgames.framework.entity;
 
-import com.snapgames.demo.Behavior;
-import com.snapgames.demo.physic.Material;
-import com.snapgames.demo.physic.PhysicType;
-import com.snapgames.demo.utils.Node;
+import com.snapgames.framework.Behavior;
+import com.snapgames.framework.physic.Material;
+import com.snapgames.framework.physic.PhysicType;
+import com.snapgames.framework.utils.Node;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
