@@ -38,4 +38,8 @@ public class Node<T> extends Rectangle2D.Double {
         c.parent = this;
         this.children.add(c);
     }
+
+    public List<Node<?>> getChildren() {
+        return children;
+    }
 }

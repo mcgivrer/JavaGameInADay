@@ -6,6 +6,7 @@ import com.snapgames.demo.physic.PhysicEngine;
 import com.snapgames.demo.scene.PlayScene;
 import com.snapgames.demo.scene.Scene;
 import com.snapgames.demo.utils.Log;
+import com.snapgames.demo.utils.Node;
 
 import javax.swing.*;
 import java.awt.*;
@@ -93,6 +94,13 @@ public class Game extends JPanel {
         this.activeScene = scenes.get(sceneName);
         activeScene.load();
         activeScene.create();
+        displaySceneTreeOnLog((Node<?>) activeScene, "");
+    }
+
+    private static void displaySceneTreeOnLog(Node<?> node, String space) {
+        String spaces = space + "  ";
+        Log.debug("%s |_ Node<%s> named '%s'", spaces, node.getClass().getSimpleName(), node.getName());
+        node.getChildren().forEach(c -> displaySceneTreeOnLog(c, spaces));
     }
 
     private void addScene(Scene scene) {
