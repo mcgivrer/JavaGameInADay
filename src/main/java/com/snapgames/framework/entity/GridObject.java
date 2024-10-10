@@ -1,5 +1,7 @@
 package com.snapgames.framework.entity;
 
+import com.snapgames.framework.physic.PhysicType;
+
 /**
  * A Grid object to display a regular grid, mainly used in a visual debug context.
  *
@@ -16,6 +18,7 @@ public class GridObject extends Entity<GridObject> {
     public GridObject setTileSize(int tw, int th) {
         this.tileWidth = tw;
         this.tileHeight = th;
+        setPhysicType(PhysicType.STATIC);
         return this;
     }
 

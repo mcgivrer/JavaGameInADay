@@ -1,6 +1,6 @@
 package com.snapgames.demo.scenes;
 
-import com.snapgames.framework.Behavior;
+import com.snapgames.framework.behaviors.Behavior;
 import com.snapgames.framework.Game;
 import com.snapgames.framework.entity.*;
 import com.snapgames.framework.io.InputListener;

@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static com.snapgames.framework.utils.I18n.getI18n;
+
 /**
  * Main class for Project test001
  *
@@ -22,7 +24,6 @@ import java.util.ResourceBundle;
  */
 public class Game extends JPanel {
     private static final double FPS = 60.0;
-    private final ResourceBundle messages = ResourceBundle.getBundle("i18n/messages");
 
     // Game exit request flag.
     public static boolean exit = false;
@@ -34,12 +35,14 @@ public class Game extends JPanel {
     private PhysicEngine physicEngine;
     private Renderer renderer;
     private SceneManager scnMgr;
+    private int debug = 1;
+    private boolean pause = false;
 
     public Game() {
         super();
         Log.info("Initialization application %s (%s) %n- running on JDK %s %n- at %s %n- with classpath = %s%n",
-                messages.getString("app.name"),
-                messages.getString("app.version"),
+                getI18n("app.name"),
+                getI18n("app.version"),
                 System.getProperty("java.version"),
                 System.getProperty("java.home"),
                 System.getProperty("java.class.path"));
@@ -83,9 +86,13 @@ public class Game extends JPanel {
             Scene scene = getSceneManager().getActiveScene();
             elapsed = endTime - startTime;
             startTime = endTime;
-            input(scene);
-            update(scene, elapsed);
-            render(scene);
+            if (!isPaused()) {
+                physicEngine.resetForces(scene);
+                input(scene);
+                update(scene, elapsed);
+                render(scene);
+            }
+
             endTime = System.currentTimeMillis();
             try {
                 Thread.sleep((long) (elapsed < (1000 / FPS) ? (1000 / FPS) - elapsed : 1));
@@ -128,5 +135,29 @@ public class Game extends JPanel {
 
     public Config getConfig() {
         return config;
+    }
+
+    public boolean isDebugGreaterThan(int debugLevel) {
+        return debug > debugLevel;
+    }
+
+    public void setDebug(int dl) {
+        debug = dl;
+    }
+
+    public int getDebug() {
+        return debug;
+    }
+
+    public void setPause(boolean p) {
+        this.pause = p;
+    }
+
+    public boolean isPaused() {
+        return pause;
+    }
+
+    public Renderer getRenderer() {
+        return renderer;
     }
 }

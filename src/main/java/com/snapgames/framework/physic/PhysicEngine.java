@@ -55,6 +55,8 @@ public class PhysicEngine implements Serializable {
     }
 
     private void applyPhysicRules(Scene scene, long elapsed, Entity<?> e) {
+        e.ax = 0;
+        e.ay = 0;
         e.addForce(0.0, -scene.getWorld().getGravity() / e.getMass());
         e.getForces().forEach(f -> {
             e.ax += f.getX();
@@ -73,11 +75,6 @@ public class PhysicEngine implements Serializable {
         }
         e.dx = Math.signum(e.dx) * Math.min(Math.abs(e.dx), 16.0);
         e.dy = Math.signum(e.dy) * Math.min(Math.abs(e.dy), 16.0);
-
-        // reset acceleration and forces
-        e.getForces().clear();
-        e.ax = 0;
-        e.ay = 0;
     }
 
     private void keepEntityIntoWorld(Scene scene, Entity<?> e) {
@@ -108,5 +105,9 @@ public class PhysicEngine implements Serializable {
 
     public void dispose() {
 
+    }
+
+    public void resetForces(Scene scene) {
+        scene.getEntities().values().forEach(e -> e.getForces().clear());
     }
 }

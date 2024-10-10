@@ -1,4 +1,4 @@
-package com.snapgames.framework;
+package com.snapgames.framework.behaviors;
 
 import com.snapgames.framework.io.InputListener;
 

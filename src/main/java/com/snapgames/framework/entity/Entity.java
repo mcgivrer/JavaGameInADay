@@ -1,6 +1,6 @@
 package com.snapgames.framework.entity;
 
-import com.snapgames.framework.Behavior;
+import com.snapgames.framework.behaviors.Behavior;
 import com.snapgames.framework.physic.Material;
 import com.snapgames.framework.physic.PhysicType;
 import com.snapgames.framework.utils.Node;
