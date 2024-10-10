@@ -88,7 +88,7 @@ public class Renderer implements Serializable {
         g.dispose();
 
         // copy buffer to window.
-        bf.getDrawGraphics().drawImage(drawbuffer, 0, 0, app.getWindowSize().width, app.getWindowSize().height,
+        bf.getDrawGraphics().drawImage(drawbuffer, 0, 0, window.getWidth(), window.getHeight(),
                 0, 0, drawbuffer.getWidth(), drawbuffer.getHeight(), null);
         bf.show();
     }

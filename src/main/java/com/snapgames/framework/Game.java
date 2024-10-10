@@ -1,20 +1,18 @@
 package com.snapgames.framework;
 
+import com.snapgames.demo.scenes.PlayScene;
 import com.snapgames.framework.gfx.Renderer;
 import com.snapgames.framework.io.InputListener;
 import com.snapgames.framework.physic.PhysicEngine;
-import com.snapgames.demo.scenes.PlayScene;
 import com.snapgames.framework.scene.Scene;
 import com.snapgames.framework.scene.SceneManager;
+import com.snapgames.framework.utils.Config;
 import com.snapgames.framework.utils.Log;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.geom.Rectangle2D;
-import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.ResourceBundle;
 
 /**
  * Main class for Project test001
@@ -25,22 +23,17 @@ import java.util.stream.Collectors;
 public class Game extends JPanel {
     private static final double FPS = 60.0;
     private final ResourceBundle messages = ResourceBundle.getBundle("i18n/messages");
-    private final Properties config = new Properties();
 
-    // Configuration values
+    // Game exit request flag.
     public static boolean exit = false;
-    private String title = "Test001";
-    private Dimension windowSize = new Dimension(640, 400);
-    private Dimension bufferSize = new Dimension(320, 200);
-    private Rectangle2D.Double playArea = new Rectangle2D.Double(0, 0, 640, 400);
+
 
     // Services
+    private Config config;
     private InputListener inputListener;
     private PhysicEngine physicEngine;
     private Renderer renderer;
     private SceneManager scnMgr;
-    private String defaultSceneName;
-
 
     public Game() {
         super();
@@ -60,63 +53,25 @@ public class Game extends JPanel {
 
     private void init(String[] args) {
         List<String> lArgs = Arrays.asList(args);
-        try {
-            config.load(this.getClass().getResourceAsStream("/config.properties"));
-            config.forEach((k, v) -> {
-                Log.info(Game.class, "%s=%s", k, v);
-            });
-            parseAttributes(config.entrySet().parallelStream().collect(Collectors.toList()));
-        } catch (IOException e) {
-            Log.info(Game.class, "Unable to read configuration file: %s", e.getMessage());
-        }
+        config = new Config(this);
+        config.load("/config.properties");
+
         lArgs.forEach(s -> {
             Log.info(Game.class, String.format("Argument: %s", s));
         });
 
         inputListener = new InputListener(this);
         physicEngine = new PhysicEngine(this);
-        renderer = new Renderer(this, bufferSize);
-        renderer.createWindow(title, windowSize);
+        renderer = new Renderer(this, config.get("app.render.buffer.size"));
+        renderer.createWindow(config.get("app.window.title"), config.get("app.window.size"));
         renderer.setInputListener(inputListener);
         scnMgr = new SceneManager(this);
 
         Scene scene = new PlayScene(this, "play");
         scnMgr.addScene(scene);
-        scnMgr.setDefaultScene(defaultSceneName);
+        scnMgr.setDefaultScene(config.get("app.scene.default"));
 
         scnMgr.switchScene();
-    }
-
-
-    private void parseAttributes(List<Map.Entry<Object, Object>> collect) {
-        collect.forEach(e -> {
-            switch (e.getKey().toString()) {
-                case "app.window.title" -> {
-                    this.title = (String) e.getValue();
-                }
-                case "app.exit" -> {
-                    exit = Boolean.parseBoolean(config.getProperty("app.exit"));
-                }
-                case "app.window.size" -> {
-                    String[] values = ((String) e.getValue()).split("x");
-                    windowSize = new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
-                }
-                case "app.render.buffer.size" -> {
-                    String[] values = ((String) e.getValue()).split("x");
-                    bufferSize = new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
-                }
-                case "app.physic.world.play.area.size" -> {
-                    String[] values = ((String) e.getValue()).split("x");
-                    playArea = new Rectangle2D.Double(0, 0, Double.parseDouble(values[0]), Double.parseDouble(values[1]));
-                }
-                case "app.scene.default" -> {
-                    defaultSceneName = (String) e.getValue();
-                }
-                default -> {
-                    Log.error("Configuration|Unknown value %s=%s", e.getKey(), e.getValue());
-                }
-            }
-        });
     }
 
     private void loop() {
@@ -167,11 +122,11 @@ public class Game extends JPanel {
         app.run(argc);
     }
 
-    public Dimension getWindowSize() {
-        return windowSize;
-    }
-
     public SceneManager getSceneManager() {
         return scnMgr;
+    }
+
+    public Config getConfig() {
+        return config;
     }
 }
