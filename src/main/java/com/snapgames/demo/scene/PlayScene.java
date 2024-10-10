@@ -2,10 +2,7 @@ package com.snapgames.demo.scene;
 
 import com.snapgames.demo.Behavior;
 import com.snapgames.demo.Game;
-import com.snapgames.demo.entity.Entity;
-import com.snapgames.demo.entity.GameObject;
-import com.snapgames.demo.entity.GridObject;
-import com.snapgames.demo.entity.TextObject;
+import com.snapgames.demo.entity.*;
 import com.snapgames.demo.io.InputListener;
 import com.snapgames.demo.io.ResourceManager;
 import com.snapgames.demo.physic.Material;
@@ -42,23 +39,6 @@ public class PlayScene extends AbstractScene {
         GridObject go = new GridObject("grid").setTileSize(16, 16).setColor(Color.DARK_GRAY).setPriority(1);
         add(go);
 
-        TextObject score = new TextObject("score")
-                .setPosition(10, 32)
-                .setFont(scoreFont.deriveFont(18.0f))
-                .setText("00000")
-                .setColor(Color.WHITE)
-                .setPhysicType(PhysicType.STATIC)
-                .setPriority(100);
-        add(score);
-
-        TextObject lives = new TextObject("lives")
-                .setPosition(320 - 30, 38)
-                .setFont(textFont.deriveFont(8.0f))
-                .setText("3")
-                .setColor(Color.RED)
-                .setPhysicType(PhysicType.STATIC)
-                .setPriority(100);
-        add(lives);
 
         GameObject player = new GameObject("player")
                 .setSize(16, 32)
@@ -87,6 +67,29 @@ public class PlayScene extends AbstractScene {
                 });
         add(player);
 
+        Camera camera = new Camera("cam01").setViewPort(320, 200).setTWeen(0.2).setTarget(player);
+        add(camera);
+
+
+        TextObject score = new TextObject("score")
+                .setPosition(10, 32)
+                .setFont(scoreFont.deriveFont(18.0f))
+                .setText("00000")
+                .setColor(Color.WHITE)
+                .setPhysicType(PhysicType.STATIC)
+                .setFixedToCamera(camera)
+                .setPriority(100);
+        add(score);
+
+        TextObject lives = new TextObject("lives")
+                .setPosition(camera.getWidth() - 30, 38)
+                .setFont(textFont.deriveFont(8.0f))
+                .setText("3")
+                .setColor(Color.RED)
+                .setPhysicType(PhysicType.STATIC)
+                .setFixedToCamera(camera)
+                .setPriority(100);
+        add(lives);
         generate("star_%d", world, 100, 1, 1,
                 Color.WHITE, 100000000,
                 Material.DEFAULT,
@@ -107,6 +110,8 @@ public class PlayScene extends AbstractScene {
         world.addArea(area1);
         add(area1);
 
+        //activate our camera as the default one.
+        setActiveCamera(camera);
     }
 
     private void generate(String tempateName, Rectangle2D windowSize,

@@ -5,6 +5,7 @@ import com.snapgames.demo.entity.Entity;
 import com.snapgames.demo.scene.Scene;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 public class PhysicEngine implements Serializable {
     private final Game app;
@@ -23,8 +24,11 @@ public class PhysicEngine implements Serializable {
                         applyPhysicRules(scene, elapsed, e);
                         keepEntityIntoWorld(scene, e);
                     }
-                    e.getBehaviors().forEach(b->b.update(e,elapsed));
+                    e.getBehaviors().forEach(b -> b.update(e, elapsed));
                 });
+        if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
+            scene.getActiveCamera().update(elapsed);
+        }
     }
 
     public void applyWorldEffects(Scene scene, Entity<?> e) {

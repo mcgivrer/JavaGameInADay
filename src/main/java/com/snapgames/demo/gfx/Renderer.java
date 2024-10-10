@@ -1,10 +1,7 @@
 package com.snapgames.demo.gfx;
 
 import com.snapgames.demo.Game;
-import com.snapgames.demo.entity.Entity;
-import com.snapgames.demo.entity.GameObject;
-import com.snapgames.demo.entity.GridObject;
-import com.snapgames.demo.entity.TextObject;
+import com.snapgames.demo.entity.*;
 import com.snapgames.demo.io.InputListener;
 import com.snapgames.demo.scene.Scene;
 
@@ -15,6 +12,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.snapgames.demo.utils.Log.error;
@@ -51,19 +49,40 @@ public class Renderer implements Serializable {
         BufferStrategy bf = window.getBufferStrategy();
 
         Graphics2D g = (Graphics2D) drawbuffer.createGraphics();
+        g.setRenderingHints(Map.of(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
+        g.setRenderingHints(Map.of(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON));
         // clear display
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, drawbuffer.getWidth(), drawbuffer.getHeight());
 
+        if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
+            g.translate(-scene.getActiveCamera().x, -scene.getActiveCamera().y);
+        }
         // draw the scene
         scene.getEntities().values().stream()
+                .filter(e -> !(e instanceof Camera))
                 .filter(Entity::isActive)
+                .filter(e -> e.getCameraIsStickedTo() == null)
+                .sorted(Comparator.comparingInt(Entity::getPriority))
+                .forEach(e -> {
+                    drawEntity(g, scene, e);
+                });
+        if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
+            g.translate(scene.getActiveCamera().x, scene.getActiveCamera().y);
+        }
+        // draw all entities fixed to the active Camera.
+        scene.getEntities().values().stream()
+                .filter(e -> !(e instanceof Camera))
+                .filter(Entity::isActive)
+                .filter(e -> e.getCameraIsStickedTo() != null && e.getCameraIsStickedTo().equals(scene.getActiveCamera()))
                 .sorted(Comparator.comparingInt(Entity::getPriority))
                 .forEach(e -> {
                     drawEntity(g, scene, e);
                 });
 
         g.dispose();
+
+        // copy buffer to window.
         bf.getDrawGraphics().drawImage(drawbuffer, 0, 0, app.getWindowSize().width, app.getWindowSize().height,
                 0, 0, drawbuffer.getWidth(), drawbuffer.getHeight(), null);
         bf.show();

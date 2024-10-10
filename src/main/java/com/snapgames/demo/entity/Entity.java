@@ -7,7 +7,6 @@ import com.snapgames.demo.utils.Node;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +28,7 @@ public class Entity<T> extends Node<T> {
 
     private List<Behavior<Entity<?>>> behaviors = new ArrayList<>();
     private int priority = 0;
+    private Camera cameraFixedTo;
 
     public Entity() {
         super();
@@ -134,5 +134,14 @@ public class Entity<T> extends Node<T> {
 
     public int getPriority() {
         return this.priority;
+    }
+
+    public Camera getCameraIsStickedTo() {
+        return cameraFixedTo;
+    }
+
+    public T setFixedToCamera(Camera cam) {
+        this.cameraFixedTo = cam;
+        return (T) this;
     }
 }

@@ -1,9 +1,11 @@
 package com.snapgames.demo.scene;
 
+import com.snapgames.demo.entity.Camera;
 import com.snapgames.demo.entity.Entity;
 import com.snapgames.demo.io.InputListener;
 import com.snapgames.demo.physic.World;
 
+import java.util.List;
 import java.util.Map;
 
 public interface Scene {
@@ -22,4 +24,10 @@ public interface Scene {
     void dispose();
 
     void load();
+
+    void setActiveCamera(Camera cam);
+
+    List<Camera> getCameras();
+
+    Camera getActiveCamera();
 }
