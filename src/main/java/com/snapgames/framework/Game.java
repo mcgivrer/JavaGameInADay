@@ -13,7 +13,6 @@ import com.snapgames.framework.utils.Log;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import static com.snapgames.framework.utils.I18n.getI18n;
 
@@ -93,7 +92,7 @@ public class Game extends JPanel {
             Scene scene = getSceneManager().getActiveScene();
             elapsed = endTime - startTime;
             startTime = endTime;
-            if (!isPaused()) {
+            if (isNotPaused()) {
                 physicEngine.resetForces(scene);
                 input(scene);
                 update(scene, elapsed);
@@ -161,11 +160,32 @@ public class Game extends JPanel {
         this.pause = p;
     }
 
-    public boolean isPaused() {
-        return pause;
+    public boolean isNotPaused() {
+        return !pause;
     }
 
     public Renderer getRenderer() {
         return renderer;
     }
+
+    public void requestExit() {
+        if (confirmExit()) {
+            exit = true;
+        }
+    }
+
+
+    public boolean confirmExit() {
+        boolean status = false;
+        setPause(true);
+        int response = JOptionPane.showConfirmDialog(renderer.getWindow(),
+                getI18n("app.exit.confirm.message"),
+                getI18n("app.exit.confirm.title"), JOptionPane.YES_NO_OPTION);
+        if (response == JOptionPane.YES_OPTION) {
+            status = true;
+        }
+        setPause(false);
+        return status;
+    }
+
 }

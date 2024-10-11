@@ -34,7 +34,7 @@ public class InputListener implements KeyListener, Serializable {
     @Override
     public void keyReleased(KeyEvent e) {
         if (isKeyPressed(KeyEvent.VK_Q) || isKeyPressed(KeyEvent.VK_ESCAPE)) {
-            app.exit = true;
+            app.requestExit();
         }
         if (isKeyPressed(KeyEvent.VK_Z) && e.isControlDown()) {
             app.getSceneManager().getActiveScene().reset();
@@ -43,7 +43,7 @@ public class InputListener implements KeyListener, Serializable {
             app.setDebug(app.getDebug() + 1 < 6 ? app.getDebug() + 1 : 0);
         }
         if (isKeyPressed(KeyEvent.VK_P) || isKeyPressed(KeyEvent.VK_PAUSE)) {
-            app.setPause(!app.isPaused());
+            app.setPause(app.isNotPaused());
         }
         if (isKeyPressed(KeyEvent.VK_F11)) {
             switchFullScreenMode();

@@ -18,4 +18,13 @@ public class Material {
         this.elasticity = elasticity;
     }
 
+    @Override
+    public String toString() {
+        return "Material{" +
+                "name='" + name + '\'' +
+                ", density=" + density +
+                ", friction=" + friction +
+                ", elasticity=" + elasticity +
+                '}';
+    }
 }

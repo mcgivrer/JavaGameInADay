@@ -33,14 +33,12 @@ public class PlayScene extends AbstractScene {
     public void create() {
         Dimension windowSize = app.getConfig().get("app.window.size");
 
-
         world = new World("earth", -0.981)
                 .setSize(800, 600)
                 .setPosition(0, 0);
 
         GridObject go = new GridObject("grid").setTileSize(16, 16).setColor(Color.DARK_GRAY).setPriority(1);
         add(go);
-
 
         GameObject player = new GameObject("player")
                 .setSize(16, 32)
@@ -73,7 +71,6 @@ public class PlayScene extends AbstractScene {
         Camera camera = new Camera("cam01").setViewPort(320, 200).setTween(0.2).setTarget(player);
         add(camera);
 
-
         TextObject score = new TextObject("score")
                 .setPosition(10, 32)
                 .setFont(scoreFont.deriveFont(18.0f))
@@ -85,14 +82,38 @@ public class PlayScene extends AbstractScene {
         add(score);
 
         TextObject lives = new TextObject("lives")
-                .setPosition(camera.getWidth() - 30, 38)
-                .setFont(textFont.deriveFont(8.0f))
+                .setPosition(camera.getWidth() - 28, 38)
+                .setFont(scoreFont.deriveFont(18.0f))
                 .setText("3")
-                .setColor(Color.RED)
+                .setColor(Color.WHITE)
                 .setPhysicType(PhysicType.STATIC)
                 .setFixedToCamera(camera)
                 .setPriority(100);
         add(lives);
+
+        GaugeObject energy = new GaugeObject("energy")
+                .setMaxValue(100)
+                .setMinValue(0)
+                .setValue(100)
+                .setSize(50, 7)
+                .setFixedToCamera(camera)
+                .setPhysicType(PhysicType.STATIC)
+                .setPosition(camera.getWidth() - 82, 25)
+                .setColor(Color.LIGHT_GRAY)
+                .setFillColor(Color.RED);
+        add(energy);
+        GaugeObject mana = new GaugeObject("mana")
+                .setMaxValue(100)
+                .setMinValue(0)
+                .setValue(100)
+                .setSize(50, 7)
+                .setFixedToCamera(camera)
+                .setPhysicType(PhysicType.STATIC)
+                .setPosition(camera.getWidth() - 82, 32)
+                .setColor(Color.LIGHT_GRAY)
+                .setFillColor(Color.BLUE);
+        add(mana);
+
         generate("star_%d", world, 20, 1, 1,
                 Color.WHITE, 100000000,
                 Material.DEFAULT,
@@ -103,8 +124,7 @@ public class PlayScene extends AbstractScene {
                 new Material("ball_mat", 1.0, 0.7, 0.8),
                 PhysicType.DYNAMIC, 5);
 
-
-        WorldArea area1 = (WorldArea) new WorldArea("water")
+        WorldArea water = (WorldArea) new WorldArea("water")
                 .setFillColor(new Color(0.1f, 0.1f, 0.7f, 0.8f))
                 .setColor(Color.BLUE)
                 .setSize(world.width, 64)
@@ -114,8 +134,9 @@ public class PlayScene extends AbstractScene {
                 .addForce(0.02, -0.21)
                 .setPriority(20)
                 .add(new WaveWaterSimulator());
-        world.addArea(area1);
-        add(area1);
+        world.addArea(water);
+        add(water);
+
         WorldArea sky = (WorldArea) new WorldArea("sky")
                 .setFillColor(new Color(0.0f, 0.1f, 0.3f, 0.9f))
                 .setSize(world.width, world.height - 64)
@@ -139,6 +160,7 @@ public class PlayScene extends AbstractScene {
                 });
         world.addArea(sky);
         add(sky);
+
         //activate our camera as the default one.
         setActiveCamera(camera);
     }
