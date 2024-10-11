@@ -1,5 +1,7 @@
 package com.snapgames.framework.utils;
 
+import com.snapgames.framework.Game;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -40,6 +42,12 @@ public class Log {
 
     public static void debug(Class<?> className, String message, Object... args) {
         log("DEBUG", className.getCanonicalName() + "|" + message, args);
+    }
+
+    public static void debug(Class<?> className, int debugLevel, String message, Object... args) {
+        if(Game.debug>=debugLevel) {
+            log("DEBUG", className.getCanonicalName() + "|" + message, args);
+        }
     }
 
     public static void info(Class<?> className, String message, Object... args) {

@@ -68,4 +68,14 @@ public abstract class AbstractScene extends Node<AbstractScene> implements Scene
         entities.clear();
         create();
     }
+
+    @Override
+    public String toString() {
+        return "AbstractScene{" +
+                "id=" + id +
+                ", name='" + name +
+                ", activeCamera=" + activeCamera +
+                ", world=" + world +
+                '}';
+    }
 }

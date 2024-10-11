@@ -61,8 +61,8 @@ public class PhysicEngine {
         e.ay = 0;
         e.addForce(0.0, -scene.getWorld().getGravity() / e.getMass());
         e.getForces().forEach(f -> {
-            e.ax += f.getX();
-            e.ay += f.getY();
+            e.ax += f.x;
+            e.ay += f.y;
         });
 
         e.dx += 0.5 * e.ax * elapsed * elapsed * 0.001;

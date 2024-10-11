@@ -30,4 +30,14 @@ public class Camera extends Entity<Camera> {
         this.x = target.x - ((this.width - target.width) * 0.5);
         this.y = target.y - ((this.height - target.height) * 0.5);
     }
+
+    @Override
+    public String toString() {
+        return "Camera{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", target='" + target.getName()+"'" +
+                ", tween=" + tween +
+                '}';
+    }
 }

@@ -28,4 +28,14 @@ public class TextObject extends Entity<TextObject> {
         return this.font;
     }
 
+
+    @Override
+    public String toString() {
+        return "TextObject{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", text='" + text + '\'' +
+                ", font='" + font.getName() + '\'' +
+                '}';
+    }
 }

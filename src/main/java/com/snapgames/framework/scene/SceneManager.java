@@ -47,7 +47,7 @@ public class SceneManager {
 
     private static void displaySceneTreeOnLog(Node<?> node, String space) {
         String spaces = space + "  ";
-        Log.debug(Game.class, "%s |_ Node<%s> named '%s'", spaces, node.getClass().getSimpleName(), node.getName());
+        Log.debug(Game.class, "%s |_ Node<%s> named '%s' : %s", spaces, node.getClass().getSimpleName(), node.getName(), node);
         node.getChildren().forEach(c -> displaySceneTreeOnLog(c, spaces));
     }
 
