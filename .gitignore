@@ -6,3 +6,4 @@
 .project
 /target
 **/*.class
+src/main/javadoc/overview.html
