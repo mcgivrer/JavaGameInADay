@@ -2,6 +2,7 @@ package com.snapgames.demo.scenes;
 
 import com.snapgames.framework.behaviors.Behavior;
 import com.snapgames.framework.Game;
+import com.snapgames.framework.behaviors.WaveWaterSimulator;
 import com.snapgames.framework.entity.*;
 import com.snapgames.framework.io.InputListener;
 import com.snapgames.framework.io.ResourceManager;
@@ -45,6 +46,7 @@ public class PlayScene extends AbstractScene {
                 .setSize(16, 32)
                 .setPosition(world.getWidth() * 0.5, world.getHeight() * 0.5)
                 .setColor(Color.BLUE)
+                .setFillColor(Color.BLUE)
                 .setMass(8)
                 .setMaterial(new Material("player_mat", 1.0, 0.92, 0.66))
                 .setPriority(10)
@@ -103,16 +105,19 @@ public class PlayScene extends AbstractScene {
 
 
         WorldArea area1 = (WorldArea) new WorldArea("water")
-                .setColor(new Color(0.1f, 0.1f, 0.7f, 0.8f))
+                .setFillColor(new Color(0.1f, 0.1f, 0.7f, 0.8f))
+                .setColor(Color.BLUE)
                 .setSize(world.width, 64)
                 .setPosition(0, world.height - 64)
                 .setPhysicType(PhysicType.STATIC)
-                .addForce(0.02, -0.16)
-                .setPriority(20);
+                .setMaterial(new Material("water", 1.0, 0.67, 0.32))
+                .addForce(0.02, -0.21)
+                .setPriority(20)
+                .add(new WaveWaterSimulator());
         world.addArea(area1);
         add(area1);
         WorldArea sky = (WorldArea) new WorldArea("sky")
-                .setColor(new Color(0.0f, 0.1f, 0.3f, 0.9f))
+                .setFillColor(new Color(0.0f, 0.1f, 0.3f, 0.9f))
                 .setSize(world.width, world.height - 64)
                 .setPosition(0, 0)
                 .addForce(0.01, 0.0)
@@ -149,6 +154,7 @@ public class PlayScene extends AbstractScene {
             GameObject star = new GameObject(templateName.formatted(i))
                     .setSize(maxW * Math.random(), maxH * Math.random())
                     .setPosition(windowSize.getWidth() * Math.random(), windowSize.getHeight() * Math.random())
+                    .setFillColor(color)
                     .setColor(color)
                     .setMass(mass)
                     .setMaterial(mat)

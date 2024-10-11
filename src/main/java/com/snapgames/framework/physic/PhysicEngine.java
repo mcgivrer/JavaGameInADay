@@ -21,7 +21,7 @@ import java.util.Optional;
  * @author Frédéric Delorme
  * @since 1.0.0
  */
-public class PhysicEngine implements Serializable {
+public class PhysicEngine {
     private final Game app;
 
     public PhysicEngine(Game app) {
@@ -30,7 +30,7 @@ public class PhysicEngine implements Serializable {
 
     public void update(Scene scene, long elapsed) {
         scene.getEntities().values().stream()
-                .filter(e -> e.isActive())
+                .filter(Entity::isActive)
                 .forEach(e -> {
                     if (e.getPhysicType() == PhysicType.DYNAMIC) {
                         e.setContact(false);
@@ -49,6 +49,8 @@ public class PhysicEngine implements Serializable {
         scene.getWorld().getChildren().forEach(a -> {
             if (a.contains(e) || a.intersects(e)) {
                 e.getForces().addAll(((WorldArea) a).getForces());
+                e.dx *= ((WorldArea) a).getMaterial().friction;
+                e.dy *= ((WorldArea) a).getMaterial().friction;
                 e.setContact(true);
             }
         });

@@ -3,6 +3,7 @@ package com.snapgames.framework;
 import com.snapgames.demo.scenes.PlayScene;
 import com.snapgames.framework.gfx.Renderer;
 import com.snapgames.framework.io.InputListener;
+import com.snapgames.framework.physic.CollisionManager;
 import com.snapgames.framework.physic.PhysicEngine;
 import com.snapgames.framework.scene.Scene;
 import com.snapgames.framework.scene.SceneManager;
@@ -28,15 +29,20 @@ public class Game extends JPanel {
     // Game exit request flag.
     public static boolean exit = false;
 
+    // internal Pause flag
+    private boolean pause = false;
+
+    // debug level
+    private int debug = 1;
 
     // Services
     private Config config;
     private InputListener inputListener;
     private PhysicEngine physicEngine;
+    private CollisionManager collisionManager;
     private Renderer renderer;
     private SceneManager scnMgr;
-    private int debug = 1;
-    private boolean pause = false;
+
 
     public Game() {
         super();
@@ -65,6 +71,7 @@ public class Game extends JPanel {
 
         inputListener = new InputListener(this);
         physicEngine = new PhysicEngine(this);
+        collisionManager = new CollisionManager(this);
         renderer = new Renderer(this, config.get("app.render.buffer.size"));
         renderer.createWindow(config.get("app.window.title"), config.get("app.window.size"));
         renderer.setInputListener(inputListener);
@@ -111,6 +118,7 @@ public class Game extends JPanel {
 
     public void update(Scene scene, long elapsed) {
         physicEngine.update(scene, elapsed);
+        collisionManager.update(scene, elapsed);
     }
 
     public void render(Scene scene) {

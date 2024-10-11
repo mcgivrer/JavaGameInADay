@@ -25,6 +25,7 @@ public class Entity<T> extends Node<T> {
     private boolean contact = false;
 
     private Color color = Color.RED;
+    private Color fillColor = Color.RED;
 
     private List<Behavior<Entity<?>>> behaviors = new ArrayList<>();
     private int priority = 0;
@@ -36,11 +37,6 @@ public class Entity<T> extends Node<T> {
 
     public Entity(String name) {
         super(name);
-    }
-
-
-    public Color getColor() {
-        return color;
     }
 
     public T setPosition(double x, double y) {
@@ -56,6 +52,21 @@ public class Entity<T> extends Node<T> {
     public T setColor(Color c) {
         this.color = c;
         return (T) this;
+    }
+
+
+    public Color getColor() {
+        return color;
+    }
+
+    public T setFillColor(Color fc) {
+        this.fillColor = fc;
+        return (T) this;
+    }
+
+
+    public Color getFillColor() {
+        return fillColor;
     }
 
     public T setMaterial(Material mat) {
@@ -143,5 +154,17 @@ public class Entity<T> extends Node<T> {
     public T setFixedToCamera(Camera cam) {
         this.cameraFixedTo = cam;
         return (T) this;
+    }
+
+    @Override
+    public String toString() {
+        return "Entity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", width=" + width +
+                ", height=" + height +
+                ", x=" + x +
+                ", y=" + y +
+                '}';
     }
 }
