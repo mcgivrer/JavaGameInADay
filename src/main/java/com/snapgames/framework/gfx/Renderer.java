@@ -173,7 +173,7 @@ public class Renderer implements Serializable {
         switch (e.getClass().getSimpleName()) {
             case "GameObject", "WorldArea" -> {
 
-                g.setColor(e.getColor());
+                g.setColor(e.getFillColor());
                 g.fill(new Rectangle2D.Double(e.x, e.y, e.width, e.height));
             }
             case "TextObject" -> {

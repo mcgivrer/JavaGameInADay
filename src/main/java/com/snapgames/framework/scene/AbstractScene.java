@@ -60,7 +60,8 @@ public abstract class AbstractScene extends Node<AbstractScene> implements Scene
     public abstract void create();
 
     public void dispose() {
-
+        // end all behaviors.
+        getEntities().values().forEach(e -> e.getBehaviors().forEach(b -> b.end(e)));
     }
 
     public void reset() {

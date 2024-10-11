@@ -20,7 +20,6 @@ public class SceneManager {
         this.app = app;
     }
 
-
     public void addScene(Scene scene) {
         if (!scenes.containsKey(scene.getName())) {
             scenes.put(scene.getName(), scene);
@@ -29,7 +28,6 @@ public class SceneManager {
         }
     }
 
-
     public void switchScene(String sceneName) {
         if (activeScene != null) {
             activeScene.dispose();
@@ -37,13 +35,15 @@ public class SceneManager {
         this.activeScene = scenes.get(sceneName);
         activeScene.load();
         activeScene.create();
+        // start all behaviors
+        activeScene.getEntities().values().forEach(e -> e.getBehaviors().forEach(b -> b.start(e)));
+
         displaySceneTreeOnLog((Node<?>) activeScene, "");
     }
 
     public void switchScene() {
         switchScene(defaultSceneName);
     }
-
 
     private static void displaySceneTreeOnLog(Node<?> node, String space) {
         String spaces = space + "  ";
