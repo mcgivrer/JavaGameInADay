@@ -1,6 +1,6 @@
 # README
    
-[![Gitea action build](http://nextserver01:4000/frederic/JavaGameOnADay/actions/workflows/build.yml/badge.svg?branch=develop)](http://nextserver01:4000/frederic/JavaGameOnADay/actions?workflow=build.yml&actor=0&status=0)
+[![Gitea action build](http://nextserver01:4000/frederic/JavaGameOnADay/actions/workflows/build.yml/badge.svg?branch=develop)](http://nextserver01:4000/frederic/JavaGameOnADay/actions?workflow=build.yml&actor=0&status=0 "build on /develop")
 
 ## Context
 

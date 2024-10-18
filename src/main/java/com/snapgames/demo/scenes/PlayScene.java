@@ -46,7 +46,6 @@ public class PlayScene extends AbstractScene {
                 .setSize(16, 32)
                 .setPosition(world.getWidth() * 0.5, world.getHeight() * 0.5)
                 .setColor(Color.BLUE)
-                .setFillColor(Color.BLUE)
                 .setMass(8)
                 .setMaterial(new Material("player_mat", 1.0, 0.92, 0.66))
                 .setPriority(10)
@@ -103,8 +102,7 @@ public class PlayScene extends AbstractScene {
                 new Material("ball_mat", 1.0, 0.7, 0.8),
                 PhysicType.DYNAMIC, 5);
 
-
-        WorldArea area1 = (WorldArea) new WorldArea("water")
+        WorldArea water = (WorldArea) new WorldArea("water")
                 .setFillColor(new Color(0.1f, 0.1f, 0.7f, 0.8f))
                 .setColor(Color.BLUE)
                 .setSize(world.width, 64)
@@ -114,10 +112,11 @@ public class PlayScene extends AbstractScene {
                 .addForce(0.02, -0.21)
                 .setPriority(20)
                 .add(new WaveWaterSimulator());
-        world.addArea(area1);
-        add(area1);
+        world.addArea(water);
+        add(water);
+
         WorldArea sky = (WorldArea) new WorldArea("sky")
-                .setFillColor(new Color(0.0f, 0.1f, 0.3f, 0.9f))
+                .setColor(new Color(0.0f, 0.1f, 0.3f, 0.9f))
                 .setSize(world.width, world.height - 64)
                 .setPosition(0, 0)
                 .addForce(0.01, 0.0)
@@ -154,7 +153,6 @@ public class PlayScene extends AbstractScene {
             GameObject star = new GameObject(templateName.formatted(i))
                     .setSize(maxW * Math.random(), maxH * Math.random())
                     .setPosition(windowSize.getWidth() * Math.random(), windowSize.getHeight() * Math.random())
-                    .setFillColor(color)
                     .setColor(color)
                     .setMass(mass)
                     .setMaterial(mat)

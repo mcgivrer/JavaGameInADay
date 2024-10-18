@@ -62,6 +62,8 @@ public class Renderer implements Serializable {
         window.setVisible(true);
         if (fullScreen) {
             window.setExtendedState(Frame.MAXIMIZED_BOTH);
+        } else {
+            window.setExtendedState(Frame.NORMAL);
         }
 
 
@@ -69,20 +71,9 @@ public class Renderer implements Serializable {
             @Override
             public void windowClosing(WindowEvent e) {
                 // Action to perform on exit request
-                confirmExit();
+                app.requestExit();
             }
         });
-    }
-
-    private void confirmExit() {
-        app.setPause(true);
-        int response = JOptionPane.showConfirmDialog(window,
-                getI18n("app.exit.confirm.message"),
-                getI18n("app.exit.confirm.title"), JOptionPane.YES_NO_OPTION);
-        if (response == JOptionPane.YES_OPTION) {
-            dispose(); // Ferme la fenêtre
-        }
-        app.setPause(false);
     }
 
     public void setInputListener(InputListener il) {
@@ -178,23 +169,42 @@ public class Renderer implements Serializable {
             }
             case "TextObject" -> {
                 TextObject te = (TextObject) e;
-                g.setColor(te.getColor());
-                if (Optional.ofNullable(te.getFont()).isPresent()) {
-                    g.setFont(te.getFont());
-                }
-                g.drawString(te.getText(), (int) e.x, (int) e.y);
+                drawText(g, te);
             }
             case "GridObject" -> {
                 GridObject go = (GridObject) e;
                 drawGrid(g, scene.getWorld(), go.getTileWidth(), go.getTileHeight(), go.getColor());
+            }
+            case "GaugeObject" -> {
+                GaugeObject gg = (GaugeObject) e;
+                drawGauge(g, gg);
             }
 
             default -> {
                 error("Unknown object class %s", e.getClass());
             }
         }
-
         e.getBehaviors().forEach(b -> b.draw(g, e));
+    }
+
+    private static void drawText(Graphics2D g, TextObject te) {
+        g.setColor(te.getColor());
+        if (Optional.ofNullable(te.getFont()).isPresent()) {
+            g.setFont(te.getFont());
+        }
+        g.drawString(te.getText(), (int) te.x, (int) te.y);
+    }
+
+    private void drawGauge(Graphics2D g, GaugeObject gg) {
+        g.setColor(Color.BLACK);
+        g.drawRect((int) gg.getX(), (int) gg.getY(), (int) gg.getWidth(), (int) gg.getHeight());
+        g.drawRect((int) gg.getX() + 2, (int) gg.getY() + 2, (int) gg.getWidth() - 4, (int) gg.getHeight() - 4);
+        g.setColor(gg.getColor());
+        g.drawRect((int) gg.getX() + 1, (int) gg.getY() + 1, (int) gg.getWidth() - 2, (int) gg.getHeight() - 2);
+        g.setColor(gg.getFillColor());
+        g.fillRect(
+                (int) gg.getX() + 3, (int) gg.getY() + 3,
+                (int) (gg.getWidth() - 5 * ((gg.getMaxValue() - gg.getMinValue()) / gg.getValue())), (int) gg.getHeight() - 5);
     }
 
     private void drawGrid(Graphics2D g, Rectangle2D playArea, int tileW, int tileH, Color color) {
