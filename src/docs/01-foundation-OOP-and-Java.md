@@ -58,7 +58,6 @@ Java. Il comprend plusieurs composants essentiels pour le développement Java :
 Le JDK est essentiel pour les développeurs Java car il fournit tous les outils et bibliothèques nécessaires pour créer,
 compiler et exécuter des applications Java.
 
-
 ## Bases de la POO
 
 Cette série de tutoriels ne sera pas un cours sur la POO (Programmation Orientée Objet), mais nous introduisons Java à
@@ -172,7 +171,9 @@ interface Vehicle {
 
 ```java
 Vehicle myCar = new Car();
-myCar.start(); // Appelle la méthode start() de Car
+myCar.
+
+start(); // Appelle la méthode start() de Car
 ```
 
 #### Encapsulation de Comportements :
@@ -257,6 +258,35 @@ public class Car extends Vehicle {
 }
 ```
 
+Nous pouvons également envisager une class Truck pour modéliser un camion, qui est, lui aussi un véhicule:
+
+```java
+public class Truck extends Vehicule {
+    String model;
+    int wheels;
+
+    public void accelerate() {
+        System.out.println("Camion accélérée");
+    }
+
+    public void load() {
+        System.out.println("Camion chargé");
+    }
+
+    public void unload() {
+        System.out.println("Camion déchargé");
+    }
+}
+```
+
+Voici une illustration de l'héritage :
+
+![Diagramme UML illustrant l'héritage entre les classes `Vehicule`, `Car` et
+`Truck`](https://www.plantuml.com/plantuml/png/ZT112W8X5CRnlQTmMNG3LmDpXABzIpyQcQV6Kok8kNjO4qYqQ2FyF_0dEEH2KcfWPPboraTCtbR6GscziucJcB6TBGFDCFiYFfvRlcvkjkQQl7jtkdHv4j3ywKMj_aYYSI-8xkkja1ouqybQC8GAEcD53bBj_1zpcm3EniVo4sqZ9t9TrjWFYneGNVkV9m00 "Diagramme UML illustrant l'héritage entre les classes
+`Vehicule`, `Car` et `Truck`")
+
+_fig. 1 - Diagramme UML illustrant l'héritage entre les classes `Vehicule`, `Car` et `Truck`_
+
 #### Utilisation de l'Héritage :
 
 Dans la classe Main, nous pouvons créer un objet Car et utiliser à la fois les méthodes de Car et celles héritées de
@@ -298,7 +328,189 @@ L'héritage de classe, comme illustré avec `Vehicle` et `Car`, est un puissant 
 code, l'organisation hiérarchique et l'extension des fonctionnalités. Cela permet de créer des systèmes plus modulaires
 et maintenables tout en simplifiant la gestion des comportements communs entre différentes classes.
 
-### UML : Langage de Modélisation Unifié
+### La portée des variables
+
+Une notion supplémentaire est à comprendre, celle de la portée de variable dans le langage Java.
+
+En effet, lorsque vous créez une variable, l'endroit où la créé a une grande importance, ainsi que la caractérisation de
+sa portée: cela définit la visibilité de la variable âr les autres classes ou méthodes.
+
+La portée des variables et attributs en Java, peux être définie par code en intégrant les modificateurs d'accès
+`private`,
+`protected` et `public`.
+
+1. **Modificateurs d'Accès :**
+    - **private :** L'attribut ou la méthode est accessible uniquement au sein de la classe où il est défini. Il n'est
+      pas accessible depuis d'autres classes, même celles qui héritent de cette classe.
+    - **protected :** L'attribut ou la méthode est accessible dans la classe où il est défini, dans les classes du même
+      package, et dans les sous-classes (même si elles sont dans des packages différents).
+    - **public :** L'attribut ou la méthode est accessible depuis n'importe quelle autre classe, sans restriction.
+
+2. **Portée des Variables Locales :**
+   Les variables déclarées à l'intérieur d'une méthode, d'un bloc ou d'une boucle sont des variables locales. Leur
+   portée est limitée à ce bloc spécifique. Elles ne peuvent pas être utilisées en dehors de celui-ci.
+
+```java
+public void maMethode() {
+    int x = 10; // variable locale
+    System.out.println(x); // accessible ici
+}
+// System.out.println(x); // erreur : x n'est pas accessible ici
+```
+
+3. **Portée des Attributs de Classe (ou Variables d'Instance) :** Les attributs déclarés au niveau de la classe (en
+   dehors des méthodes) peuvent avoir différents modificateurs d'accès :
+
+```java
+public class MaClasse {
+    private int attributPrive; // accessible uniquement dans MaClasse
+    protected int attributProtege; // accessible dans le même package et dans les sous-classes
+    public int attributPublic; // accessible de partout
+
+    public void maMethode() {
+        attributPrive = 5; // accessible ici
+        attributProtege = 10; // accessible ici
+        attributPublic = 15; // accessible ici
+    }
+}
+```
+
+4. **Portée des Attributs Statiques :** Les attributs déclarés avec le mot-clé static sont partagés entre toutes les
+   instances de la classe. Ils peuvent également avoir des modificateurs d'accès :
+
+```java
+public class MaClasse {
+    private static int attributStatiquePrive; // accessible uniquement dans MaClasse
+    protected static int attributStatiqueProtege; // accessible dans le même package et dans les sous-classes
+    public static int attributStatiquePublic; // accessible de partout
+
+    public static void maMethodeStatique() {
+        attributStatiquePrive = 10; // accessible ici
+        attributStatiqueProtege = 20; // accessible ici
+        attributStatiquePublic = 30; // accessible ici
+    }
+}
+```
+
+5. **Portée des Paramètres de Méthode :**
+   Les paramètres passés à une méthode sont des variables locales, avec une portée limitée à cette méthode.
+
+```java
+public void maMethode(int param) { // param est un paramètre
+    System.out.println(param); // accessible ici
+}
+```
+
+#### Résumé
+
+La portée détermine où une variable ou un attribut peut être utilisé dans le code. Les modificateurs d'accès (private,
+protected, public) contrôlent la visibilité des attributs et des méthodes. Les variables locales ont une portée limitée
+à leur bloc, tandis que les attributs de classe et les attributs statiques peuvent avoir une portée plus large, selon
+leur modificateur d'accès.
+
+## Plongeons dans Java !
+
+Maintenant que nous avons revu quelques bases de la POO, les classe, les interfaces, l'héritage, il est temps de
+s'intéresser de plus près à JAVA !
+
+### La méthode main
+
+Lorsque vous créez un programme en Java et que vous souhaitez l'exécuter, il est nécessaire de suivre certaines règles.
+L'une des plus importantes est de définir un point d'entrée pour démarrer votre programme : c'est la méthode `main` !
+
+Cette méthode reçoit un seul paramètre, qui est un tableau de chaînes de caractères (String) contenant tous les
+arguments passés depuis la ligne de commande.
+
+Par exemple, si vous exécutez votre programme avec la commande suivante (nous aborderons les détails de la commande
+`java`
+plus tard) :
+
+```bash
+java MonProgramme.java Parametre1=1 Parametre2=2
+```
+
+Les arguments passés à main seront alors la liste suivante \["Parametre1=1","Parametre2=2"\].
+
+Voici à quoi ressemble la classe Java `MonProgramme` :
+
+```java
+public class MonProgramme {
+
+    public static void main(String[] args) {
+        for (String arg : args) {
+            System.out.println("argument : " + arg);
+        }
+    }
+}
+```
+
+Si nous exécutons ce code avec la commande proposée, nous obtiendrons la sortie suivante dans la console :
+
+```bash
+$> java MonProgramme.java Parametre1=1 Parametre2=2
+nb args:2
+argument : Parametre1=1
+argument : Parametre2=2
+```
+
+Nous savons maintenant comment lancer un programme java.
+
+#### Améliorons notre programme
+
+Ajoutons quelques éléments à notre programme. Nous allons réorganiser le code pour déplacer le traitement des arguments
+de la méthode `main` vers une méthode distincte de la classe `MonProgramme`.
+
+```Java
+public class MonProgramme2 {
+
+    //<1>
+    public MonProgramme2() {
+        System.out.println("Démarrage de mon Programme2");
+    }
+
+    //<2>
+    public void run(String[] args) {
+        System.out.println("nb args:" + args.length);
+        for (String arg : args) {
+            System.out.println("argument : " + arg);
+        }
+    }
+
+    public static void main(String[] args) {
+        //<3>
+        MonProgramme2 prog = new MonProgramme2();
+        //<4>
+        prog.run(args);
+    }
+}
+```
+
+1. Notre nouvelle classe `Programme2` a maintenant un constructeur, qui initialise des informations dès la
+   création de l'instance de la classe, ici, nous affichons un message indiquant le
+   démarrage du programme.
+2. La méthode `run` contient le code précédemment présent dans `main`, c'est-à-dire l'affichage du nombre d'arguments et
+   de leur contenu.
+3. Dans la nouvelle methode main, nous commençons par créer une instance de notre classe `MonProgramme2`,
+4. Ensuite, nous appelons la méthode `run` de cette instance.
+
+Nous venons d'écrire notre premier programme Java, Bravo !
+
+> **Note**<br/>
+> Si vous êtes familier avec le langage C++, vous remarquerez l'absence d'une méthode de destruction (destructeur) pour
+> l'instance.
+
+### Une fenêtre ?
+
+Nous avons maintenant un pied dans le code java, nous allons passer à ce qui nous intéresse ici, la création d'une jeu.
+En premier lieu, il est nécessaire d'ouvrir une fenêtre dans laquelle nous pourrons afficher ce jeu.
+
+Pour ce faire, nous passerons par la bibliothèque de composants graphique fournie nativement par java.
+Non pas JavaFX, mais AWT et Swing.
+Ces 2 bibliothèques historiques nous donneront tous les services et composants dont nous aurons besoin.
+
+Comment créer une fenêtre ? cette création passe par l'utilisation d'une classe : [JFrame]( ).
+
+## UML : Langage de Modélisation Unifié
 
 Nous pouvons également utiliser les méthodes et outils UML pour décrire de telles classes et objets.
 
@@ -337,43 +549,14 @@ Caractéristiques clés de l'UML :
 UML aide les équipes à communiquer efficacement et sert de plan pour construire des applications logicielles, facilitant
 de meilleures pratiques de conception et de documentation.
 
-#### Un Diagramme de Classe
+Quelques exemples
 
-```plantuml
-@startuml
-class Car {
-- color: String
-- make: String
-- model: String
-+ start(): void
-+ stop(): void
-+ accelerate(): void
-}
-@enduml
-```
+1. Un Diagramme de Classe
 
-#### Un Diagramme d'Activité
+![Diagramme de la classe Car modélisant un voiture](https://www.plantuml.com/plantuml/png/SoWkIImgAStDuKhEIImkLd1EB5Aevj9LICxFoI-oKWWkAShCImVoSnEpKv6v-IcfEN2-jWBO50rDAuMo_CmKC3-_08cRc9oScfDQb5YI2XUivN98pKi1MWm0 "Diagramme de la classe Car modélisant un voiture")
 
-```plantuml
-@startuml
-|Conducteur|
-start
-: Démarrer la voiture ;
-if (La voiture est-elle allumée ?) then (oui)
-: Conduire la voiture ;
-: Accélérer ;
-if (Besoin de s'arrêter ?) then (oui)
-: Arrêter la voiture ;
-else (non)
-: Continuer à conduire ;
-endif
-else (non)
-: Allumer le contact ;
-: Démarrer la voiture ;
-endif
-stop
-@enduml
-```
+2. Un Diagramme d'Activité
 
+![Diagramme d'activité d'une Voiture](https://www.plantuml.com/plantuml/png/TP0nhi8m38RtdCBRQuTtWVS6Mc3a4b7gYaXkWXo7gOTX3TV8nKWA5QeGM_Jdq_VRxe9ebZYHcW_U3T48HfxLage_EEOqQMPa80rNRoKomh-o8pIdTu11Vf48GHF5AIU4NGjoHWUDZxOjdiLj6JUQalV6v4GvrOQdTe_1MmS3GlWfpVako1-wVltOw902GkEyUpMATR4m-GPchI-G6-ouHViwTPLX1KKRAToNtLT147zHNNdNqpq0 "Diagramme d'activité d'une Voiture")
 
 [^1]: POO signifie Programmation Orientée Objet
