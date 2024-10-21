@@ -1,10 +1,10 @@
 # README
    
-[![Gitea action build](http://nextserver01:4000/frederic/JavaGameOnADay/actions/workflows/build.yml/badge.svg?branch=develop)](http://nextserver01:4000/frederic/JavaGameOnADay/actions?workflow=build.yml&actor=0&status=0 "build on /develop")
+[![Gitea action build](http://nextserver01:4000/frederic/JavaGameOnAWeek/actions/workflows/build.yml/badge.svg?branch=develop)](http://nextserver01:4000/frederic/JavaGameOnAWeek/actions?workflow=build.yml&actor=0&status=0 "build on /develop")
 
 ## Context
 
-This is the readme file for "Java Game In A Day" tutorial projects (1.0.0) where bilding a simpl e2D game framework step by step by adding features, with a moderate ramp-up on complexity.
+This is the readme file for "Java Game In A Week" tutorial projects (1.0.0) where building a simple 2D game framework step by step by adding features, with a moderate ramp-up on complexity.
 
 Hope this small project will help you on-boarding into the game development adventure with an common and accessible lanague.
 
