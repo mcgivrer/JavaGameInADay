@@ -1,232 +1,379 @@
-# Define Foundation
+# Définir la Fondation
 
-## Java language
+## Langage Java
 
-### What is Java?
+### Qu'est-ce que Java ?
 
-Java is a high-level, object-oriented programming language developed by Sun Microsystems (now part of Oracle
-Corporation) in the mid-1990s. It is designed to be platform-independent, allowing developers to write code once and run
-it anywhere (thanks to the Java Virtual Machine). Java is known for its simplicity, robustness, security features, and
-extensive libraries, making it widely used for building web applications, mobile applications, enterprise software, and
-more. Its syntax is similar to C++, which helps programmers transition easily from those languages.
+Java est un langage de programmation orienté objet de haut niveau développé par Sun Microsystems (maintenant partie
+d'Oracle Corporation) au milieu des années 1990. Il est conçu pour être indépendant de la plateforme, permettant aux
+développeurs d'écrire du code une fois et de l'exécuter partout (grâce à la machine virtuelle Java). Java est connu pour
+sa simplicité, sa robustesse, ses fonctionnalités de sécurité et ses bibliothèques étendues, ce qui le rend largement
+utilisé pour la création d'applications web, d'applications mobiles, de logiciels d'entreprise, et plus encore. Sa
+syntaxe est similaire à celle de C++, ce qui aide les programmeurs à passer facilement de ces langages.
 
-Java was developed in the early 1990s by a team led by James Gosling at Sun Microsystems. Initially intended for
-interactive television, the project evolved into a general-purpose programming language. Here are key milestones in
-Java's history:
+Java a été développé au début des années 1990 par une équipe dirigée par James Gosling chez Sun Microsystems.
+Initialement destiné à la télévision interactive, le projet a évolué en un langage de programmation à usage général.
+Voici quelques jalons clés de l'histoire de Java :
 
-- **1991:** The Java project, originally called Oak, was initiated to create a language for embedded systems.
-- **1995:** The language was officially renamed Java and released to the public. It gained popularity for its "write
-  once, run anywhere" capability, thanks to the Java Virtual Machine (JVM).
-- **1996:** The first official version, Java 1.0, was released, establishing Java as a major player in web development
-  with applets.
-- **1998:** Java 2 was introduced, which included significant enhancements and the introduction of the Swing GUI
-  toolkit.
-- **2004:** Java 5 (also known as J2SE 5.0) introduced major features like generics, annotations, and the enhanced for
-  loop.
-- **2006:** Sun Microsystems made Java free and open-source under the GNU General Public License.
-- **2010**: Oracle Corporation acquired Sun Microsystems, and Java continued to evolve with regular updates and new
-  features.
-- **2020 and beyond:** Java has maintained its relevance with ongoing enhancements, focusing on performance, security,
-  and developer productivity.
-- **Today**, Java remains one of the most widely used programming languages globally, particularly in enterprise
-  environments and Android app development.
+- **1991 :** Le projet Java, initialement appelé Oak, a été lancé pour créer un langage pour les systèmes embarqués.
+- **1995 :** Le langage a été officiellement renommé Java et publié au public. Il a gagné en popularité grâce à sa
+  capacité "écrire une fois, exécuter partout", grâce à la machine virtuelle Java (JVM).
+- **1996 :** La première version officielle, Java 1.0, a été publiée, établissant Java comme un acteur majeur dans le
+  développement web avec des applets.
+- **1998 :** Java 2 a été introduit, incluant des améliorations significatives et l'introduction de la bibliothèque GUI
+  Swing.
+- **2004 :** Java 5 (également connu sous le nom de J2SE 5.0) a introduit des fonctionnalités majeures comme les
+  génériques, les annotations et la boucle 'for' améliorée.
+- **2006 :** Sun Microsystems a rendu Java gratuit et open-source sous la licence publique générale GNU.
+- **2010 :** Oracle Corporation a acquis Sun Microsystems, et Java a continué d'évoluer avec des mises à jour régulières
+  et de nouvelles fonctionnalités.
+- **2020 et au-delà :** Java a maintenu sa pertinence avec des améliorations continues, se concentrant sur la
+  performance, la sécurité et la productivité des développeurs.
+- **Aujourd'hui**, Java reste l'un des langages de programmation les plus utilisés au monde, en particulier dans les
+  environnements d'entreprise et le développement d'applications Android.
 
-#### Let's open the box
+### Ouvrons la boîte
 
-The Java Development Kit (JDK) is a software development environment used for developing Java applications. It includes
-several components essential for Java development:
+Le Java Development Kit (JDK) est un environnement de développement logiciel utilisé pour développer des applications
+Java. Il comprend plusieurs composants essentiels pour le développement Java :
 
-- **Java Compiler (javac):** Converts Java source code (.java files) into bytecode (.class files) that can be executed
-  by the Java Virtual Machine (JVM).
-- **Java Runtime Environment (JRE):** Provides the libraries, Java Virtual Machine (JVM), and other components necessary
-  to run Java applications.
-- **Java Virtual Machine (JVM):** Executes Java bytecode and provides a runtime environment for Java applications.
-- **Development Tools:** Includes various command-line tools for tasks such as:
-- **jar:** Creates and manages Java Archive (JAR) files.
-- **javadoc:** Generates documentation from Java source code comments.
-- **jdb:** Java Debugger for troubleshooting Java applications.
-- **javap:** Disassembles class files to provide information about their structure.
-- **Java Class Libraries:** A set of pre-built libraries that provide functionality for tasks like input/output,
-  networking, data structures, and graphical user interfaces.
-- **Sample Programs and Documentation:** Example code and extensive documentation to help developers understand how to
-  use the JDK effectively.
-- **JavaFX:** A set of graphics and media packages for building rich client applications (included in some JDK
-  distributions).
+- **Compilateur Java (javac) :** Convertit le code source Java (.java) en bytecode (.class) qui peut être exécuté par la
+  machine virtuelle Java (JVM).
+- **Environnement d'exécution Java (JRE) :** Fournit les bibliothèques, la machine virtuelle Java (JVM) et d'autres
+  composants nécessaires pour exécuter des applications Java.
+- **Machine virtuelle Java (JVM) :** Exécute le bytecode Java et fournit un environnement d'exécution pour les
+  applications Java.
+- **Outils de développement :** Comprend divers outils en ligne de commande pour des tâches telles que :
+    - **jar :** Crée et gère des fichiers Java Archive (JAR).
+    - **javadoc :** Génère de la documentation à partir des commentaires du code source Java.
+    - **jdb :** Débogueur Java pour résoudre les problèmes des applications Java.
+    - **javap :** Désassemble les fichiers de classe pour fournir des informations sur leur structure.
+- **Bibliothèques de classes Java :** Un ensemble de bibliothèques préconstruites qui fournissent des fonctionnalités
+  pour des tâches comme l'entrée/sortie, le réseau, les structures de données et les interfaces graphiques.
+- **Programmes d'exemple et documentation :** Code exemple et documentation extensive pour aider les développeurs à
+  comprendre comment utiliser le JDK efficacement.
+- **JavaFX :** Un ensemble de packages graphiques et multimédias pour construire des applications client riches (inclus
+  dans certaines distributions JDK).
 
-The JDK is essential for Java developers as it provides all the necessary tools and libraries to create, compile, and
-run Java applications.
+Le JDK est essentiel pour les développeurs Java car il fournit tous les outils et bibliothèques nécessaires pour créer,
+compiler et exécuter des applications Java.
 
-#### First program
 
-### Basics of OOP
+## Bases de la POO
 
-This tutorial series will not be a course on the
-OOP ([Object-Oriented Programing](https://en.wikipedia.org/wiki/Object-oriented_programming "read more on wikipedia")),
-but we introduce Java trough OOP.
-Object-Oriented Programing is based on a group of models and process described through classes and objects.
+Cette série de tutoriels ne sera pas un cours sur la POO (Programmation Orientée Objet), mais nous introduisons Java à
+travers la POO. La Programmation Orientée Objet est basée sur un ensemble de modèles et de processus décrits à travers
+des classes et des objets.
 
-Object-Oriented Programming (OOP) is a programming paradigm based on the concept of "objects," which can contain data
-and code. Here are the core principles of OOP:
+La Programmation Orientée Objet (POO) est un paradigme de programmation basé sur le concept d' "objets", qui peuvent
+contenir des données et du code. Voici les principes fondamentaux de la POO :
 
-- **Encapsulation:** This principle involves bundling the data (attributes) and methods (functions) that operate on the
-  data into a single unit called a class. It restricts direct access to some of the object's components, which helps
-  prevent unintended interference and misuse. Access to the data is typically controlled through public methods (getters
-  and setters).
-- **Abstraction:** Abstraction focuses on hiding the complex implementation details and showing only the essential
-  features of an object. It allows programmers to work at a higher level of complexity without needing to understand all
-  the underlying details. This is often achieved through abstract classes and interfaces.
-- **Inheritance:** Inheritance allows one class (the child or subclass) to inherit the properties and methods of another
-  class (the parent or superclass). This promotes code reusability and establishes a hierarchical relationship between
-  classes. A subclass can also override methods of its superclass to provide specific functionality.
-- **Polymorphism:** Polymorphism allows methods to do different things based on the object that it is acting upon. This
-  can be achieved through method overloading (same method name with different parameters) and method overriding (
-  subclass provides a specific implementation of a method already defined in its superclass). It enables a single
-  interface to represent different underlying forms (data types).
+- **Encapsulation :** Ce principe consiste à regrouper les données (attributs) et les méthodes (fonctions) qui opèrent
+  sur les données en une seule unité appelée classe. Il restreint l'accès direct à certains composants de l'objet, ce
+  qui aide à prévenir les interférences et les abus non intentionnels. L'accès aux données est généralement contrôlé par
+  des méthodes publiques (getters et setters).
+- **Abstraction :** L'abstraction se concentre sur la dissimulation des détails d'implémentation complexes et montre
+  uniquement les caractéristiques essentielles d'un objet. Elle permet aux programmeurs de travailler à un niveau de
+  complexité plus élevé sans avoir besoin de comprendre tous les détails sous-jacents. Cela est souvent réalisé par le
+  biais de classes abstraites et d'interfaces.
+- **Héritage :** L'héritage permet à une classe (l'enfant ou sous-classe) d'hériter des propriétés et des méthodes d'une
+  autre classe (le parent ou superclasse). Cela favorise la réutilisation du code et établit une relation hiérarchique
+  entre les classes. Une sous-classe peut également remplacer les méthodes de sa superclasse pour fournir une
+  fonctionnalité spécifique.
+- **Polymorphisme :** Le polymorphisme permet aux méthodes de faire des choses différentes selon l'objet sur lequel
+  elles agissent. Cela peut être réalisé par la surcharge de méthode (même nom de méthode avec des paramètres
+  différents) et le remplacement de méthode (la sous-classe fournit une implémentation spécifique d'une méthode déjà
+  définie dans sa superclasse). Il permet à une seule interface de représenter différentes formes sous-jacentes (types
+  de données).
 
-These principles work together to facilitate modular, reusable, and maintainable code, making OOP a popular choice for
-software development.
+Ces principes travaillent ensemble pour faciliter un code modulaire, réutilisable et maintenable, ce qui fait de la POO
+un choix populaire pour le développement de logiciels.
 
-#### A Class
+### Une Classe
 
-The `class` in the OOP [^1] is the tool to describe an `object`, like a blue-print can be for a house or a car.
+La `classe` dans la POO est l'outil pour décrire un `objet`, comme un plan peut l'être pour une maison ou une voiture.
 
-It defines attributes (some specific values for this kind of object) and some methods, a list of possible interaction
-with the
-object.
+Elle définit des attributs (certaines valeurs spécifiques pour ce type d'objet) et des méthodes, une liste
+d'interactions possibles avec l'objet.
 
-For example, a class named `Car` might have attributes like `color`, `make`, and `model`, and methods like `start()`,
-`stop()`, and
-`accelerate()`.
+Par exemple, une classe nommée `Car` pourrait avoir des attributs comme `color`, `make`, et `model`, et des méthodes
+comme `start()`, `stop()`, et `accelerate()`.
 
-#### An Object
+### Un Objet
 
-An `object` is an instance of a class.
+Un `objet` est une instance d'une classe.
 
-When a class is defined, no memory is allocated until an object of that class is created.
+Lorsqu'une classe est définie, aucune mémoire n'est allouée jusqu'à ce qu'un objet de cette classe soit créé.
 
-Each object can have its own state (values of attributes) and can execute the methods defined in its class.
+Chaque objet peut avoir son propre état (valeurs des attributs) et peut exécuter les méthodes définies dans sa classe.
 
-For example, if `Car` is a class, then `myCar` could be an object of that class with specific values like
-`color = "red"`, `make = "Toyota"`, and `model = "Corolla"`.
+Par exemple, si `Car` est une classe, alors `myCar` pourrait être un objet de cette classe avec des valeurs spécifiques
+comme `color = "red"`, `make = "Toyota"`, et `model = "Corolla"`.
 
 ```java
-// Class definition
+// Définition de la classe
 public class Car {
     String color;
     String make;
     String model;
 
     void start() {
-        System.out.println("Car started");
+        System.out.println("Voiture démarrée");
     }
 }
 
 public class Main {
-    public static main(String[] args) {
-        // Creating an object
+    public static void main(String[] args) {
+// Création d'un objet
         Car myCar = new Car();
         myCar.color = "red";
         myCar.make = "Toyota";
         myCar.model = "Corolla";
-        myCar.
-
-                start(); // Output: Car started
+        myCar.start(); // Sortie : Voiture démarrée
     }
 }
 ```
 
-### UML: Unified Modeling Language
+### Une interface
 
-We can also use the UML methods and tools to describe such class and objects.
+#### Qu'est-ce qu'une Interface ?
 
-UML, or Unified Modeling Language, is a standardized modeling language used in software engineering to visualize,
-specify, construct, and document the artifacts of a software system. It provides a set of graphic notation techniques to
-create visual models of software systems.
-Key Features of UML:
+Une interface en programmation orientée objet est un contrat qui définit un ensemble de méthodes qu'une classe doit
+implémenter, sans fournir d'implémentation concrète pour ces méthodes. Voici quelques points clés illustrés par
+l'exemple de la classe Car.
+Caractéristiques d'une Interface
 
-1. **Visual Representation:** UML uses diagrams to represent different aspects of a system, making it easier to
-   understand complex systems.
-2. **Standardized Notation:** UML provides a consistent way to represent system components, which helps in communication
-   among stakeholders (developers, designers, business analysts, etc.).
-3. **Multiple Diagrams:** UML includes various types of diagrams that can be categorized into two main groups:
+#### Définition de Méthodes :
 
-    - **Structural Diagrams:** These diagrams represent the static aspects of a system, such as:
+Une interface peut contenir des déclarations de méthodes que les classes qui l'implémentent doivent définir. Par
+exemple, nous pourrions créer une interface Vehicle :
 
-        - Class Diagram
-        - Component Diagram
-        - Object Diagram
-        - Package Diagram
+```java
+interface Vehicle {
+    void start();
 
-    - **Behavioral Diagrams:** These diagrams represent the dynamic aspects of a system, such as:
+    void stop();
 
-        - Use Case Diagram
-        - Sequence Diagram
-        - Activity Diagram
-        - State Diagram
+    void accelerate();
+}
+```
 
-4. **Modeling Software Systems:** UML can be used for modeling various aspects of software systems, including
-   requirements, architecture, design, and implementation.
-5. **Interdisciplinary Use:** While primarily used in software engineering, UML can also be applied in other fields for
-   modeling complex systems.
+1. **Pas d'État :**
+   Les interfaces ne contiennent pas de variables d'instance. Elles peuvent seulement définir des constantes. Cela
+   signifie que Vehicle ne peut pas avoir d'attributs comme color ou make.
 
-UML helps teams communicate effectively and serves as a blueprint for building software applications, facilitating
-better design and documentation practices.
+2. **Multiples Implémentations :**
+   Une classe peut implémenter plusieurs interfaces. Par exemple, si nous avions une autre interface Electric, une
+   classe ElectricCar pourrait implémenter à la fois Vehicle et Electric.
 
-#### A class Diagram
+3. **Polymorphisme :**
+   Les interfaces permettent le polymorphisme. Par exemple, nous pouvons traiter différents types de véhicules de
+   manière uniforme :
+
+```java
+Vehicle myCar = new Car();
+myCar.start(); // Appelle la méthode start() de Car
+```
+
+#### Encapsulation de Comportements :
+
+Les interfaces définissent des comportements attendus sans se soucier de leur réalisation. Cela favorise la séparation
+des préoccupations. Par exemple, Car doit fournir des implémentations pour start(), stop(), et accelerate() :
+
+```java
+public class Car implements Vehicle {
+    @Override
+    public void start() {
+        System.out.println("Voiture démarrée");
+    }
+
+    @Override
+    public void stop() {
+        System.out.println("Voiture arrêtée");
+    }
+
+    @Override
+    public void accelerate() {
+        System.out.println("Voiture accélérée");
+    }
+}
+```
+
+#### Avantages des Interfaces
+
+- **Flexibilité :** Les interfaces permettent de changer les implémentations sans affecter le code qui les utilise. Par
+  exemple, si nous décidons de créer une nouvelle classe `Truck` qui implémente `Vehicle`, nous pouvons le faire sans
+  modifier le code qui utilise Vehicle.
+- **Testabilité :** Elles facilitent le test unitaire en permettant de créer des classes simulées (mocks) qui
+  implémentent les interfaces. Cela est utile pour tester des comportements sans dépendre des implémentations concrètes.
+- **Clarté :** Elles fournissent une documentation claire des comportements attendus des classes. Dans notre exemple,
+  toute classe qui implémente Vehicle doit savoir comment démarrer, arrêter et accélérer.
+
+En résumé, une interface comme `Vehicle` est un outil puissant pour structurer et organiser le code, en favorisant la
+réutilisation et la maintenabilité, tout en garantissant que les classes comme `Car` fournissent les comportements
+nécessaires.
+
+### Qu'est-ce que l'Héritage de Classe ?
+
+L'héritage de classe est un concept fondamental en programmation orientée objet qui permet de créer une nouvelle
+classe (appelée sous-classe ou classe dérivée) à partir d'une classe existante (appelée superclasse ou classe parente).
+La sous-classe hérite des attributs et des méthodes de la superclasse, ce qui favorise la réutilisation du code et la
+création de relations hiérarchiques entre les classes.
+
+#### Exemple avec Vehicle et Car
+
+##### Définition de la Superclasse :
+
+Nous commençons par définir une classe Vehicle qui contient des attributs et des méthodes communs à tous les types de
+véhicules.
+
+```java
+public class Vehicle {
+    String color;
+    String make;
+
+    public void start() {
+        System.out.println("Véhicule démarré");
+    }
+
+    public void stop() {
+        System.out.println("Véhicule arrêté");
+    }
+}
+```
+
+##### Création de la Sous-classe :
+
+Ensuite, nous créons la classe `Car` qui hérite de la classe `Vehicle`. Cela signifie que `Car` a accès aux attributs
+`color` et `make`, ainsi qu'aux méthodes `start()` et `stop()`.
+
+```java
+public class Car extends Vehicle {
+    String model;
+
+    public void accelerate() {
+        System.out.println("Voiture accélérée");
+    }
+}
+```
+
+#### Utilisation de l'Héritage :
+
+Dans la classe Main, nous pouvons créer un objet Car et utiliser à la fois les méthodes de Car et celles héritées de
+Vehicle.
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        Car myCar = new Car();
+        myCar.color = "rouge";
+        myCar.make = "Toyota";
+        myCar.model = "Corolla";
+
+        myCar.start();      // Sortie : Véhicule démarré
+        myCar.accelerate(); // Sortie : Voiture accélérée
+        myCar.stop();       // Sortie : Véhicule arrêté
+    }
+}
+```
+
+#### Avantages de l'Héritage
+
+1. **Réutilisation du Code :**
+   L'héritage permet de réutiliser le code de la superclasse dans la sous-classe. Dans notre exemple, Car n'a pas besoin
+   de redéfinir les méthodes start() et stop(), car elles sont déjà définies dans Vehicle.
+2. **Organisation Hierarchique :**
+   L'héritage crée une structure hiérarchique qui aide à organiser les classes. Cela facilite la compréhension des
+   relations entre différents types d'objets.
+3. **Extension de Fonctionnalités :**
+   La sous-classe peut ajouter des méthodes et des attributs spécifiques tout en conservant les comportements de la
+   superclasse. Par exemple, Car a une méthode accelerate() qui n'est pas présente dans Vehicle.
+4. **Polymorphisme :**
+   L'héritage permet également le polymorphisme. Par exemple, nous pouvons traiter un objet Car comme un objet Vehicle,
+   ce qui permet d'utiliser des méthodes communes sans connaître le type exact de l'objet.
+
+#### Conclusion
+
+L'héritage de classe, comme illustré avec `Vehicle` et `Car`, est un puissant mécanisme qui favorise la réutilisation du
+code, l'organisation hiérarchique et l'extension des fonctionnalités. Cela permet de créer des systèmes plus modulaires
+et maintenables tout en simplifiant la gestion des comportements communs entre différentes classes.
+
+### UML : Langage de Modélisation Unifié
+
+Nous pouvons également utiliser les méthodes et outils UML pour décrire de telles classes et objets.
+
+UML, ou Langage de Modélisation Unifié, est un langage de modélisation standardisé utilisé en ingénierie logicielle pour
+visualiser, spécifier, construire et documenter les artefacts d'un système logiciel. Il fournit un ensemble de
+techniques de notation graphique pour créer des modèles visuels de systèmes logiciels.
+
+Caractéristiques clés de l'UML :
+
+1. **Représentation Visuelle :** UML utilise des diagrammes pour représenter différents aspects d'un système, ce qui
+   facilite la compréhension des systèmes complexes.
+2. **Notation Standardisée :** UML fournit un moyen cohérent de représenter les composants du système, ce qui aide à la
+   communication entre les parties prenantes (développeurs, designers, analystes commerciaux, etc.).
+3. **Multiples Diagrammes :** UML comprend divers types de diagrammes qui peuvent être classés en deux groupes
+   principaux :
+
+- **Diagrammes Structurels :** Ces diagrammes représentent les aspects statiques d'un système, tels que :
+
+    - Diagramme de Classe
+    - Diagramme de Composant
+    - Diagramme d'Objet
+    - Diagramme de Paquet
+
+- **Diagrammes Comportementaux :** Ces diagrammes représentent les aspects dynamiques d'un système, tels que :
+
+    - Diagramme de Cas d'Utilisation
+    - Diagramme de Séquence
+    - Diagramme d'Activité
+    - Diagramme d'État
+
+4. **Modélisation des Systèmes Logiciels :** UML peut être utilisé pour modéliser divers aspects des systèmes logiciels,
+   y compris les exigences, l'architecture, la conception et l'implémentation.
+5. **Utilisation Interdisciplinaire :** Bien qu'il soit principalement utilisé en ingénierie logicielle, UML peut
+   également être appliqué dans d'autres domaines pour modéliser des systèmes complexes.
+
+UML aide les équipes à communiquer efficacement et sert de plan pour construire des applications logicielles, facilitant
+de meilleures pratiques de conception et de documentation.
+
+#### Un Diagramme de Classe
 
 ```plantuml
 @startuml
 class Car {
-    - color: String
-    - make: String
-    - model: String
-    + start(): void
-    + stop(): void
-    + accelerate(): void
+- color: String
+- make: String
+- model: String
++ start(): void
++ stop(): void
++ accelerate(): void
 }
 @enduml
 ```
 
-#### An activity Diagram
+#### Un Diagramme d'Activité
 
 ```plantuml
-plantuml
 @startuml
-|Driver|
+|Conducteur|
 start
-:Start the car;
-if (Is the car on?) then (yes)
-  :Drive the car;
-  :Accelerate;
-  if (Need to stop?) then (yes)
-    :Stop the car;
-  else (no)
-    :Continue driving;
-  endif
-else (no)
-  :Turn on the ignition;
-  :Start the car;
+: Démarrer la voiture ;
+if (La voiture est-elle allumée ?) then (oui)
+: Conduire la voiture ;
+: Accélérer ;
+if (Besoin de s'arrêter ?) then (oui)
+: Arrêter la voiture ;
+else (non)
+: Continuer à conduire ;
+endif
+else (non)
+: Allumer le contact ;
+: Démarrer la voiture ;
 endif
 stop
 @enduml
 ```
 
-## Learning by playing
 
-### What's in the Game?
-
-#### Screen and input
-
-Where the player interacts with
-
-#### loop and objects
-
-How the game manages everything!
-
-#### Gameplay and Scene
-
-Organizing our work and our game.
-
-## Let's code something
-
-[^1]: OOP stands for Object Oriented Programming
+[^1]: POO signifie Programmation Orientée Objet
