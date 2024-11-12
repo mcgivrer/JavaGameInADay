@@ -1,0 +1,1133 @@
+.
+  |_.git
+  |  |_COMMIT_EDITMSG
+  |  |_config
+  |  |_description
+  |  |_FETCH_HEAD
+  |  |_gitui
+  |  |_HEAD
+  |  |_hooks
+  |  |  |_applypatch-msg.sample
+  |  |  |_commit-msg.sample
+  |  |  |_fsmonitor-watchman.sample
+  |  |  |_post-update.sample
+  |  |  |_pre-applypatch.sample
+  |  |  |_pre-commit.sample
+  |  |  |_pre-merge-commit.sample
+  |  |  |_pre-push.sample
+  |  |  |_pre-rebase.sample
+  |  |  |_pre-receive.sample
+  |  |  |_prepare-commit-msg.sample
+  |  |  |_push-to-checkout.sample
+  |  |  |_sendemail-validate.sample
+  |  |  |_update.sample
+  |  |_index
+  |  |_info
+  |  |  |_exclude
+  |  |_logs
+  |  |  |_HEAD
+  |  |  |_refs
+  |  |  |  |_heads
+  |  |  |  |  |_develop
+  |  |  |  |  |_feature
+  |  |  |  |  |  |_add-new-physic-engine
+  |  |  |  |  |  |_chapter-1-foundation-OOP-and-Java
+  |  |  |  |  |_main
+  |  |  |  |_remotes
+  |  |  |  |  |_origin
+  |  |  |  |  |  |_develop
+  |  |  |  |  |  |_feature
+  |  |  |  |  |  |  |_add-new-physic-engine
+  |  |  |  |  |  |  |_chapter-1-foundation-OOP-and-Java
+  |  |  |  |  |  |_main
+  |  |  |  |_stash
+  |  |_objects
+  |  |  |_00
+  |  |  |  |_0b5631accf5694940ee06bc16f0b10fa61e4cc
+  |  |  |  |_29202339777e6473a0026ce910841e2f548ca1
+  |  |  |  |_5cbb9ac35c67d11f740c055ccd98fc7ec5cd00
+  |  |  |_02
+  |  |  |  |_0a207a56ff8b05556d52743fd6b60c3a98e9a8
+  |  |  |  |_53f6c272c37d462509f6aa421f0ce47662ecb7
+  |  |  |  |_d46c2e1f30b0cb2ebd4c6153418143bf4dadc0
+  |  |  |  |_ee6f8ac7cfd50a2874ca31bdc1e6b198a7dd8f
+  |  |  |_03
+  |  |  |  |_34e6fa35fbf3b8ca25b3d8e27735406d769349
+  |  |  |  |_589250cd48f7f42f485cc14cdc07d86c097a1e
+  |  |  |  |_cf2308cd32e976896bdfa01e0b52e8f9a722c6
+  |  |  |  |_eca667e16d823ab2fc4287be753023ec9a6d73
+  |  |  |_04
+  |  |  |  |_b5720d8121bf58547c54244c7125e63045ae63
+  |  |  |_05
+  |  |  |  |_925a98762338fcaec3146656b31657b1089b88
+  |  |  |  |_9e4fc9787aaa882b1250b371b2629fba5c45dc
+  |  |  |  |_b27962e74c7f1ee5504b0d8ba38a7e35bcdd21
+  |  |  |  |_fbc557a127bfeba9384d2ac49adc432a3fc999
+  |  |  |_06
+  |  |  |  |_01ee63f3a6b43a91efb211941f3266cee1b8c6
+  |  |  |  |_0a986532a42e431647964c4cbb9a60a2afcf9c
+  |  |  |  |_d73a3cae519419e5ae27847bdd99c3fe470df3
+  |  |  |_07
+  |  |  |  |_3929334dc9f780bcc3474bee4d2c8273c7e3b3
+  |  |  |_08
+  |  |  |  |_86d3915f0129a1bf23e0e617c8bdfb3f7a46d4
+  |  |  |  |_cebb700ceb91ec7c69012d199f37b12bcfa292
+  |  |  |  |_f8ddb5a8e04b58398071cde0eff9dfe2ac8b7c
+  |  |  |_09
+  |  |  |  |_6ccc1a801eff15a65796dba51c2ed2a21f1ecd
+  |  |  |  |_7d3cffe201aa9108abbdef7a0662fb101d6326
+  |  |  |  |_c9376ba42e76365f068a1cc1570b86fe842957
+  |  |  |_0a
+  |  |  |  |_4f9c0ac953d8eaefcdeb3c682c2b5427b31616
+  |  |  |_0b
+  |  |  |  |_193f24117d4d2109f6027d9c404233fdcbbcd8
+  |  |  |  |_bcebff3f935fe0f462ce30fbf35df56cfd9a1f
+  |  |  |  |_cf5a87b904ca668e1a7bc41b08acf65ad44673
+  |  |  |  |_fadbead6178fe1b6cc0aac4bf69900fa00d105
+  |  |  |_0c
+  |  |  |  |_fe631416c1086b1501b98c2a1748eb86b46664
+  |  |  |_0d
+  |  |  |  |_19ac5ca99ce46e95794f1fe718df7952b0fc53
+  |  |  |_0e
+  |  |  |  |_61da42cfca21f4d9d3799df72da65156d6c973
+  |  |  |_0f
+  |  |  |  |_34bad25ba3318917af9157a679822e178d8aad
+  |  |  |  |_fa612c780b4c76f0d5d9cf99e89a36e9a212aa
+  |  |  |_10
+  |  |  |  |_5442d3ee71902910f896903614aa36bc0f847c
+  |  |  |  |_64bdf7e4e2c835bd4b9cce2a1724b5015db409
+  |  |  |  |_8baeee07aaad9c71b67b4dedd6894d6852b865
+  |  |  |_11
+  |  |  |  |_1fd0810cb22beae0bcb20fd64e619df9517e9f
+  |  |  |  |_b65115e25390b975ac063cde7e948a1f972c42
+  |  |  |  |_d1a6d1d2deab81b24634c2441535dac628a00f
+  |  |  |_12
+  |  |  |  |_3dc2cf09aeec334c34b3f758148e8002112429
+  |  |  |  |_78ab774e05cf9e45c6baf9a20ff0816e93b030
+  |  |  |_14
+  |  |  |  |_120cf82823b3d00d34b4c30ebe4581b6667fbc
+  |  |  |  |_6314b184e712263d2ec1ed9f8694bf157fcdf7
+  |  |  |  |_f72b9a6e0d2fe0047c45ea1ec8631932f39f7d
+  |  |  |_15
+  |  |  |  |_2a79c7aa4a9615fc8a1d751074a5b292901fec
+  |  |  |  |_ec5c4450bc9b1fda60a8cbec1d0d134b6a2c9d
+  |  |  |_16
+  |  |  |  |_cbf23f916a36a8645188cc73fba11905bdbf82
+  |  |  |  |_d71016bbe4e258eff1c74619e1c501b25aea87
+  |  |  |_18
+  |  |  |  |_5e1142a5b9205fc72aa644ac4aa30ea8ec4fa5
+  |  |  |  |_99ee2bc7310b2034ed9f8794cfed4ff4276f1e
+  |  |  |  |_b0bd9c49ee62a502e6abb0fd560fb3ba3cdc6c
+  |  |  |_19
+  |  |  |  |_ce45ecc1fc49f1efcb0f60923c6dc0bb1e02cc
+  |  |  |_1a
+  |  |  |  |_599f02c9608cc0e785b311d80ed876288a4739
+  |  |  |_1b
+  |  |  |  |_0e2a27e03783db547908fc2827f6262f7a187a
+  |  |  |  |_1301cb9d15ffa0519eb04ae4d49fc4cf31a7a6
+  |  |  |  |_8fa483351bc415c7a7a1e41613c4e10dda0835
+  |  |  |_1c
+  |  |  |  |_639b4c0695603a13ae5f173c54b67e5591f374
+  |  |  |  |_83a5dda3372fce63bbbffa8885e76913fd4e5e
+  |  |  |  |_9f04a2547afa393c72f9ebc9778e06ce360f5e
+  |  |  |  |_f275c36be4e7e0f3a4e04906c2bbde22b0a9e6
+  |  |  |_1d
+  |  |  |  |_2b5716f5f1c2151000dcee85c00ac801a9b146
+  |  |  |_1f
+  |  |  |  |_6140787f0906791a1c6607d07a8b373c654fce
+  |  |  |  |_7bc3c4b97e480dfdef4c62ced80860a8eb5753
+  |  |  |  |_81f1cc350556824f4c93b4df9773a726ac3be5
+  |  |  |  |_9a0ce071d887d84a616f77a576871f6c4a5f1f
+  |  |  |  |_a226470ae0f9c8d7644b9017481a1380a7e1b1
+  |  |  |_20
+  |  |  |  |_08a3eeeb2076701a64eac0b10a531fb6d2dab8
+  |  |  |  |_9d0b9bbb0136a5b738308c85c041034de44bd0
+  |  |  |  |_c6d4c74729485c761c786d7faf1746958c74c7
+  |  |  |  |_eea01a2d7792e772a8c45438d4b7dba0b84e98
+  |  |  |_21
+  |  |  |  |_0de1c350b7049502bf234cc0b6f2d4b556eb97
+  |  |  |  |_623dcfb68fb8da5288d877dd88d9787f9a26a8
+  |  |  |  |_9a0faa03fecfad26283109ae2f310c43235833
+  |  |  |_22
+  |  |  |  |_05dc5dabd66b9c5317549ea015849d88b68b5d
+  |  |  |  |_a8bb44249b7e4a9c6eb589f71eb195cd8547b0
+  |  |  |_23
+  |  |  |  |_173688465e40ffe6635b961421ac3580f057ee
+  |  |  |_24
+  |  |  |  |_0fec23337fd1097a6661b134d2cabe34e07d19
+  |  |  |  |_9b7a9ebe7d0b6eaceb109b5b72157616c6befb
+  |  |  |  |_f430971bbb6391e8160a9479ccfe4fec459788
+  |  |  |_25
+  |  |  |  |_3e9699904aa1f4a9e1486055c9a4caa9e518a9
+  |  |  |  |_a02b0a7babcc72a372d9e1135d0ab0567524a9
+  |  |  |_26
+  |  |  |  |_5631f5b460b20e3595adf58eeeee4b669ca103
+  |  |  |  |_7ce2e924a17999f7db7aec16ad524473a99e1c
+  |  |  |  |_d5e5cbe85dbda65db2922848e593ee0980ad78
+  |  |  |  |_e5009210e3d897a1427c1130e46bd985b3b338
+  |  |  |  |_fddacd0ce1b87ba1d88d46ac20a79d8c2b8196
+  |  |  |_27
+  |  |  |  |_1f360ef296491a58507e3a611420b4611b2977
+  |  |  |  |_49ec33968d27d9fd655a8982449258a98889d6
+  |  |  |  |_8ee292bff0898ae210c9135f6eda554111033f
+  |  |  |  |_9c90c43f806ae19e78639886c11b5735d681b0
+  |  |  |  |_e442f07be0b63206845930367e09e3371640a5
+  |  |  |_28
+  |  |  |  |_fd16c09f17c9014e5fcf9f4b8a40071118c493
+  |  |  |_29
+  |  |  |  |_0c6e66438235df02768fb204a495e6db9e89fb
+  |  |  |_2a
+  |  |  |  |_88de159a142b02783e0b1db835866e6756f1f7
+  |  |  |_2b
+  |  |  |  |_b8b5b97f1ff9a653b02e44add0c1080292c76e
+  |  |  |  |_c0e7d95e0022ce3188b4babb51551b57c7566c
+  |  |  |_2c
+  |  |  |  |_51c88e057cc8bc8d5d0f964e3b0a42d1112d4f
+  |  |  |  |_53383eeb8d2e010e8cbb38cc463c15bef862ae
+  |  |  |  |_650b9180f8011c39beedb29fed583734f5d691
+  |  |  |_2d
+  |  |  |  |_d7932a76d76e8a789bf43d09379158dbf9b60e
+  |  |  |  |_ec59b50517a745a113cfe3456d6384d05fb018
+  |  |  |_2e
+  |  |  |  |_2abc6c99d717b7a25baf14f09c884af213004f
+  |  |  |  |_97612c14d8c2f78437bc1fb96c6274e57cc39a
+  |  |  |  |_aab39b9f6a080311453a074846012819178304
+  |  |  |  |_f9d08201ff51631cf4b0eb84e4644838950bba
+  |  |  |_2f
+  |  |  |  |_19d6bb5706c87a4757b1a710f51758f240699f
+  |  |  |_30
+  |  |  |  |_7da6cd8c698412c889ce533aa04379915effa8
+  |  |  |  |_88166fd4afd7a97b9277b047d34ab95f313a4e
+  |  |  |_32
+  |  |  |  |_5be6b0c5e43c14b417b96671707283ac3e18e2
+  |  |  |  |_dc4f0eb7455a3f53720d180f55ebdcb53aa68d
+  |  |  |_33
+  |  |  |  |_cf8e2a1f75e0f811251f8ae4d8c08e6dde949f
+  |  |  |_34
+  |  |  |  |_278f57d05c3cc52832a799745b0ccf49432c1c
+  |  |  |  |_2b1fc4b395b272243db3384552d83ab93a388b
+  |  |  |  |_450340fe55e0abb162f7b36b6036e71f784f1a
+  |  |  |  |_a1af4b1c4292bc4aff5e77cb2f7cf27098590c
+  |  |  |_35
+  |  |  |  |_a0b46c02f15ebec73b296441a57de8bd6d2092
+  |  |  |  |_aa81358f28c1737cd23a2d68233809c738f235
+  |  |  |_36
+  |  |  |  |_723a41e79b0ed96ced57bace5da5b9125e021d
+  |  |  |  |_d17f3416b35d8d295bb28e57d286beead8c2e1
+  |  |  |_37
+  |  |  |  |_08b4b3ec04343f0d2c210bb11c3499b3003de8
+  |  |  |  |_1e011a38db36c445fb32fb7048de26c1dd9172
+  |  |  |  |_3d0caade757b9e6a8045de396ba8264b395fa4
+  |  |  |_38
+  |  |  |  |_5537255bee0192bcafd2ce1680203f15747f45
+  |  |  |  |_7cc83280763904fb191fe8a056cd6c2e51e3cc
+  |  |  |  |_e8deeb2c96d24e102bc5bfb5a1e828904658e1
+  |  |  |_39
+  |  |  |  |_4caa8539d7f461dad02e258cf38f4b31000ca1
+  |  |  |  |_f108da172b53bdde02c142e0ca537bc6a6d94d
+  |  |  |_3a
+  |  |  |  |_73e17250f1e2fe70f79dd4820c92307fe1440a
+  |  |  |  |_8a143ffc5be57b834eaee5a648ac149f5f4b2e
+  |  |  |_3b
+  |  |  |  |_4d333f770c48994237946a0b5596979d118f1d
+  |  |  |  |_e776cc2df6df0e695f7378981b229c28815b08
+  |  |  |_3c
+  |  |  |  |_05d9a0fe832bc8260373bc29f04b255ed3f570
+  |  |  |  |_280ba0ca2129da4960137da909220484c04b5b
+  |  |  |_3d
+  |  |  |  |_7a0b905d2230c555aa5821b9a762533e58892a
+  |  |  |_3e
+  |  |  |  |_96aa7666641924bbdc32bc8240fa66904a996e
+  |  |  |_3f
+  |  |  |  |_6075fa3ee3ee493f92f573391dc4e2c5078466
+  |  |  |_40
+  |  |  |  |_0342747d5bd774c9857da07c3b327be69d93f4
+  |  |  |  |_440047e18aef75e3d49b51c669338f5892455a
+  |  |  |_41
+  |  |  |  |_78ea7e81a4edf77a1fb81abd2f23bcdd757214
+  |  |  |  |_b71386f69b21ac1915cb7ae01c64ec313f228a
+  |  |  |_42
+  |  |  |  |_2f280e49656e70d58e8c68322d38d04eda209b
+  |  |  |  |_44598895d82d9f8f8e1c6f44f9d32dd6ae772e
+  |  |  |  |_6d81b49113c52bcac53d2224fe2f22472070aa
+  |  |  |  |_edfd2bc04e4e69ece2262a7c2c7f461d4a6417
+  |  |  |_43
+  |  |  |  |_b43cc781735337ff047177aed6373297cffe7f
+  |  |  |  |_c898104da1b38bc798571ae7bd978cbbc92844
+  |  |  |_44
+  |  |  |  |_0da00a689eedd53fb940c9ec41a8a49dec9d46
+  |  |  |  |_138b03dda384dbd295c3a8c70bf4da0ef14643
+  |  |  |_45
+  |  |  |  |_a7188401c5a2e2d3c443c3acaba1b0dc02cc6d
+  |  |  |_46
+  |  |  |  |_fb0bf3d28a37edc9e3ddf883b601ec6ac23297
+  |  |  |_47
+  |  |  |  |_942dc8ff08ecf4ef184e220d143aa28150d2e0
+  |  |  |  |_bed84e24650dacdcdff8880aad2d4288cc775f
+  |  |  |_48
+  |  |  |  |_3985f3652a1b02eec792c823c538cb99ec2a45
+  |  |  |  |_c252ac88ced03c9ae50d593f852160b9369c4d
+  |  |  |_49
+  |  |  |  |_0550932d5957f1af0a2c9b5e62bb75863deadc
+  |  |  |  |_ca3a1a9284bee32fbf712eda00126e8811f0a8
+  |  |  |  |_e665c083a6c4d1ea28b049344800c852d45da7
+  |  |  |_4a
+  |  |  |  |_70a1ed3f4933dda1d77925b866ce492cab483a
+  |  |  |_4b
+  |  |  |  |_9988c48edce7305a5aafb27b135144c5a0d5d2
+  |  |  |  |_b26e3073b9d7f3cf6fedc2043dcf5365843a52
+  |  |  |_4c
+  |  |  |  |_3178110e551e50ab8dec2c7850a06b45dd7137
+  |  |  |  |_99f7aeb34a7b63200a43d9e0fde998c973ff65
+  |  |  |_4d
+  |  |  |  |_18dc0000ab7bb7c8b542cdad37899f4d3dbaf1
+  |  |  |  |_a8585372b93256ed69662bd1dddfc27552a8ad
+  |  |  |  |_c2e87f917b3941f60378c86a2e943f2282e2d5
+  |  |  |_4e
+  |  |  |  |_0b1f572723d4bc827321a21b3d899c2d8319b9
+  |  |  |  |_3c30d4a5a6a6aec21fededd688a720a43f6be1
+  |  |  |  |_d484c11bad4c17cb5bf63a77ce3ed4fa6281f9
+  |  |  |  |_fb518cf7258c6b107d1cd19572c1718c117745
+  |  |  |_4f
+  |  |  |  |_0b2d4749f428875741bf66315e7c5273d10a28
+  |  |  |  |_0c6b0e4d8227beb6fdbaeb97d245856a1468c0
+  |  |  |  |_1ab1520facda48fd3784af081d674a4c3086fa
+  |  |  |_50
+  |  |  |  |_0534ed5ae2534cebed0ed1f5c462ef7d657074
+  |  |  |  |_dde279236acfcd930725912f4c02c6d03a597a
+  |  |  |_51
+  |  |  |  |_53163fa4bad6bbdbffb66a1df8cc89b1ef55a7
+  |  |  |  |_5e08656a2e53af9d3af1320bf592e51c6af189
+  |  |  |_52
+  |  |  |  |_f73b5f71995e05ecd55ea85185772ed1f683e4
+  |  |  |_53
+  |  |  |  |_2f91c55ba4e2f8bb33b41976c4a2ac703d58a9
+  |  |  |  |_433ee30e7a55013d1e503a431911e120cdd24c
+  |  |  |  |_458558e65f9fe00569eb16fb861c9b5979facf
+  |  |  |  |_febf700225fc82a096a3315711dae1006f7dea
+  |  |  |_54
+  |  |  |  |_5cecb13deda7c67331c605e73e79714a13a040
+  |  |  |_55
+  |  |  |  |_38f291bafd15b46a1168c161b6c9223d1994fc
+  |  |  |_56
+  |  |  |  |_01e3b34531251d38b87a2c16bbee462b943545
+  |  |  |  |_d59441c28ffcf64fbc01d2a1700d602bee686d
+  |  |  |  |_dcbb0df9e69e16915b242c0942c6e630a24686
+  |  |  |  |_de3ffa3a3d85571c7d6cdda679edc8096e4582
+  |  |  |_57
+  |  |  |  |_3ac67cd62dd298e1cccf68d1b16dbe52de41e0
+  |  |  |  |_3cd71ba23e25efeceaf4e5f4e245335c7d3731
+  |  |  |  |_67ccedbc491dcadebfb612f8153f4e1e9bfc8a
+  |  |  |  |_68c5462c78f59658211001a20518d6edefee34
+  |  |  |  |_f30c50df8e4ebb9b914a990ffe83675c883b50
+  |  |  |_58
+  |  |  |  |_fed6ba5ccf58b3efc6f59851389cfc38bfb6e7
+  |  |  |_59
+  |  |  |  |_71281e2c22945427b40f01d3d0a22754a1436c
+  |  |  |  |_e25fa8c6852e6cd848cd3434ffcf2fdd565fd2
+  |  |  |_5a
+  |  |  |  |_25be9044b339b4a841dd54a14c87b94bb779ce
+  |  |  |  |_4859e3bd383f618a7d61f71532f5c1f3539275
+  |  |  |  |_596fb4d4932d6d564f706de3acf02bcb7166e3
+  |  |  |  |_a6515e9f9f0512ff6f9a604ca5c4a102998920
+  |  |  |  |_cecb84f5b53861e20ed6a07d77bd786eb160f8
+  |  |  |  |_e96be7b533e5a0897fda4e986443d59976f8c3
+  |  |  |_5b
+  |  |  |  |_10b58b4069cb4eca11e3cd7ba3381e4b95a274
+  |  |  |  |_fa9e0268282140905bee1e739c813c4cd537d5
+  |  |  |_5c
+  |  |  |  |_9a0bbb8ba25bbcccc69be48a6e3669260a076a
+  |  |  |  |_a8e3e327c8557d8a3eb18d7e0aa2beec23f393
+  |  |  |_5d
+  |  |  |  |_2679b9720176843d1d85b82c3c39d1f7bedbca
+  |  |  |  |_e294f8c612a3710bf97ba8e325631d15aa2d14
+  |  |  |_5e
+  |  |  |  |_21ef9fbc70d3fce75df03c3769f982ae37c66c
+  |  |  |  |_394b24c4756dc21a4bdf920e95fd6fc17b0f43
+  |  |  |  |_f5780682cb31cd4778755c493ae5baa70e5989
+  |  |  |_5f
+  |  |  |  |_80556e0d3cad2a856afa6e9646a2d9340d10d8
+  |  |  |_60
+  |  |  |  |_059f4124ae19ede51dead3a26fc5063e1f9052
+  |  |  |  |_07052e99bba13f4815dce9561887ad1aad9443
+  |  |  |  |_5c7979ffb9a5cbc730f698beb82d81df5a723d
+  |  |  |  |_7d5f175d44c494058f5a3b4d7446d9f2e0b605
+  |  |  |  |_f90c4b347b15cd4233c57eccb8c08400063d60
+  |  |  |_61
+  |  |  |  |_639f2f5403e5aa63e473be0521fe9711381c30
+  |  |  |  |_6a8950b1fc8cf40edd9885653283aefbd72320
+  |  |  |_62
+  |  |  |  |_c86d6171c8af9523291abd78a35fc5d2b2dbfe
+  |  |  |_63
+  |  |  |  |_1a4a9ed6f36ebdaa3304cc8b7f695a5e4a0888
+  |  |  |  |_b94d7f7c00a28241e1e6f180890c243ae9addc
+  |  |  |_65
+  |  |  |  |_b18b2747045f1848428c796910faaed1f54219
+  |  |  |  |_e8f6d141d47908193b4f6850e2679aa88e5932
+  |  |  |_66
+  |  |  |  |_5b8083298fea4517fe27768c238f2b16a2c61c
+  |  |  |  |_859f27db4b8bed654a93ffef006e49f628d921
+  |  |  |  |_a66d89efe1445a8efa78d9c68c48167cf1e162
+  |  |  |_67
+  |  |  |  |_16e1fc7da2a5436586b455ad77a7936b7080ca
+  |  |  |  |_a46b8aa4623bc94415a9550c5eeb6604fe1e26
+  |  |  |_68
+  |  |  |  |_24341f8fd5698497aff8d3c86a3878d0706929
+  |  |  |  |_91d39b047f927e6e83ffd1b1d51d90deb0b61f
+  |  |  |  |_c3cae0a22c594dd71ceb3272519e366eb13959
+  |  |  |_69
+  |  |  |  |_ea6f6ed5e6aea88532a8980eed50b5b7817b50
+  |  |  |_6a
+  |  |  |  |_0828a4c029899ced8aa5d1c693c8b1405e7337
+  |  |  |  |_2283418f14b280db12748301d5ec262269854a
+  |  |  |  |_2c66d416bbfbe34760614d850925d7bd7eb851
+  |  |  |  |_76db3738f00ee69bbafd5702fa8889070622a8
+  |  |  |  |_e30d550708ab958dcb35f6f53414c4e2258e90
+  |  |  |_6b
+  |  |  |  |_12343d307546a74dc1574a557afcad45b7d2c0
+  |  |  |  |_4104e76cd743fcd9c60a1bfab1e99e8f5495e5
+  |  |  |  |_8fe57d49fd1c94d9fe2764a91363566a0731ab
+  |  |  |  |_b89b685195775dbf280ab339615eccaf833080
+  |  |  |  |_be95c31bad8bd1095e497c83a39d5c1e18fab0
+  |  |  |_6c
+  |  |  |  |_ae606f9ca08e4f017d38779e0d31ad48d4a64e
+  |  |  |  |_c45408e302081c4afac7e98452fd5a1cc1ac7e
+  |  |  |  |_dc49875787cfcf7174f0c5fcdbfab78bb011d7
+  |  |  |_6d
+  |  |  |  |_3809b910ba394eebe2a7bb37bd08c5ef6e161f
+  |  |  |  |_b4770e313cc4dde45f0312a2529e0365d22097
+  |  |  |_6e
+  |  |  |  |_01a2155908adec9ecc960c0b1c34db2f0d03af
+  |  |  |  |_598e5a45420ec5ae24b34da0a0d342a79a51fb
+  |  |  |_6f
+  |  |  |  |_a8349ce51e7a82379389e82a9e896cd742263d
+  |  |  |_70
+  |  |  |  |_11431579626f9b4547e1b4cc37303058b4ca88
+  |  |  |  |_5848afaea197dd080a9292f28395b739a39e0e
+  |  |  |_71
+  |  |  |  |_3ca426ff3fabd1c4c93136436dcfcb26afdd83
+  |  |  |  |_4401ec8f6d02224e4f2315cfdf451c26c475c4
+  |  |  |_72
+  |  |  |  |_02e294264ca511d5a43954135ee642cca5ba01
+  |  |  |  |_3dd575c2329bd5895ac2d08d4ebbd1684a85c0
+  |  |  |  |_5f0a115b47a9021effa89c83f2292121b980e1
+  |  |  |_73
+  |  |  |  |_78cac3fc9fd68f3d074bd4591f4d4506cfb44d
+  |  |  |_74
+  |  |  |  |_6ef52b357e05154dfd84349467eb41de41c3b5
+  |  |  |  |_73fb6e8676c753f4d161f8a16f498d568f439f
+  |  |  |_75
+  |  |  |  |_ee9b7b1b35279b231052e7c2534f962df9d25d
+  |  |  |  |_fd92f6ab1e153abce674ecf4eda50926617639
+  |  |  |_76
+  |  |  |  |_81c41b8e3326b1998ff928bae543ff5019d077
+  |  |  |  |_bf99e6d9fe544f23af166884cf3e89ea88d195
+  |  |  |_77
+  |  |  |  |_016cce3d6030c241223e70daee40d9db92fb2b
+  |  |  |  |_c13c7023038e3573b0c7e66f10199d0a8fcb61
+  |  |  |_78
+  |  |  |  |_11d39c702609e52595c45a306a9ab57d5a3c1e
+  |  |  |  |_b384b479bea52faedb2d91496cf92b7cd0cf0e
+  |  |  |_79
+  |  |  |  |_69a88c243c387eea7b1091addc7d907f80b8c6
+  |  |  |  |_909277152b37121bba301cf537991e5159ab5f
+  |  |  |  |_9c46c4052a509956365caa1cdc1b6411b4ef7e
+  |  |  |  |_9eb9e74c236e14a96f2e214ef56720d68a4983
+  |  |  |_7a
+  |  |  |  |_9273952391ce426089656598e0a61532924388
+  |  |  |  |_a5aab0eeaa23013bb7e557fcf3ccc38226e3ba
+  |  |  |  |_ccb3da903b29b1ca44f901b16ef8b8260d2dce
+  |  |  |_7b
+  |  |  |  |_4939d389853c5e796ee9485e85185cc57e7170
+  |  |  |  |_99ea191f8fecad8132bb6dccfacdbec2b3808d
+  |  |  |_7d
+  |  |  |  |_acdb05c9598f38cff836b89b6ea8c4f2ec85f3
+  |  |  |  |_c6c0e676a82aa524df5c540e81a507311e89e8
+  |  |  |  |_f349ddb5a92be15f7bb77683231704d656596c
+  |  |  |_7e
+  |  |  |  |_e007f7ead1083087dfa00c08e5d634e10a6e3e
+  |  |  |_7f
+  |  |  |  |_4fd440c424ba1700065eb32e5a116939f23871
+  |  |  |  |_b0c3efc8f75d88acbc8f9934e2ed6a8cecffd6
+  |  |  |_80
+  |  |  |  |_09cdd37c0e6cd732ee858f3acd1f5022e1e42a
+  |  |  |  |_10b12f085fbba555cc49ee2b8219bca9054bdc
+  |  |  |  |_559ff35d578022783ab9cfc3ed5b82dfc4e8a8
+  |  |  |  |_6e6a72f1def14d465535cf91c62adf7bdb1091
+  |  |  |  |_74b7b39c278b1a7878103edc231e9f3cebf972
+  |  |  |_81
+  |  |  |  |_59c226cc430aa7d5d846f936bc404ef0ee7ff8
+  |  |  |_82
+  |  |  |  |_00fe5c178fe4fafcdda8395fad502c4ee385e8
+  |  |  |  |_06bb5240047ba00618fa5ed4884ad6cfbcf056
+  |  |  |  |_5f544fd98626dbc5d9278bf64b7de1ea3c6c26
+  |  |  |  |_8e720afbc53f6b457d9aeb97e51bfa39ee7955
+  |  |  |  |_b5119261507e17d01b3cced311f5065f246081
+  |  |  |  |_c4b5f75d80da54791269fc7affc3fd1dc1e196
+  |  |  |_84
+  |  |  |  |_6d238ab7a4b36dd681e2b8ac0e2b258b9adf9c
+  |  |  |  |_7d8007021a4921998fad4ecb5fa851117a1331
+  |  |  |  |_980d358f6ce3e308093571e6df107ca922c05e
+  |  |  |  |_b8ff3f51187beeccfce35eb9bc0c6a7d062caa
+  |  |  |  |_d457f2befbde45186cf68a7ff92a66a154cb6e
+  |  |  |_85
+  |  |  |  |_1c2c5a7b5b8f7904648900b2c16dbca03937d8
+  |  |  |  |_3409790156a757fb54142224e97501f7ccea8c
+  |  |  |  |_79a05d34ab4e0ff7da3522d4f6b3b9a0a6185a
+  |  |  |  |_bf26793c38232ad108057bca3020a94118c21c
+  |  |  |  |_dd43b3841e76802424d07b24c1e271aec0c276
+  |  |  |_86
+  |  |  |  |_7e68f70500e3f6a90c091ddf8d556aecc0fd9e
+  |  |  |  |_85b213631ee6409e413cf7e07b4cc119ee1f8d
+  |  |  |_87
+  |  |  |  |_8379b031d238a403488a59f00188e08bfdbb77
+  |  |  |_88
+  |  |  |  |_16313d11454efa60a6f65386ee3bc62e2dfd9d
+  |  |  |  |_4713ec46c4b21d3d8d7e93dd022081fd1a114a
+  |  |  |  |_90cbca46ac51d92926d8492c5714988377c83f
+  |  |  |  |_d13cfa232ccf1ee812bf74ae2b962bb9a797ac
+  |  |  |  |_e77690c1285b299549d2e4b9a928d1ec3c077c
+  |  |  |_89
+  |  |  |  |_cc9bf0334c26de75d8e9965e6a5c9a7007c9b1
+  |  |  |_8a
+  |  |  |  |_9e2d103d0332f89af6d33011e10575cc04cd60
+  |  |  |  |_d51c6b57c5c7fa7b8ca8dc5c92d50def129e09
+  |  |  |  |_ecf1cfb887568e6fde0e79057c21f1cf8febbf
+  |  |  |_8b
+  |  |  |  |_0ca56c18c7cc409127523d10bcdb34e54f0a3f
+  |  |  |  |_2c540d5bebc7017ec3d99e92b0d1c98210dec2
+  |  |  |  |_601f881b7983797ec0f30f8c7500358928d0f9
+  |  |  |  |_8dc5c83cee59e602ab85366620f6e279ddd432
+  |  |  |  |_d158b3b74b3b0cef8b6467367df5a83ced949d
+  |  |  |  |_d6be777b6d5af58f02405defc298cff793af33
+  |  |  |_8c
+  |  |  |  |_b5d83f450788fa1575f133a7a0a657af5f8aa3
+  |  |  |_8d
+  |  |  |  |_05041c8d347a5cc534c1eae018f58953694ebf
+  |  |  |  |_b5125391d5275f7e4bb9e52bf08106c6b3109d
+  |  |  |_8e
+  |  |  |  |_076ae517bdc3f53d3b7c2c05524a58ba750397
+  |  |  |  |_9069ae63969abcd2820efcf4015c76072efb0f
+  |  |  |  |_ace5a9cb7f67b1b8d598f6c332ddc73e5bceaa
+  |  |  |_90
+  |  |  |  |_61d01d9f65b600e6d057a447cc645e3a6af857
+  |  |  |  |_734864d1740f0c99dfcf7cdb8dfcc4ca10ef8a
+  |  |  |  |_ec2f3ebea3117995a0b73a444eb251569485ee
+  |  |  |_91
+  |  |  |  |_a31e00d6fa1653eaf07fb4f180c41d828799ca
+  |  |  |  |_a509be5e29b61cae98201ad371d9248fde7524
+  |  |  |_92
+  |  |  |  |_510a4a396cb079cd022e1ca9ff5d5cb4bfeeaf
+  |  |  |_93
+  |  |  |  |_5acf6aaa083b40a7764b335a04463d65fb90ae
+  |  |  |  |_fbd9c34c08f6dd80bdedc68625f87e3483194e
+  |  |  |_94
+  |  |  |  |_2fe62e4f7b81e29ff0c953c4838d9accda87b0
+  |  |  |  |_6d0d80a79a3423b0c4e6822ba3b183b68e164a
+  |  |  |  |_a1eaa8adea1b202a1eb628c1b22b02acd08de3
+  |  |  |_96
+  |  |  |  |_2099246e6d74503a3f1bff2f61d78f7b614567
+  |  |  |  |_2813f662a226a29c628a7892204f7b9e5b93d8
+  |  |  |  |_82fa884a796d28e783621b04fd12ca536d4cc9
+  |  |  |_97
+  |  |  |  |_4c458f77c07be4c0d8959633df84beba4c1ee6
+  |  |  |  |_4d43ce29d985ac738850ded2725b633403a1c7
+  |  |  |  |_54073cfe30ef868ff52a16b0cfaa57965b3c57
+  |  |  |  |_6f3826acf6a2a2170e99fcf3c0c0b9a385ddc4
+  |  |  |_98
+  |  |  |  |_4dd36d4b451c18f8c722224756b6f5970c7b7d
+  |  |  |  |_4f4edee9cf7465eb25e89ec39fe6438cd86d7d
+  |  |  |  |_68c076830004e2c8e3243c1dd894f3ef51572a
+  |  |  |  |_80c7e64e697216aae52d89db11f73e6e73cfce
+  |  |  |  |_864b88fdd3566639737c5b59f772ce59ea7e14
+  |  |  |  |_daa7c743b53768e6b7f6cfd57a233135c083bc
+  |  |  |_99
+  |  |  |  |_047320fd42d1e3159eb40bdeda4f81a0e034dc
+  |  |  |_9a
+  |  |  |  |_47b58afcc3b31338dd2b7ce7eef0674738a998
+  |  |  |  |_70a6716cc31f8d53f72dfbe85ce466c6eef3da
+  |  |  |  |_9e4d53de1e273fecc75454cf9b44cc41815ee9
+  |  |  |  |_b7ce85da0d0274c2c095cae53d3981a4480108
+  |  |  |_9b
+  |  |  |  |_5957a553a33201bbf89f9f765f09fc37ea85ec
+  |  |  |_9c
+  |  |  |  |_57f8b9d91dacd1538c62c0cbdcc8c436e92996
+  |  |  |  |_7fbfa2b48e5affc922f3c424938b619a8bbd1a
+  |  |  |  |_aaaefd85ce21af8b9a9e0f91bce2146c8aa544
+  |  |  |  |_cfcb3ef9c6ecfa8afed2c9ff6e958362d36737
+  |  |  |_9d
+  |  |  |  |_389d001d9194f1021c1db8325e225722eed0a0
+  |  |  |  |_527ede19160ee844afe01aa087b315eb0cdbbd
+  |  |  |  |_bf3a64ab49b8a2af81f9a66123d13b0f662e60
+  |  |  |_9e
+  |  |  |  |_a58d4e6cdb9393a375bdb299e3a9b24c7848b8
+  |  |  |_9f
+  |  |  |  |_1c555c3e5f7b0dadfaf436e4c4283ca1f3a6ac
+  |  |  |_a0
+  |  |  |  |_446d08487878344c8b3aacada9104257f42897
+  |  |  |  |_c00c7657b72b9b357fd347ffc81861fba93dfd
+  |  |  |_a1
+  |  |  |  |_21adfef4394a3ce5f0edcf6538d66c1d4f19a4
+  |  |  |  |_48fc8b518d0103c66bc7e13b20ece4cfa4d6b5
+  |  |  |  |_6af524bc8db0b0022e10b7b81c526d7125087e
+  |  |  |_a2
+  |  |  |  |_9095364f92d03e9205708744e29de88ca56afd
+  |  |  |  |_9d940dc5d560ab6d6bf031b84aec7a44ab56f3
+  |  |  |_a3
+  |  |  |  |_e401ab5db77a78980b0a60582dd93f07fe9bd9
+  |  |  |_a4
+  |  |  |  |_5a16be2a081530a737a485a411348855c31ed1
+  |  |  |  |_9eb2c8b07326258027f9562c13d51c40d6209b
+  |  |  |  |_e5223663329876dd84ac0b581d131bb87feef4
+  |  |  |_a5
+  |  |  |  |_750abe8c5a8211bcaa4d5b880807f38207fe08
+  |  |  |_a6
+  |  |  |  |_7fd1bf62118ef294e18eaa070b6627919f84e9
+  |  |  |_a7
+  |  |  |  |_0b283cacf52794da3d413c73d414da4b3c479d
+  |  |  |  |_162994f81fb2217d7460c66080de213931b8fd
+  |  |  |  |_90a237ea4f3ccc54a317d70a3804f55107ac9c
+  |  |  |_a8
+  |  |  |  |_364d737ea46521e0f3a53c420a3f58e47d0fba
+  |  |  |  |_3d7308e25f1fea53863dd317b64d5c990bb8c5
+  |  |  |  |_8dfec69a3bc10270a31d49ec8b1e60f8cc322d
+  |  |  |  |_b6dc32e83a958e223cd41db2d84273cdfddfbd
+  |  |  |_a9
+  |  |  |  |_a6165bdbfe5e203d6c1977674e6ad17407b52c
+  |  |  |  |_adcd051c316ab766f060eaaec013cad29ac252
+  |  |  |_aa
+  |  |  |  |_83726c0ccd5d810564ffde312a368bcd7839f7
+  |  |  |  |_83c0fa4f46d9102e20f55c1a4e550709876c77
+  |  |  |  |_d730cf7fa68a976b7b6daa9856b98b0a553ddb
+  |  |  |_ab
+  |  |  |  |_0f261cc8797accec617c61f13adb057fab3d2d
+  |  |  |  |_8c14c6f9944f93bcd9c8ce1fddd74061486a35
+  |  |  |  |_e4d9de079dfd40a60f454c45c9518f412feef2
+  |  |  |  |_ec83ff6e57567cb7bae829f7f151d33dc133d6
+  |  |  |_ac
+  |  |  |  |_8f85c522eb2f25c2975e091c8ec342c1715b4c
+  |  |  |  |_ab4cb18339afe55ff05e9a1e590c5ce8e457c9
+  |  |  |_ad
+  |  |  |  |_50b5fe25bc42742264ef4d7ae55f94f11e951b
+  |  |  |  |_b4af431ccc25dfbcb4e945d8e1e27e01eb55ce
+  |  |  |_ae
+  |  |  |  |_02e3f6282f37bbd4343a49859e3f2277279f77
+  |  |  |  |_b8b96b155ef43cf1d8d78c266516d8da9cbd22
+  |  |  |  |_ee77584653f3b6957b0a0793e2f5966be3af98
+  |  |  |  |_f6dedbc359e72990c1cf4420be01889f8bbaaa
+  |  |  |_af
+  |  |  |  |_100b4e9aaecc32cacaac0772aa83b68d37b530
+  |  |  |  |_7adc77f006984189a63f002dd75c4d26aabaf0
+  |  |  |  |_88d6222a05a6ec91ab707193aac470fba43362
+  |  |  |_b0
+  |  |  |  |_6fc1adc02fd44804d446633e40a19473e3e0c7
+  |  |  |  |_76cd1a3e5d49058acd99f17b62197d24d60010
+  |  |  |  |_af742ce4294227473d80e8fc9004ed1a81f22f
+  |  |  |  |_fa595b908da1736253ecb0a7166de37ad07117
+  |  |  |_b1
+  |  |  |  |_233d6ac1f1137fada7dca56c962fc36963df40
+  |  |  |  |_70ce2e49fedf5971c59eedca1cad397b535e9c
+  |  |  |  |_de13b508b9837989442cc9857e5c59bffc34d5
+  |  |  |_b2
+  |  |  |  |_17af554b8be6e215dc5c418c8475f494a00360
+  |  |  |  |_44be06792d2fef45ed1ad3085da1ffc833d6f5
+  |  |  |  |_de43a9ae105d4893790acf486b2de85d777b75
+  |  |  |  |_e47d834e193939d2ec5a6ae419f586f40f0f77
+  |  |  |  |_f7051c3434db8ce1690bca944b4259fed1f64c
+  |  |  |_b3
+  |  |  |  |_1ee2bb899a7a70eb4a7036e14c8d53dd28d46b
+  |  |  |  |_59dea030f3ddfd5c4969aec5510cb62fe1b6f4
+  |  |  |  |_6124a483ea983a76067f8714b1f211653cbc5a
+  |  |  |  |_add43e8c2295d4f89e2214cf2c293c6b375001
+  |  |  |  |_ae8b0cc7a6a8aff6d7cce8d148f18773127d1e
+  |  |  |  |_c8040b33a68ef4ac8d33cb1acb04d7da2d2fb0
+  |  |  |  |_fd63eb59c93e8ed644ec0c135239ab685241da
+  |  |  |_b4
+  |  |  |  |_6b2b6ff5f5330c9bfc0c4107eb520449b3f512
+  |  |  |_b5
+  |  |  |  |_adc9724b2c956ab0d5bde68254dffb44d31963
+  |  |  |  |_b0091a1cd455416a938c1637b1229ce63f546b
+  |  |  |_b6
+  |  |  |  |_9ee8443293ec260d220b7ac79c75786d028c36
+  |  |  |  |_c67a6901fb382d0778a46cecd1d2a3c797a322
+  |  |  |_b7
+  |  |  |  |_aea0b96e1a2e7f93d2936ae6021af9841fd82c
+  |  |  |  |_f056898a6d17de692555c466c5496eb44c2de5
+  |  |  |_b8
+  |  |  |  |_793e3ecb9a97141e0a750516a6ceca3be0f2c3
+  |  |  |  |_cd2504c4404f8c11815305daf14aa8829dff00
+  |  |  |  |_ec6c8e6ba1cfbbb717314c449144c162792fb1
+  |  |  |_b9
+  |  |  |  |_0dc75c2e33174a84570ac7e6b46de4a3c25f9b
+  |  |  |  |_8982a0128d62953d0766248144476f5ae080e6
+  |  |  |  |_a7dda92314b23ae0695202aebee05912479337
+  |  |  |  |_e81de180a650aa84af9bd72ea052850f33d528
+  |  |  |_bb
+  |  |  |  |_1b490463cab3ec5bcea6667cc4dcecf4838a6c
+  |  |  |  |_26b61ddb3797113c53dea393fc99e72450b04e
+  |  |  |  |_34fc48a47224d2f824c1c803d5dfeae303b5b2
+  |  |  |_bc
+  |  |  |  |_47e7e776708efa41c21418e46857fc3d486600
+  |  |  |  |_b84169b3dcac4c42cc3fa361018aadfc2a3288
+  |  |  |_bd
+  |  |  |  |_4bebb0a0ca096bc9f5d0cbd5c0365d89e33241
+  |  |  |  |_7951afe22b1a2de8aae5da2eee2ce7a25b67fa
+  |  |  |_be
+  |  |  |  |_33a26274eff0d9d49a4150d34fa5127b77004b
+  |  |  |  |_92ede3b8276d0dbc9ef264fc778e2c34ba01cd
+  |  |  |  |_9ad8908cafaed550688adfaaf8c2c595e2fc62
+  |  |  |  |_f2fea1aca36ed19db6b29f1d8847cff311ce34
+  |  |  |_bf
+  |  |  |  |_1ae55faf3607657c31b289658343d1de33103d
+  |  |  |_c0
+  |  |  |  |_2edeee79cdca679f39f1e1cdafa28b82eb10e1
+  |  |  |  |_7a74de4fb4ebbad5a9b84a5a7b68e4f489a6e0
+  |  |  |  |_ccb6ed8079b46f1c8095539935d714f3a7b6c4
+  |  |  |  |_dff33a139a5f1fabe7450fbbe38c3ce3c8159d
+  |  |  |  |_f594581100d304cc0b67d2e5e42ed76fc71bf4
+  |  |  |_c1
+  |  |  |  |_bffe170276c2135d69b28e5fc97fccfbc42a39
+  |  |  |  |_d7574c3ffdab2ac5381fe3ec9b30dc35aea4ba
+  |  |  |_c2
+  |  |  |  |_79f040819afb3f5c35c45976f8fc9b2e271902
+  |  |  |  |_df7e9fc2f8bfd6508fab906a8415629dc63855
+  |  |  |_c3
+  |  |  |  |_2919267127e5191e2d188bee15da861431a51b
+  |  |  |  |_5d13aa92bd3737da5dd869792711a9ddd4010a
+  |  |  |_c4
+  |  |  |  |_20ae551b509de43a9cf488429304ea2d40e407
+  |  |  |  |_43a2b98df38af71af2c17acb490e666858f1c7
+  |  |  |_c5
+  |  |  |  |_7854d1ca1ab738c273dc5f1215a1c78eb9e175
+  |  |  |  |_7f9968a529aa73615e352d26bb5455031f09ee
+  |  |  |  |_88f8071905579f0f0923d7f4098d947b182d6d
+  |  |  |_c6
+  |  |  |  |_7c1ddf4843b9fbe29f4017af5766e8844b8cd7
+  |  |  |_c7
+  |  |  |  |_b098e7a90f874adfa02aba3e4b9ba6777cd79f
+  |  |  |_c8
+  |  |  |  |_20a76601674165762625cda7477bf413888c23
+  |  |  |  |_786c37f376806e8447399486a52215a125b5c6
+  |  |  |  |_797308848a4b9e57903665393516d03d9ed612
+  |  |  |  |_dd3e58d254c612f11ee9cbea450d617327a0d9
+  |  |  |_c9
+  |  |  |  |_ca6bc6e4305c385d205b4cb33c2db72fe92e2b
+  |  |  |  |_e33e551a8aa324a26aa1a9163d70f24152e3bf
+  |  |  |_ca
+  |  |  |  |_01881786b2581255218e1a51c0329254b95288
+  |  |  |  |_5f4a9a7b41560a28f76b9d0c2148a70ee72d52
+  |  |  |  |_8ff2d208b49682938a408c762e60bfca0f5d6d
+  |  |  |  |_94bed93fc432eb88b25f29294c4093a47d614c
+  |  |  |  |_f24b0aaf717a2af55f9c28a69e809944cb45f8
+  |  |  |_cb
+  |  |  |  |_151a71d9dcee0e44c734c3261f2dc9fb511961
+  |  |  |_cc
+  |  |  |  |_9a65537a83318baa748429c94815981fed411a
+  |  |  |_cd
+  |  |  |  |_7eda713c32d0b949248d5c82f25084358f2c6b
+  |  |  |  |_8ba83ddb71c277b562fbda13c8e4e490a249ff
+  |  |  |  |_bec1e0102036fe134b1e1ebfdf5b2ab0655806
+  |  |  |  |_f8557b960f23bc9900d8cb87147a8cbf583f61
+  |  |  |_ce
+  |  |  |  |_be6efe37b3d38a9c8b298fbd30f9be547ad540
+  |  |  |  |_f1fc6dde7d9db1a25de0f63ec9932c33f954f9
+  |  |  |  |_f44e034c0bdf3392dc9335ec5d13253492be37
+  |  |  |_cf
+  |  |  |  |_66a229ea98830cda83e6034ce8e710c6285b3d
+  |  |  |  |_890b25e7e8dd71e5a48f4efd83ac06610b3493
+  |  |  |  |_90cb41908e992a41827ec22f28eab7f7abbb0e
+  |  |  |  |_d64438d416892d1853847cb3524c67916d74fc
+  |  |  |_d0
+  |  |  |  |_8474e2d5478566dfc799aedd43d33071ae73b2
+  |  |  |  |_88de4af75aa9eb10a42c760faf5489b282ad5c
+  |  |  |  |_b7945e5153f3da42bd848644c87a85e0b8629e
+  |  |  |_d2
+  |  |  |  |_2ccc21b5fee59c976fcd2d49c74853c1d93051
+  |  |  |  |_cbe6a2a31490aa3523809f2168d3e856b07fba
+  |  |  |_d3
+  |  |  |  |_735cc74188b690900a68cc99023c889bb030b6
+  |  |  |  |_c029e7612ac4a3f5dd3840d7caeaca79cef198
+  |  |  |  |_c3d3ad57a629a1726285b54ba3d8ef86577aca
+  |  |  |  |_d4c049dadcc77b693432bf04c6e71d6565ccc1
+  |  |  |_d4
+  |  |  |  |_24eee5f15c9d35aa203757cc5f8679b673afab
+  |  |  |  |_3a2721341f94ddc22554b9e88fbb83b895f3a9
+  |  |  |  |_f92800aa2983fe37264d2832a9cbdb5f0d951f
+  |  |  |_d5
+  |  |  |  |_bd4c61aae53da9adfeed2108122fad79431fa8
+  |  |  |_d6
+  |  |  |  |_057102d54d403a6388084a876ab1170427555a
+  |  |  |  |_5f7d99124d020fb0aa42bc46c2002eb44e5dd8
+  |  |  |  |_936aea91661d963b22a39fce86c51e5153d796
+  |  |  |_d7
+  |  |  |  |_79b3e2f17f20139b9c54c06b45510b817b811c
+  |  |  |  |_a42c105a2d17bf8aee32eff8d7eb0c709bd2bb
+  |  |  |_d8
+  |  |  |  |_683ed29c38bfb476d6d5665d6f6972671d9248
+  |  |  |  |_ec28f094760f03f438683bff298fd56ecf6704
+  |  |  |_d9
+  |  |  |  |_a8d9711d9f7efe2f6ee90aa15d8b57add47683
+  |  |  |  |_c0ce7fda1f5e8303995b57245f835559189f37
+  |  |  |  |_c2d3efac810a8ed573265975029093ad49abca
+  |  |  |_da
+  |  |  |  |_2aff8ada63136898d9943cc099c89e26310ac3
+  |  |  |_db
+  |  |  |  |_74e939c236381e466c2686d2af6c77e325dadf
+  |  |  |_dc
+  |  |  |  |_2b3d6e505ef9a4e86c7bf1e7c6fb3daaad03dd
+  |  |  |  |_2fb4b9b5591120de0fbcb87196d395a6d0041e
+  |  |  |  |_c109a6b99d37339adeea35738f64d6bda036d3
+  |  |  |_de
+  |  |  |  |_1412ee27239871d63ebea6eb19e84c7b6d2ecb
+  |  |  |  |_233fcd31a8b5d6020556c01a1211ac61cf7660
+  |  |  |  |_54bfab5cc90e621f5f68e302a92a217335bdf1
+  |  |  |  |_a80a270a1fb42ea2066a272b040d45a3215a16
+  |  |  |  |_aa4d7144c616e35e7fcc1aeda0ce96b9994b2d
+  |  |  |  |_e631856a2d2246099acf9988ebdc3afdd99e7e
+  |  |  |_df
+  |  |  |  |_89ba8271ede9f842a1a4666a6c0e0548168142
+  |  |  |_e0
+  |  |  |  |_6410d12d8e9e5904b8f3324f12a47c7e9b247a
+  |  |  |  |_d57611a6caf7abf8b8c620c149fd1a8089e911
+  |  |  |  |_deb18f504a2b0afc80d291c3b60bf729269047
+  |  |  |_e1
+  |  |  |  |_19e6f8449b03d3e1778b53facde6bb3c63a245
+  |  |  |  |_1cc68f5eda79de2289f315ac91403c73819695
+  |  |  |  |_6c5bcb3109318adb7e18acab1e3cfd33748df7
+  |  |  |  |_dac0b2a0fa74ffaacf13af8fd67e9f4e65a87b
+  |  |  |_e2
+  |  |  |  |_b82c86a28754e2a43514b4bcddaff9221eb4d0
+  |  |  |  |_f00405299c9c1836de6b43c807d2eb8023b118
+  |  |  |  |_f86b6c2e4dabebfd277c91c63301ad09116277
+  |  |  |_e3
+  |  |  |  |_07ce5f6d788820d514ea026ad37bee97895b7d
+  |  |  |  |_283c1afa7e844f729dace129fa71b98701316f
+  |  |  |  |_2d2f13a9a97b057e21b73fbe31399a2f19469b
+  |  |  |  |_b87132b50c4809b17cbf5461338e405e1d8896
+  |  |  |_e4
+  |  |  |  |_40efc513fa3bfc7c276d89f42c79b6e8fc6063
+  |  |  |  |_c59aa4aefd23fae27c5ea5fa46688641182243
+  |  |  |_e6
+  |  |  |  |_9de29bb2d1d6434b8b29ae775ad8c2e48c5391
+  |  |  |  |_b3ac0791934c8be0a8d2182d0a0c4131e36f15
+  |  |  |_e7
+  |  |  |  |_1c16994e1336bbaa9b39ea8dac1968b54c2883
+  |  |  |  |_b6e6c7a583c5e256d0be68a319fd3f79f521a9
+  |  |  |  |_f33e5868428ca2e1df66040fa5d3ea30dc456d
+  |  |  |_e8
+  |  |  |  |_90367f1e235d2c7a694242f393cee8ecf17730
+  |  |  |_ea
+  |  |  |  |_3376dc432826a7f43240084d9a86d45da69e68
+  |  |  |  |_47e6f98c8f0897291327da1df41dddfb32b87d
+  |  |  |  |_95223e36d1667cf0b033582c78f1ec7fc97482
+  |  |  |_eb
+  |  |  |  |_933042344c72a1c87f247fcc764aab4a3ce54f
+  |  |  |  |_da5fcf7d8e132971c8c9f4154c70d85429bb05
+  |  |  |_ec
+  |  |  |  |_42271f219aa459668aa8ba48c8450fa664713d
+  |  |  |  |_4bcc12d55fb0a5b7064009ca506d21ce5fc60a
+  |  |  |  |_5e5594d2dfcc82e5e635744980b6acecd14494
+  |  |  |  |_6817bc48433d9c3517db48d7d9ae3cff5d709d
+  |  |  |  |_72a5af3dfbf473ef26eb69a7166ecf7fa4fa8c
+  |  |  |  |_83aa67d04ea4f6656c7c8ff66e4e08eaa421e9
+  |  |  |  |_9b4489569ca3939d8c98998a5b5149e15279e5
+  |  |  |  |_ce4f08a657548751c7d90b3cf3e5fabece7ef6
+  |  |  |_ed
+  |  |  |  |_0c62f9d9f9b01ace4d1911007c72a697ade633
+  |  |  |_ee
+  |  |  |  |_247003a1627d86c340e1f631ece338009ed2c9
+  |  |  |  |_c4bd2163deb3f11ab12aa15f6140fe525ce4b8
+  |  |  |_ef
+  |  |  |  |_886419a198eef4498a1f40738af48935f68712
+  |  |  |  |_abec78ffb9c429629c7513379f8c780ffe0fb0
+  |  |  |  |_ec4e3acd40e9dc10f93c56a20f975807368895
+  |  |  |  |_fd75ba04c1026c5efb3692db9f541aca43bd23
+  |  |  |_f0
+  |  |  |  |_f55677a1170234cc87f95cd401ddc597c00435
+  |  |  |_f1
+  |  |  |  |_05397e565572605cd7b9b7d7e9ecb86e0a87d1
+  |  |  |  |_36801399b2af753216050d33b059104b7146cf
+  |  |  |  |_7693f329eeec5acd4d4669fa96a2fd71d85d06
+  |  |  |_f2
+  |  |  |  |_3739bfa73a92cd17d59703b91a20d33dad4466
+  |  |  |  |_480789a9e236503e07605780a17c189c8c398f
+  |  |  |  |_7c071a0996bde6f284950203bfc46b0c14845b
+  |  |  |  |_c3b8e7e9c9a6c2b88c687c7432cde68a8258e0
+  |  |  |_f4
+  |  |  |  |_58b81b8cda001ee8fdb61f0c350dec5d359133
+  |  |  |  |_5a89667907367aa8a6d5850685ea93e52a024d
+  |  |  |  |_8e31ca0e948089db6beb9e5fd370ad711dc7f8
+  |  |  |_f5
+  |  |  |  |_054172ccc3fc7e1da9e1817b69b75ae7cc15cb
+  |  |  |  |_a79efe506f7c6e4e06e4efd026797f6e48827d
+  |  |  |  |_f0f7c9cc577cc798f72af529464a66c213a311
+  |  |  |_f6
+  |  |  |  |_94ddef0ea47b4a04cd9347d90d9137c3105946
+  |  |  |  |_a5cd64be7b753a16ecba14724df6f1602b6d5f
+  |  |  |  |_eefcfb73da22215ea34cd03b90625a6910fc37
+  |  |  |_f7
+  |  |  |  |_0c0a712610a38dd612d47452030e63608185ac
+  |  |  |  |_22b0c8899bc2f7af641d8f7e2c69c681b1a118
+  |  |  |  |_612c6d715a03e9cfb3b3e090c6d1633bc143f1
+  |  |  |  |_b6bc7066c883b2d40f01199ac450384200a8f9
+  |  |  |_f9
+  |  |  |  |_3fa50d425758818508373b2b126ce040b6497a
+  |  |  |  |_eda82d1f9fe9b923bcfa3fa75f41a57d13d964
+  |  |  |_fa
+  |  |  |  |_b280219d856f79bd30ff11ff5839cf6ba843f7
+  |  |  |  |_b98c07d2041f1d2bb8486820d68e114fcd2023
+  |  |  |  |_f7ec3107843ff8d28d11332593dd6f6e080b4e
+  |  |  |_fb
+  |  |  |  |_0851d7459e8d82b00d06262f5b540771b89e1e
+  |  |  |  |_b166658bbccc779cf8fa6edfc3d9fb9b07cb3d
+  |  |  |  |_fa215421b169bca93ce088f5ee8a85a60678f5
+  |  |  |_fc
+  |  |  |  |_1fb7c62953636bcac1aab3cb32ad5ba7d727bf
+  |  |  |_fd
+  |  |  |  |_565826d7716cc2f31f8fd88c4a4fee684337bf
+  |  |  |  |_709edf90f377db3979fbb3c77507d2354fc294
+  |  |  |  |_c8f38995540cbea1aa57c616ca060b2c98808a
+  |  |  |  |_e663d825a77710d4c81ba688fd7e7011ddc8cd
+  |  |  |_fe
+  |  |  |  |_7808bc1485c17335214f4a9194d66eeb887224
+  |  |  |_ff
+  |  |  |  |_77a85cf4210c98c59018b391d8b9aba9543afc
+  |  |  |  |_abbddfe600f1afc7f1eee31e3a9f6c1a8eb478
+  |  |  |_info
+  |  |  |_pack
+  |  |  |  |_pack-19879138d09bcfad4f056c66d86161f42a122262.idx
+  |  |  |  |_pack-19879138d09bcfad4f056c66d86161f42a122262.pack
+  |  |  |  |_pack-19879138d09bcfad4f056c66d86161f42a122262.rev
+  |  |_ORIG_HEAD
+  |  |_refs
+  |  |  |_heads
+  |  |  |  |_develop
+  |  |  |  |_feature
+  |  |  |  |  |_add-new-physic-engine
+  |  |  |  |  |_chapter-1-foundation-OOP-and-Java
+  |  |  |  |_main
+  |  |  |_remotes
+  |  |  |  |_origin
+  |  |  |  |  |_develop
+  |  |  |  |  |_feature
+  |  |  |  |  |  |_add-new-physic-engine
+  |  |  |  |  |  |_chapter-1-foundation-OOP-and-Java
+  |  |  |  |  |_main
+  |  |  |_stash
+  |  |  |_tags
+  |  |  |  |_1.0.0
+  |  |_snyk
+  |_.gitea
+  |  |_workflows
+  |  |  |_build.yml
+  |_.gitignore
+  |_.idea
+  |  |_.gitignore
+  |  |_checkstyle-idea.xml
+  |  |_libraries
+  |  |  |_junit_platform_console_standalone_1_10_1.xml
+  |  |  |_target.xml
+  |  |  |_tools.xml
+  |  |_misc.xml
+  |  |_modules.xml
+  |  |_uiDesigner.xml
+  |  |_vcs.xml
+  |  |_workspace.xml
+  |_.sdkmanrc
+  |_build
+  |_build.properties
+  |_build.readme.md
+  |_build.sh
+  |_filelist.txt
+  |_JavaGameOnAWeek.iml
+  |_lib
+  |  |_dep
+  |  |_stub.sh
+  |  |_test
+  |  |  |_junit-platform-console-standalone-1.10.1.jar
+  |  |_tools
+  |  |  |_checkstyle-10.12.3-all.jar
+  |  |  |_markdown2html-0.3.1.jar
+  |  |  |_rules
+  |  |  |  |_checkstyle-author.xsl
+  |  |  |  |_checkstyle-csv.xsl
+  |  |  |  |_checkstyle-frames-errors.xsl
+  |  |  |  |_checkstyle-frames.xsl
+  |  |  |  |_checkstyle-noframes-sorted.xsl
+  |  |  |  |_checkstyle-simple.xsl
+  |  |  |  |_google_checks.xml
+  |  |  |  |_sun_checks.xml
+  |_README.md
+  |_scripts
+  |_src
+  |  |_docs
+  |  |  |_01-foundation-OOP-and-Java.md
+  |  |  |_10-newton-s-physics.md
+  |  |_main
+  |  |  |_java
+  |  |  |  |_com
+  |  |  |  |  |_snapgames
+  |  |  |  |  |  |_demo
+  |  |  |  |  |  |  |_scenes
+  |  |  |  |  |  |  |  |_PlayScene.java
+  |  |  |  |  |  |_framework
+  |  |  |  |  |  |  |_behaviors
+  |  |  |  |  |  |  |  |_Behavior.java
+  |  |  |  |  |  |  |  |_WaveWaterSimulator.java
+  |  |  |  |  |  |  |_entity
+  |  |  |  |  |  |  |  |_Camera.java
+  |  |  |  |  |  |  |  |_Entity.java
+  |  |  |  |  |  |  |  |_GameObject.java
+  |  |  |  |  |  |  |  |_GaugeObject.java
+  |  |  |  |  |  |  |  |_GridObject.java
+  |  |  |  |  |  |  |  |_TextObject.java
+  |  |  |  |  |  |  |_Game.java
+  |  |  |  |  |  |  |_gfx
+  |  |  |  |  |  |  |  |_Renderer.java
+  |  |  |  |  |  |  |_io
+  |  |  |  |  |  |  |  |_InputListener.java
+  |  |  |  |  |  |  |  |_ResourceManager.java
+  |  |  |  |  |  |  |_physic
+  |  |  |  |  |  |  |  |_CollisionManager.java
+  |  |  |  |  |  |  |  |_Material.java
+  |  |  |  |  |  |  |  |_PhysicEngine.java
+  |  |  |  |  |  |  |  |_PhysicType.java
+  |  |  |  |  |  |  |  |_World.java
+  |  |  |  |  |  |  |  |_WorldArea.java
+  |  |  |  |  |  |  |_scene
+  |  |  |  |  |  |  |  |_AbstractScene.java
+  |  |  |  |  |  |  |  |_Scene.java
+  |  |  |  |  |  |  |  |_SceneManager.java
+  |  |  |  |  |  |  |_utils
+  |  |  |  |  |  |  |  |_Config.java
+  |  |  |  |  |  |  |  |_I18n.java
+  |  |  |  |  |  |  |  |_Log.java
+  |  |  |  |  |  |  |  |_Node.java
+  |  |  |_javadoc
+  |  |  |  |_overview.html
+  |  |  |_resources
+  |  |  |  |_assets
+  |  |  |  |  |_fonts
+  |  |  |  |  |  |_Minecraftia-Regular.ttf
+  |  |  |  |  |  |_upheavtt.ttf
+  |  |  |  |  |_images
+  |  |  |  |  |  |_backgrounds
+  |  |  |  |  |  |  |_forest.jpg
+  |  |  |  |  |  |  |_ruins.png
+  |  |  |  |  |  |  |_volcano.png
+  |  |  |  |  |  |_thor-hammer.png
+  |  |  |  |  |  |_tiles01.png
+  |  |  |  |  |  |_tiles01.xcf
+  |  |  |  |_config.properties
+  |  |  |  |_i18n
+  |  |  |  |  |_messages.properties
+  |  |  |  |  |_messages_en_US.properties
+  |  |_test
+  |  |  |_java
+  |  |  |  |_MonProgramme.java
+  |  |  |  |_MonProgramme2.java
+  |  |  |_resources
+  |_target
+  |  |_build
+  |  |  |_JavaGameInADay-1.0.1.run
+  |  |  |_lib
+  |  |  |  |_dep
+  |  |_build.log
+  |  |_checkstyle_errors.xml
+  |  |_classes
+  |  |  |_assets
+  |  |  |  |_fonts
+  |  |  |  |  |_Minecraftia-Regular.ttf
+  |  |  |  |  |_upheavtt.ttf
+  |  |  |  |_images
+  |  |  |  |  |_backgrounds
+  |  |  |  |  |  |_forest.jpg
+  |  |  |  |  |  |_ruins.png
+  |  |  |  |  |  |_volcano.png
+  |  |  |  |  |_thor-hammer.png
+  |  |  |  |  |_tiles01.png
+  |  |  |  |  |_tiles01.xcf
+  |  |  |_config.properties
+  |  |  |_i18n
+  |  |  |  |_messages.properties
+  |  |  |  |_messages_en_US.properties
+  |  |_javadoc
+  |  |  |_allclasses-index.html
+  |  |  |_allpackages-index.html
+  |  |  |_com
+  |  |  |  |_snapgames
+  |  |  |  |  |_demo
+  |  |  |  |  |  |_scenes
+  |  |  |  |  |  |  |_class-use
+  |  |  |  |  |  |  |  |_PlayScene.html
+  |  |  |  |  |  |  |_package-summary.html
+  |  |  |  |  |  |  |_package-tree.html
+  |  |  |  |  |  |  |_package-use.html
+  |  |  |  |  |  |  |_PlayScene.html
+  |  |  |_element-list
+  |  |  |_help-doc.html
+  |  |  |_index-all.html
+  |  |  |_index.html
+  |  |  |_legal
+  |  |  |  |_ADDITIONAL_LICENSE_INFO
+  |  |  |  |_ASSEMBLY_EXCEPTION
+  |  |  |  |_dejavufonts.md
+  |  |  |  |_jquery.md
+  |  |  |  |_jqueryUI.md
+  |  |  |  |_LICENSE
+  |  |  |_member-search-index.js
+  |  |  |_module-search-index.js
+  |  |  |_overview-summary.html
+  |  |  |_overview-tree.html
+  |  |  |_package-search-index.js
+  |  |  |_resource-files
+  |  |  |  |_copy.svg
+  |  |  |  |_fonts
+  |  |  |  |  |_dejavu.css
+  |  |  |  |  |_DejaVuLGCSans-Bold.woff
+  |  |  |  |  |_DejaVuLGCSans-Bold.woff2
+  |  |  |  |  |_DejaVuLGCSans-BoldOblique.woff
+  |  |  |  |  |_DejaVuLGCSans-BoldOblique.woff2
+  |  |  |  |  |_DejaVuLGCSans-Oblique.woff
+  |  |  |  |  |_DejaVuLGCSans-Oblique.woff2
+  |  |  |  |  |_DejaVuLGCSans.woff
+  |  |  |  |  |_DejaVuLGCSans.woff2
+  |  |  |  |  |_DejaVuLGCSansMono-Bold.woff
+  |  |  |  |  |_DejaVuLGCSansMono-Bold.woff2
+  |  |  |  |  |_DejaVuLGCSansMono-BoldOblique.woff
+  |  |  |  |  |_DejaVuLGCSansMono-BoldOblique.woff2
+  |  |  |  |  |_DejaVuLGCSansMono-Oblique.woff
+  |  |  |  |  |_DejaVuLGCSansMono-Oblique.woff2
+  |  |  |  |  |_DejaVuLGCSansMono.woff
+  |  |  |  |  |_DejaVuLGCSansMono.woff2
+  |  |  |  |  |_DejaVuLGCSerif-Bold.woff
+  |  |  |  |  |_DejaVuLGCSerif-Bold.woff2
+  |  |  |  |  |_DejaVuLGCSerif-BoldItalic.woff
+  |  |  |  |  |_DejaVuLGCSerif-BoldItalic.woff2
+  |  |  |  |  |_DejaVuLGCSerif-Italic.woff
+  |  |  |  |  |_DejaVuLGCSerif-Italic.woff2
+  |  |  |  |  |_DejaVuLGCSerif.woff
+  |  |  |  |  |_DejaVuLGCSerif.woff2
+  |  |  |  |_glass.png
+  |  |  |  |_jquery-ui.min.css
+  |  |  |  |_link.svg
+  |  |  |  |_stylesheet.css
+  |  |  |  |_x.png
+  |  |  |_script-files
+  |  |  |  |_jquery-3.7.1.min.js
+  |  |  |  |_jquery-ui.min.js
+  |  |  |  |_script.js
+  |  |  |  |_search-page.js
+  |  |  |  |_search.js
+  |  |  |_search.html
+  |  |  |_serialized-form.html
+  |  |  |_tag-search-index.js
+  |  |  |_type-search-index.js
+  |  |_JavaGameInADay-1.0.1-javadoc.jar
+  |  |_JavaGameInADay-1.0.1-sources.jar
+  |  |_JavaGameInADay-1.0.1.jar
+  |  |_MANIFEST.MF
+  |  |_sources.lst
+  |  |_test-classes
+  |  |_test-sources.lst
+  |_test001.iml
