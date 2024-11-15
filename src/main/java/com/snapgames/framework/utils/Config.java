@@ -3,6 +3,7 @@ package com.snapgames.framework.utils;
 import com.snapgames.framework.Game;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.HashMap;
@@ -18,6 +19,8 @@ public class Config extends HashMap<String, Object> {
     public Config(Game app) {
         super();
         this.app = app;
+        put("app.test", false);
+        put("app.debug.level", 0);
         put("app.render.window.title", "Test001");
         put("app.render.window.size", new Dimension(640, 400));
         put("app.render.buffer.size", new Dimension(320, 200));
@@ -46,6 +49,9 @@ public class Config extends HashMap<String, Object> {
                 case "app.exit" -> {
                     app.exit = Boolean.parseBoolean(props.getProperty("app.exit"));
                 }
+                case "app.debug.level" -> {
+                    app.setDebug(Integer.parseInt(props.getProperty("app.debug.level")));
+                }
                 case "app.render.window.size" -> {
                     String[] values = ((String) e.getValue()).split("x");
                     put("app.render.window.size", new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
@@ -58,8 +64,15 @@ public class Config extends HashMap<String, Object> {
                     String[] values = ((String) e.getValue()).split("x");
                     put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, Double.parseDouble(values[0]), Double.parseDouble(values[1])));
                 }
+                case "app.physic.world.gravity" -> {
+                    String[] values = ((String) e.getValue()).substring(((String) e.getValue()).indexOf("(") + 1, ((String) e.getValue()).lastIndexOf(")")).split(",");
+                    put("app.physic.world.gravity", new Point2D.Double(Double.parseDouble(values[0]), Double.parseDouble(values[1])));
+                }
                 case "app.scene.default" -> {
                     put("app.scene.default", (String) e.getValue());
+                }
+                case "app.scene.list" -> {
+                    put("app.scene.list", ((String) e.getValue()).split(","));
                 }
                 default -> {
                     Log.error(Config.class, "Unknown value %s=%s", e.getKey(), e.getValue());

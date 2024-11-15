@@ -75,9 +75,6 @@ public class Game extends JPanel {
         renderer.createWindow(config.get("app.window.title"), config.get("app.window.size"));
         renderer.setInputListener(inputListener);
         scnMgr = new SceneManager(this);
-
-        Scene scene = new PlayScene(this, "play");
-        scnMgr.addScene(scene);
         scnMgr.setDefaultScene(config.get("app.scene.default"));
 
         scnMgr.switchScene();

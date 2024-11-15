@@ -32,6 +32,7 @@ public class PlayScene extends AbstractScene {
     @Override
     public void create() {
         Dimension windowSize = app.getConfig().get("app.window.size");
+        Rectangle2D playArea = app.getConfig().get("app.physic.world.play.area.size");
 
 
         setWorld(new World("earth", -0.981)

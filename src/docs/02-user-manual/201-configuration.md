@@ -53,10 +53,12 @@ This configuration file contains multiple keys sections. Let's discover those.
 
 | Configuration Key                 | Description                                                                                | Default value |
 |:----------------------------------|:-------------------------------------------------------------------------------------------|:--------------|
-| `app.physic.world.play.area.size` | Define the play area zone for the game world. must respect the format "`[width]x[height]`" | 800x600       | 
+| `app.physic.world.play.area.size` | Define the play area zone for the game world. must respect the format "`[width]x[height]`" | 800x600       |
+| `app.physic.world.gravity`        | set the default gravity for the World context used into the PhysicEngine computation       | (0,-0.981)    |
 
 ### Scenes `app.scene`
 
-| Configuration Key   | Description                           | Default value |
-|:--------------------|:--------------------------------------|:--------------|
-| `app.scene.default` | Define the starting 'scene' instance. | play          |
+| Configuration Key   | Description                                          | Default value                          |
+|:--------------------|:-----------------------------------------------------|:---------------------------------------|
+| `app.scene.default` | Define the starting 'scene' instance.                | "play"                                 |
+| `app.scene.list`    | Set the list of Scene instance available in the Game | "play:com.snapgames.demo.scenes.Play," |||
