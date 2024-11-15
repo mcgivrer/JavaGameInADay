@@ -94,16 +94,16 @@ public class Renderer implements Serializable {
         }
         // draw the scene
         scene.getEntities().values().stream()
-                .filter(e -> !(e instanceof Camera))
-                .filter(Entity::isActive)
-                .filter(e -> e.getCameraIsStickedTo() == null)
-                .sorted(Comparator.comparingInt(Entity::getPriority))
-                .forEach(e -> {
-                    drawEntity(g, scene, e);
-                    if (app.isDebugGreaterThan(0)) {
-                        drawDebugInfoEntity(g, scene, e);
-                    }
-                });
+            .filter(e -> !(e instanceof Camera))
+            .filter(Entity::isActive)
+            .filter(e -> e.getCameraIsStickedTo() == null)
+            .sorted(Comparator.comparingInt(Entity::getPriority))
+            .forEach(e -> {
+                drawEntity(g, scene, e);
+                if (app.isDebugGreaterThan(0)) {
+                    drawDebugInfoEntity(g, scene, e);
+                }
+            });
 
         // draw World borders
         g.setColor(Color.DARK_GRAY);
@@ -114,13 +114,13 @@ public class Renderer implements Serializable {
         }
         // draw all entities fixed to the active Camera.
         scene.getEntities().values().stream()
-                .filter(e -> !(e instanceof Camera))
-                .filter(Entity::isActive)
-                .filter(e -> e.getCameraIsStickedTo() != null && e.getCameraIsStickedTo().equals(scene.getActiveCamera()))
-                .sorted(Comparator.comparingInt(Entity::getPriority))
-                .forEach(e -> {
-                    drawEntity(g, scene, e);
-                });
+            .filter(e -> !(e instanceof Camera))
+            .filter(Entity::isActive)
+            .filter(e -> e.getCameraIsStickedTo() != null && e.getCameraIsStickedTo().equals(scene.getActiveCamera()))
+            .sorted(Comparator.comparingInt(Entity::getPriority))
+            .forEach(e -> {
+                drawEntity(g, scene, e);
+            });
 
         g.dispose();
 
@@ -129,7 +129,7 @@ public class Renderer implements Serializable {
             BufferStrategy bf = window.getBufferStrategy();
             if (bf != null) {
                 bf.getDrawGraphics().drawImage(drawbuffer, 0, 0, window.getWidth(), window.getHeight(),
-                        0, 0, drawbuffer.getWidth(), drawbuffer.getHeight(), null);
+                    0, 0, drawbuffer.getWidth(), drawbuffer.getHeight(), null);
                 if (!bf.contentsLost()) {
                     bf.show();
                 }
@@ -155,36 +155,37 @@ public class Renderer implements Serializable {
     private void drawVector(Graphics2D g, double x, double y, double dx, double dy, Color c) {
         g.setColor(c);
         g.drawLine(
-                (int) x, (int) y,
-                (int) (x + dx), (int) (y + dy));
+            (int) x, (int) y,
+            (int) (x + dx), (int) (y + dy));
 
     }
 
     public void drawEntity(Graphics2D g, Scene scene, Entity<?> e) {
         switch (e.getClass().getSimpleName()) {
             case "GameObject", "WorldArea" -> {
-
-                g.setColor(e.getFillColor());
-                g.fill(new Rectangle2D.Double(e.x, e.y, e.width, e.height));
+                drawObject(g, e);
             }
             case "TextObject" -> {
-                TextObject te = (TextObject) e;
-                drawText(g, te);
+                drawText(g, (TextObject) e);
             }
             case "GridObject" -> {
-                GridObject go = (GridObject) e;
-                drawGrid(g, scene.getWorld(), go.getTileWidth(), go.getTileHeight(), go.getColor());
+                drawGrid(g, scene, (GridObject) e);
             }
             case "GaugeObject" -> {
-                GaugeObject gg = (GaugeObject) e;
-                drawGauge(g, gg);
+                drawGauge(g, (GaugeObject) e);
             }
-
             default -> {
                 error("Unknown object class %s", e.getClass());
             }
         }
         e.getBehaviors().forEach(b -> b.draw(g, e));
+    }
+
+    private static void drawObject(Graphics2D g, Entity<?> e) {
+        if (e.getFillColor() != null) {
+            g.setColor(e.getFillColor());
+            g.fill(e);
+        }
     }
 
     private static void drawText(Graphics2D g, TextObject te) {
@@ -203,15 +204,17 @@ public class Renderer implements Serializable {
         g.drawRect((int) gg.getX() + 1, (int) gg.getY() + 1, (int) gg.getWidth() - 2, (int) gg.getHeight() - 2);
         g.setColor(gg.getFillColor());
         g.fillRect(
-                (int) gg.getX() + 3, (int) gg.getY() + 3,
-                (int) (gg.getWidth() - 5 * ((gg.getMaxValue() - gg.getMinValue()) / gg.getValue())), (int) gg.getHeight() - 5);
+            (int) gg.getX() + 3, (int) gg.getY() + 3,
+            (int) (gg.getWidth() - 5 * ((gg.getMaxValue() - gg.getMinValue()) / gg.getValue())), (int) gg.getHeight() - 5);
     }
 
-    private void drawGrid(Graphics2D g, Rectangle2D playArea, int tileW, int tileH, Color color) {
-        g.setColor(color);
-        for (int iy = 0; iy < playArea.getHeight(); iy += tileH) {
-            for (int ix = 0; ix < playArea.getWidth(); ix += tileW) {
-                g.drawRect(ix, iy, tileW, (int) (iy + tileH < playArea.getHeight() ? tileH : tileH - (playArea.getHeight() - iy)));
+    private void drawGrid(Graphics2D g, Scene scene, GridObject go) {
+        g.setColor(go.getColor());
+        for (int iy = 0; iy < scene.getWorld().getHeight(); iy += go.getTileWidth()) {
+            for (int ix = 0; ix < scene.getWorld().getWidth(); ix += go.getTileWidth()) {
+                g.drawRect(ix, iy, go.getTileWidth(), (int) (iy + go.getTileHeight() < scene.getWorld().getHeight()
+                    ? go.getTileHeight()
+                    : go.getTileHeight() - (scene.getWorld().getHeight() - iy)));
             }
         }
     }

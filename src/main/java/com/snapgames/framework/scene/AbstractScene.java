@@ -31,6 +31,11 @@ public abstract class AbstractScene extends Node<AbstractScene> implements Scene
         return world;
     }
 
+    public void setWorld(World w) {
+        this.world = w;
+    }
+
+
     public void add(Entity<?> entity) {
         entities.put(entity.getName(), entity);
         super.add(entity);
@@ -72,10 +77,10 @@ public abstract class AbstractScene extends Node<AbstractScene> implements Scene
     @Override
     public String toString() {
         return "AbstractScene{" +
-                "id=" + id +
-                ", name='" + name +
-                ", activeCamera=" + activeCamera +
-                ", world=" + world +
-                '}';
+            "id=" + id +
+            ", name='" + name +
+            ", activeCamera=" + activeCamera +
+            ", world=" + world +
+            '}';
     }
 }
