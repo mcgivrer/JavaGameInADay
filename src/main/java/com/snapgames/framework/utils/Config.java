@@ -18,8 +18,8 @@ public class Config extends HashMap<String, Object> {
     public Config(Game app) {
         super();
         this.app = app;
-        put("app.window.title", "Test001");
-        put("app.window.size", new Dimension(640, 400));
+        put("app.render.window.title", "Test001");
+        put("app.render.window.size", new Dimension(640, 400));
         put("app.render.buffer.size", new Dimension(320, 200));
         put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, 640, 400));
         put("app.scene.default", "");
@@ -40,15 +40,15 @@ public class Config extends HashMap<String, Object> {
     private void parseAttributes(List<Entry<Object, Object>> collect) {
         collect.forEach(e -> {
             switch (e.getKey().toString()) {
-                case "app.window.title" -> {
-                    put("app.window.title", (String) e.getValue());
+                case "app.render.window.title" -> {
+                    put("app.render.window.title", (String) e.getValue());
                 }
                 case "app.exit" -> {
                     app.exit = Boolean.parseBoolean(props.getProperty("app.exit"));
                 }
-                case "app.window.size" -> {
+                case "app.render.window.size" -> {
                     String[] values = ((String) e.getValue()).split("x");
-                    put("app.window.size", new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
+                    put("app.render.window.size", new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
                 }
                 case "app.render.buffer.size" -> {
                     String[] values = ((String) e.getValue()).split("x");
