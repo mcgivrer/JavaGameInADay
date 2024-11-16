@@ -1,5 +1,6 @@
 package com.snapgames.framework.scene;
 
+import com.snapgames.framework.Game;
 import com.snapgames.framework.entity.Camera;
 import com.snapgames.framework.entity.Entity;
 import com.snapgames.framework.io.InputListener;
@@ -32,4 +33,7 @@ public interface Scene {
     Camera getActiveCamera();
 
     void reset();
+
+    default void process(Game game, double elapsed) {
+    }
 }
