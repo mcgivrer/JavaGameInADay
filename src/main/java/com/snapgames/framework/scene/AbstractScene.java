@@ -5,6 +5,8 @@ import com.snapgames.framework.entity.Camera;
 import com.snapgames.framework.entity.Entity;
 import com.snapgames.framework.io.InputListener;
 import com.snapgames.framework.physic.World;
+import com.snapgames.framework.system.SystemManager;
+import com.snapgames.framework.utils.Config;
 import com.snapgames.framework.utils.Node;
 
 import java.util.List;
@@ -74,13 +76,18 @@ public abstract class AbstractScene extends Node<AbstractScene> implements Scene
         create();
     }
 
+    public Config getConfig() {
+        return SystemManager.get(Config.class);
+    }
+
+
     @Override
     public String toString() {
         return "AbstractScene{" +
-            "id=" + id +
-            ", name='" + name +
-            ", activeCamera=" + activeCamera +
-            ", world=" + world +
-            '}';
+                "id=" + id +
+                ", name='" + name +
+                ", activeCamera=" + activeCamera +
+                ", world=" + world +
+                '}';
     }
 }

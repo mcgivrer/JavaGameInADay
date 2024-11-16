@@ -1,20 +1,24 @@
 package com.snapgames.framework.utils;
 
 import com.snapgames.framework.Game;
+import com.snapgames.framework.system.GSystem;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-public class Config extends HashMap<String, Object> {
+public class Config extends HashMap<String, Object> implements GSystem {
     private final Game app;
 
     private final Properties props = new Properties();
+
+    private String configFilePath = "/config.properties";
 
     public Config(Game app) {
         super();
@@ -25,7 +29,9 @@ public class Config extends HashMap<String, Object> {
         put("app.render.window.size", new Dimension(640, 400));
         put("app.render.buffer.size", new Dimension(320, 200));
         put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, 640, 400));
+        put("app.physic.world.gravity", new Point2D.Double(0, -0.981));
         put("app.scene.default", "");
+        put("app.scene.list", "");
     }
 
     public void load(String configFilePath) {
@@ -81,7 +87,51 @@ public class Config extends HashMap<String, Object> {
         });
     }
 
+    public void parseArgs(String[] args) {
+        List.of(args).forEach(arg -> {
+            String[] kv = arg.split("=");
+            switch (kv[0]) {
+                case "config" -> {
+                    configFilePath = kv[1];
+                }
+                default -> {
+                    // nothing to do there !
+                }
+            }
+        });
+    }
+
     public <T> T get(String name) {
         return (T) super.get(name);
+    }
+
+    @Override
+    public Collection<Class<?>> getDependencies() {
+        return null;
+    }
+
+    @Override
+    public void initialize(Game game) {
+        load(configFilePath);
+    }
+
+    @Override
+    public void start(Game game) {
+
+    }
+
+    @Override
+    public void process(Game game) {
+
+    }
+
+    @Override
+    public void stop(Game game) {
+
+    }
+
+    @Override
+    public void dispose(Game game) {
+
     }
 }

@@ -3,8 +3,14 @@ package com.snapgames.framework.physic;
 import com.snapgames.framework.Game;
 import com.snapgames.framework.entity.Entity;
 import com.snapgames.framework.scene.Scene;
+import com.snapgames.framework.scene.SceneManager;
+import com.snapgames.framework.system.GSystem;
+import com.snapgames.framework.system.SystemManager;
+import com.snapgames.framework.utils.Config;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -21,14 +27,15 @@ import java.util.Optional;
  * @author Frédéric Delorme
  * @since 1.0.0
  */
-public class PhysicEngine {
+public class PhysicEngine implements GSystem {
     private final Game app;
+    private long currentTime = 0;
 
     public PhysicEngine(Game app) {
         this.app = app;
     }
 
-    public void update(Scene scene, long elapsed) {
+    private void update(Scene scene, double elapsed) {
         scene.getEntities().values().stream()
                 .filter(Entity::isActive)
                 .forEach(e -> {
@@ -56,7 +63,7 @@ public class PhysicEngine {
         });
     }
 
-    private void applyPhysicRules(Scene scene, long elapsed, Entity<?> e) {
+    private void applyPhysicRules(Scene scene, double elapsed, Entity<?> e) {
         e.ax = 0;
         e.ay = 0;
         e.addForce(0.0, -scene.getWorld().getGravity() / e.getMass());
@@ -111,5 +118,47 @@ public class PhysicEngine {
 
     public void resetForces(Scene scene) {
         scene.getEntities().values().forEach(e -> e.getForces().clear());
+    }
+
+    @Override
+    public List<Class<?>> getDependencies() {
+        return List.of(Config.class, SceneManager.class);
+    }
+
+    @Override
+    public void initialize(Game game) {
+
+    }
+
+    @Override
+    public void start(Game game) {
+
+    }
+
+    @Override
+    public void process(Game game) {
+        if (game.isNotPaused()) {
+            long previousTime = currentTime;
+            currentTime = System.currentTimeMillis();
+            double elapsed = currentTime - previousTime;
+            SceneManager sm = SystemManager.get(SceneManager.class);
+            update(sm.getActiveScene(), elapsed);
+        }
+    }
+
+    @Override
+    public void postProcess(Game game) {
+        SceneManager sm = SystemManager.get(SceneManager.class);
+        resetForces(sm.getActiveScene());
+    }
+
+    @Override
+    public void stop(Game game) {
+
+    }
+
+    @Override
+    public void dispose(Game game) {
+
     }
 }

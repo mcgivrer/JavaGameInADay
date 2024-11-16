@@ -4,7 +4,12 @@ import com.snapgames.framework.Game;
 import com.snapgames.framework.entity.*;
 import com.snapgames.framework.io.InputListener;
 import com.snapgames.framework.io.ResourceManager;
+import com.snapgames.framework.physic.PhysicEngine;
 import com.snapgames.framework.scene.Scene;
+import com.snapgames.framework.scene.SceneManager;
+import com.snapgames.framework.system.GSystem;
+import com.snapgames.framework.system.SystemManager;
+import com.snapgames.framework.utils.Config;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,31 +20,34 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static com.snapgames.framework.utils.I18n.getI18n;
 import static com.snapgames.framework.utils.Log.error;
 
-public class Renderer implements Serializable {
+public class Renderer implements GSystem, Serializable {
     private final Game app;
 
     private JFrame window;
     private BufferedImage drawbuffer;
     private Font debugFont;
 
-    public Renderer(Game app, Dimension bufferSize) {
+    private boolean fullScreen = false;
+
+    public Renderer(Game app) {
         this.app = app;
-        drawbuffer = new BufferedImage(bufferSize.width, bufferSize.height, BufferedImage.TYPE_INT_ARGB);
     }
 
-    public void createWindow(String title, Dimension size) {
+    private void createWindow(String title, Dimension size) {
         newWindow(title, size, false);
         debugFont = window.getGraphics().getFont().deriveFont(9.0f);
     }
 
-    public void newWindow(String title, Dimension size, boolean fullScreen) {
+    private void newWindow(String title, Dimension size, boolean fullScreen) {
         KeyListener il = null;
         if (window != null && window.isActive()) {
             il = window.getKeyListeners()[0];
@@ -80,7 +88,7 @@ public class Renderer implements Serializable {
         window.addKeyListener(il);
     }
 
-    public void render(Scene scene) {
+    private void render(Scene scene) {
 
         Graphics2D g = (Graphics2D) drawbuffer.createGraphics();
         g.setRenderingHints(Map.of(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
@@ -94,16 +102,16 @@ public class Renderer implements Serializable {
         }
         // draw the scene
         scene.getEntities().values().stream()
-            .filter(e -> !(e instanceof Camera))
-            .filter(Entity::isActive)
-            .filter(e -> e.getCameraIsStickedTo() == null)
-            .sorted(Comparator.comparingInt(Entity::getPriority))
-            .forEach(e -> {
-                drawEntity(g, scene, e);
-                if (app.isDebugGreaterThan(0)) {
-                    drawDebugInfoEntity(g, scene, e);
-                }
-            });
+                .filter(e -> !(e instanceof Camera))
+                .filter(Entity::isActive)
+                .filter(e -> e.getCameraIsStickedTo() == null)
+                .sorted(Comparator.comparingInt(Entity::getPriority))
+                .forEach(e -> {
+                    drawEntity(g, scene, e);
+                    if (app.isDebugGreaterThan(0)) {
+                        drawDebugInfoEntity(g, scene, e);
+                    }
+                });
 
         // draw World borders
         g.setColor(Color.DARK_GRAY);
@@ -114,13 +122,13 @@ public class Renderer implements Serializable {
         }
         // draw all entities fixed to the active Camera.
         scene.getEntities().values().stream()
-            .filter(e -> !(e instanceof Camera))
-            .filter(Entity::isActive)
-            .filter(e -> e.getCameraIsStickedTo() != null && e.getCameraIsStickedTo().equals(scene.getActiveCamera()))
-            .sorted(Comparator.comparingInt(Entity::getPriority))
-            .forEach(e -> {
-                drawEntity(g, scene, e);
-            });
+                .filter(e -> !(e instanceof Camera))
+                .filter(Entity::isActive)
+                .filter(e -> e.getCameraIsStickedTo() != null && e.getCameraIsStickedTo().equals(scene.getActiveCamera()))
+                .sorted(Comparator.comparingInt(Entity::getPriority))
+                .forEach(e -> {
+                    drawEntity(g, scene, e);
+                });
 
         g.dispose();
 
@@ -129,7 +137,7 @@ public class Renderer implements Serializable {
             BufferStrategy bf = window.getBufferStrategy();
             if (bf != null) {
                 bf.getDrawGraphics().drawImage(drawbuffer, 0, 0, window.getWidth(), window.getHeight(),
-                    0, 0, drawbuffer.getWidth(), drawbuffer.getHeight(), null);
+                        0, 0, drawbuffer.getWidth(), drawbuffer.getHeight(), null);
                 if (!bf.contentsLost()) {
                     bf.show();
                 }
@@ -155,8 +163,8 @@ public class Renderer implements Serializable {
     private void drawVector(Graphics2D g, double x, double y, double dx, double dy, Color c) {
         g.setColor(c);
         g.drawLine(
-            (int) x, (int) y,
-            (int) (x + dx), (int) (y + dy));
+                (int) x, (int) y,
+                (int) (x + dx), (int) (y + dy));
 
     }
 
@@ -204,8 +212,8 @@ public class Renderer implements Serializable {
         g.drawRect((int) gg.getX() + 1, (int) gg.getY() + 1, (int) gg.getWidth() - 2, (int) gg.getHeight() - 2);
         g.setColor(gg.getFillColor());
         g.fillRect(
-            (int) gg.getX() + 3, (int) gg.getY() + 3,
-            (int) (gg.getWidth() - 5 * ((gg.getMaxValue() - gg.getMinValue()) / gg.getValue())), (int) gg.getHeight() - 5);
+                (int) gg.getX() + 3, (int) gg.getY() + 3,
+                (int) (gg.getWidth() - 5 * ((gg.getMaxValue() - gg.getMinValue()) / gg.getValue())), (int) gg.getHeight() - 5);
     }
 
     private void drawGrid(Graphics2D g, Scene scene, GridObject go) {
@@ -213,8 +221,8 @@ public class Renderer implements Serializable {
         for (int iy = 0; iy < scene.getWorld().getHeight(); iy += go.getTileWidth()) {
             for (int ix = 0; ix < scene.getWorld().getWidth(); ix += go.getTileWidth()) {
                 g.drawRect(ix, iy, go.getTileWidth(), (int) (iy + go.getTileHeight() < scene.getWorld().getHeight()
-                    ? go.getTileHeight()
-                    : go.getTileHeight() - (scene.getWorld().getHeight() - iy)));
+                        ? go.getTileHeight()
+                        : go.getTileHeight() - (scene.getWorld().getHeight() - iy)));
             }
         }
     }
@@ -227,5 +235,64 @@ public class Renderer implements Serializable {
 
     public JFrame getWindow() {
         return window;
+    }
+
+    @Override
+    public Collection<Class<?>> getDependencies() {
+        return List.of(Config.class, SceneManager.class, PhysicEngine.class, InputListener.class);
+    }
+
+    @Override
+    public void initialize(Game game) {
+        Config config = SystemManager.get(Config.class);
+        Dimension bufferSize = config.get("app.render.buffer.size");
+        drawbuffer = new BufferedImage(bufferSize.width, bufferSize.height, BufferedImage.TYPE_INT_ARGB);
+
+        Dimension windowSize = config.get("app.render.window.size");
+        String title = config.get("app.render.window.title");
+        createWindow(title, windowSize);
+
+        InputListener inputListener = SystemManager.get(InputListener.class);
+        setInputListener(inputListener);
+    }
+
+    public void switchFullScreenMode() {
+        app.setPause(true);
+        fullScreen = !fullScreen;
+        JFrame w = getWindow();
+        Dimension dim = w.getSize();
+        String title = w.getTitle();
+        newWindow(title, dim, fullScreen);
+        app.setPause(false);
+    }
+
+    @Override
+    public void start(Game game) {
+
+    }
+
+    @Override
+    public void process(Game game) {
+        SceneManager sm = SystemManager.get(SceneManager.class);
+        render(sm.getActiveScene());
+    }
+
+    @Override
+    public void postProcess(Game game) {
+        PhysicEngine pe = SystemManager.get(PhysicEngine.class);
+        SceneManager sm = SystemManager.get(SceneManager.class);
+        if (sm != null && pe != null) {
+            pe.resetForces(sm.getActiveScene());
+        }
+    }
+
+    @Override
+    public void stop(Game game) {
+
+    }
+
+    @Override
+    public void dispose(Game game) {
+        dispose();
     }
 }
