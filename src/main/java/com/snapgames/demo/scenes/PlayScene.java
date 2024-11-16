@@ -33,14 +33,12 @@ public class PlayScene extends AbstractScene {
     public void create() {
         Dimension windowSize = app.getConfig().get("app.window.size");
 
-
         world = new World("earth", -0.981)
                 .setSize(800, 600)
                 .setPosition(0, 0);
 
         GridObject go = new GridObject("grid").setTileSize(16, 16).setColor(Color.DARK_GRAY).setPriority(1);
         add(go);
-
 
         GameObject player = new GameObject("player")
                 .setSize(16, 32)
@@ -84,14 +82,37 @@ public class PlayScene extends AbstractScene {
         add(score);
 
         TextObject lives = new TextObject("lives")
-                .setPosition(camera.getWidth() - 30, 38)
-                .setFont(textFont.deriveFont(8.0f))
+                .setPosition(camera.getWidth() - 30, 32)
+                .setFont(scoreFont.deriveFont(17.0f))
                 .setText("3")
-                .setColor(Color.RED)
+                .setColor(Color.WHITE)
                 .setPhysicType(PhysicType.STATIC)
                 .setFixedToCamera(camera)
                 .setPriority(100);
         add(lives);
+
+        GaugeObject energy = new GaugeObject("energy")
+                .setPosition(camera.getWidth()-78,20)
+                .setSize(40,7)
+                .setColor(Color.LIGHT_GRAY)
+                .setFillColor(Color.RED)
+                .setMinValue(0).setMaxValue(100).setValue(100)
+                .setPhysicType(PhysicType.STATIC)
+                .setFixedToCamera(camera)
+                .setPriority(100);
+        add(energy);
+
+        GaugeObject mana = new GaugeObject("mana")
+                .setPosition(camera.getWidth()-78,27)
+                .setSize(40,7)
+                .setColor(Color.LIGHT_GRAY)
+                .setFillColor(Color.BLUE)
+                .setMinValue(0).setMaxValue(100).setValue(100)
+                .setPhysicType(PhysicType.STATIC)
+                .setFixedToCamera(camera)
+                .setPriority(100);
+        add(mana);
+
         generate("star_%d", world, 20, 1, 1,
                 Color.WHITE, 100000000,
                 Material.DEFAULT,
@@ -116,7 +137,8 @@ public class PlayScene extends AbstractScene {
         add(water);
 
         WorldArea sky = (WorldArea) new WorldArea("sky")
-                .setColor(new Color(0.0f, 0.1f, 0.3f, 0.9f))
+                .setFillColor(new Color(0.0f, 0.1f, 0.3f, 0.9f))
+                .setColor(null)
                 .setSize(world.width, world.height - 64)
                 .setPosition(0, 0)
                 .addForce(0.01, 0.0)
