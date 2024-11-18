@@ -9,7 +9,7 @@ import com.snapgames.framework.io.ResourceManager;
 import com.snapgames.framework.physic.Material;
 import com.snapgames.framework.physic.PhysicType;
 import com.snapgames.framework.physic.World;
-import com.snapgames.framework.physic.WorldArea;
+import com.snapgames.framework.entity.WorldArea;
 import com.snapgames.framework.scene.AbstractScene;
 
 import java.awt.*;

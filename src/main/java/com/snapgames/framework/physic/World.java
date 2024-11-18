@@ -1,10 +1,7 @@
 package com.snapgames.framework.physic;
 
 import com.snapgames.framework.entity.Entity;
-
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.List;
+import com.snapgames.framework.entity.WorldArea;
 
 public class World extends Entity<World> {
     private double gravity;

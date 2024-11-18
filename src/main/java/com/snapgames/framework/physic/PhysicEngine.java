@@ -2,9 +2,9 @@ package com.snapgames.framework.physic;
 
 import com.snapgames.framework.Game;
 import com.snapgames.framework.entity.Entity;
+import com.snapgames.framework.entity.WorldArea;
 import com.snapgames.framework.scene.Scene;
 
-import java.io.Serializable;
 import java.util.Optional;
 
 /**
