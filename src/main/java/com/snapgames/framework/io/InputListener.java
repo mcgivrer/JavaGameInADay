@@ -1,12 +1,15 @@
 package com.snapgames.framework.io;
 
 import com.snapgames.framework.Game;
+import com.snapgames.framework.physic.CollisionManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.Serializable;
+
+import static com.snapgames.framework.utils.Log.debug;
 
 public class InputListener implements KeyListener, Serializable {
     private final Game app;
@@ -15,6 +18,7 @@ public class InputListener implements KeyListener, Serializable {
 
     public InputListener(Game app) {
         this.app = app;
+        debug(InputListener.class, "Start of processing");
     }
 
     public boolean isKeyPressed(int keyCode) {
@@ -59,5 +63,9 @@ public class InputListener implements KeyListener, Serializable {
         String title = w.getTitle();
         app.getRenderer().newWindow(title, dim, fullScreen);
         app.setPause(false);
+    }
+
+    public void dispose() {
+        debug(InputListener.class, "End of processing");
     }
 }

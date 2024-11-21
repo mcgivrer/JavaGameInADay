@@ -5,6 +5,7 @@ import com.snapgames.framework.entity.*;
 import com.snapgames.framework.io.InputListener;
 import com.snapgames.framework.io.ResourceManager;
 import com.snapgames.framework.scene.Scene;
+import com.snapgames.framework.utils.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.snapgames.framework.utils.I18n.getI18n;
+import static com.snapgames.framework.utils.Log.debug;
 import static com.snapgames.framework.utils.Log.error;
 
 public class Renderer implements Serializable {
@@ -32,11 +34,13 @@ public class Renderer implements Serializable {
     public Renderer(Game app, Dimension bufferSize) {
         this.app = app;
         drawbuffer = new BufferedImage(bufferSize.width, bufferSize.height, BufferedImage.TYPE_INT_ARGB);
+        debug(Renderer.class, "start of processing");
     }
 
     public void createWindow(String title, Dimension size) {
         newWindow(title, size, false);
         debugFont = window.getGraphics().getFont().deriveFont(9.0f);
+        debug(Renderer.class, "Window %s created with size of %dx%d", title, size.width, size.height);
     }
 
     public void newWindow(String title, Dimension size, boolean fullScreen) {
@@ -78,6 +82,8 @@ public class Renderer implements Serializable {
 
     public void setInputListener(InputListener il) {
         window.addKeyListener(il);
+
+        debug(Renderer.class, "adding this %s as a KeyListener", il.getClass());
     }
 
     public void render(Scene scene) {
@@ -94,16 +100,16 @@ public class Renderer implements Serializable {
         }
         // draw the scene
         scene.getEntities().values().stream()
-                .filter(e -> !(e instanceof Camera))
-                .filter(Entity::isActive)
-                .filter(e -> e.getCameraIsStickedTo() == null)
-                .sorted(Comparator.comparingInt(Entity::getPriority))
-                .forEach(e -> {
-                    drawEntity(g, scene, e);
-                    if (app.isDebugGreaterThan(0)) {
-                        drawDebugInfoEntity(g, scene, e);
-                    }
-                });
+            .filter(e -> !(e instanceof Camera))
+            .filter(Entity::isActive)
+            .filter(e -> e.getCameraIsStickedTo() == null)
+            .sorted(Comparator.comparingInt(Entity::getPriority))
+            .forEach(e -> {
+                drawEntity(g, scene, e);
+                if (app.isDebugGreaterThan(0)) {
+                    drawDebugInfoEntity(g, scene, e);
+                }
+            });
 
         // draw World borders
         g.setColor(Color.DARK_GRAY);
@@ -114,13 +120,13 @@ public class Renderer implements Serializable {
         }
         // draw all entities fixed to the active Camera.
         scene.getEntities().values().stream()
-                .filter(e -> !(e instanceof Camera))
-                .filter(Entity::isActive)
-                .filter(e -> e.getCameraIsStickedTo() != null && e.getCameraIsStickedTo().equals(scene.getActiveCamera()))
-                .sorted(Comparator.comparingInt(Entity::getPriority))
-                .forEach(e -> {
-                    drawEntity(g, scene, e);
-                });
+            .filter(e -> !(e instanceof Camera))
+            .filter(Entity::isActive)
+            .filter(e -> e.getCameraIsStickedTo() != null && e.getCameraIsStickedTo().equals(scene.getActiveCamera()))
+            .sorted(Comparator.comparingInt(Entity::getPriority))
+            .forEach(e -> {
+                drawEntity(g, scene, e);
+            });
 
         g.dispose();
 
@@ -129,7 +135,7 @@ public class Renderer implements Serializable {
             BufferStrategy bf = window.getBufferStrategy();
             if (bf != null) {
                 bf.getDrawGraphics().drawImage(drawbuffer, 0, 0, window.getWidth(), window.getHeight(),
-                        0, 0, drawbuffer.getWidth(), drawbuffer.getHeight(), null);
+                    0, 0, drawbuffer.getWidth(), drawbuffer.getHeight(), null);
                 if (!bf.contentsLost()) {
                     bf.show();
                 }
@@ -155,8 +161,8 @@ public class Renderer implements Serializable {
     private void drawVector(Graphics2D g, double x, double y, double dx, double dy, Color c) {
         g.setColor(c);
         g.drawLine(
-                (int) x, (int) y,
-                (int) (x + dx), (int) (y + dy));
+            (int) x, (int) y,
+            (int) (x + dx), (int) (y + dy));
 
     }
 
@@ -181,7 +187,7 @@ public class Renderer implements Serializable {
             }
 
             default -> {
-                error("Unknown object class %s", e.getClass());
+                error(Renderer.class, "Unknown object class %s", e.getClass());
             }
         }
         e.getBehaviors().forEach(b -> b.draw(g, e));
@@ -203,8 +209,8 @@ public class Renderer implements Serializable {
         g.drawRect((int) gg.getX() + 1, (int) gg.getY() + 1, (int) gg.getWidth() - 2, (int) gg.getHeight() - 2);
         g.setColor(gg.getFillColor());
         g.fillRect(
-                (int) gg.getX() + 3, (int) gg.getY() + 3,
-                (int) (gg.getWidth() - 5 * ((gg.getMaxValue() - gg.getMinValue()) / gg.getValue())), (int) gg.getHeight() - 5);
+            (int) gg.getX() + 3, (int) gg.getY() + 3,
+            (int) (gg.getWidth() - 5 * ((gg.getMaxValue() - gg.getMinValue()) / gg.getValue())), (int) gg.getHeight() - 5);
     }
 
     private void drawGrid(Graphics2D g, Rectangle2D playArea, int tileW, int tileH, Color color) {
@@ -219,7 +225,10 @@ public class Renderer implements Serializable {
     public void dispose() {
         if (window != null && window.isEnabled() && window.isActive()) {
             window.dispose();
+
+            debug(Renderer.class, "windows has been closed.");
         }
+        debug(Renderer.class, "End of processing.");
     }
 
     public JFrame getWindow() {

@@ -1,12 +1,15 @@
 package com.snapgames.framework.scene;
 
 import com.snapgames.framework.Game;
+import com.snapgames.framework.gfx.Renderer;
 import com.snapgames.framework.utils.Log;
 import com.snapgames.framework.utils.Node;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.snapgames.framework.utils.Log.debug;
 
 public class SceneManager {
 
@@ -55,6 +58,7 @@ public class SceneManager {
         if (Optional.ofNullable(activeScene).isPresent()) {
             activeScene.dispose();
         }
+        debug(SceneManager.class, "End of processing.");
     }
 
     public void setDefaultScene(String defaultSceneName) {

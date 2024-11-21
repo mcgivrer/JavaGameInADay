@@ -3,9 +3,12 @@ package com.snapgames.framework.physic;
 import com.snapgames.framework.Game;
 import com.snapgames.framework.entity.Entity;
 import com.snapgames.framework.entity.WorldArea;
+import com.snapgames.framework.gfx.Renderer;
 import com.snapgames.framework.scene.Scene;
 
 import java.util.Optional;
+
+import static com.snapgames.framework.utils.Log.debug;
 
 /**
  * The {@link PhysicEngine} service compute everything about move and update of all the entities in a {@link Scene}.
@@ -26,20 +29,22 @@ public class PhysicEngine {
 
     public PhysicEngine(Game app) {
         this.app = app;
+
+        debug(PhysicEngine.class, "Start of processing");
     }
 
     public void update(Scene scene, long elapsed) {
         scene.getEntities().values().stream()
-                .filter(Entity::isActive)
-                .forEach(e -> {
-                    if (e.getPhysicType() == PhysicType.DYNAMIC) {
-                        e.setContact(false);
-                        applyWorldEffects(scene, e);
-                        applyPhysicRules(scene, elapsed, e);
-                        keepEntityIntoWorld(scene, e);
-                    }
-                    e.getBehaviors().forEach(b -> b.update(e, elapsed));
-                });
+            .filter(Entity::isActive)
+            .forEach(e -> {
+                if (e.getPhysicType() == PhysicType.DYNAMIC) {
+                    e.setContact(false);
+                    applyWorldEffects(scene, e);
+                    applyPhysicRules(scene, elapsed, e);
+                    keepEntityIntoWorld(scene, e);
+                }
+                e.getBehaviors().forEach(b -> b.update(e, elapsed));
+            });
         if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
             scene.getActiveCamera().update(elapsed);
         }
@@ -106,6 +111,7 @@ public class PhysicEngine {
     }
 
     public void dispose() {
+        debug(PhysicEngine.class, "End of processing");
 
     }
 

@@ -11,47 +11,74 @@ import java.time.format.DateTimeFormatter;
  */
 public class Log {
 
+    public enum LogLevel {
+        DEBUG("DEBUG"),
+        INFO("INFO"),
+        WARN("WARN"),
+        ERROR("ERROR"),
+        FATAL("FATAL");
+
+        String value;
+
+        LogLevel(String value) {
+            this.value = value;
+        }
+
+        String getValue() {
+            return this.value;
+        }
+    }
+
+    private static final String separator = "\t";
+    private static final String lineFeed = "%n";
     private static int debug = 0;
     private static String debugFilter = "";
     private static String loggerFilter = "ERR,WARN,INFO,DEBUG";
 
-    public static void log(String level, String message, Object... args) {
-        if (loggerFilter.contains(level)) {
-            String dateFormatted = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(LocalDateTime.now());
-            System.out.printf(dateFormatted + "|" + level + "|" + message + "%n", args);
+    public static void log(LogLevel level, String message, Object... args) {
+        String dateFormatted = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(LocalDateTime.now());
+        if (loggerFilter.contains(level.getValue())) {
+            System.out.printf(dateFormatted + separator + level + separator + message + lineFeed, args);
+        }
+        if ((level.equals(LogLevel.ERROR) || level.equals(LogLevel.FATAL))) {
+            System.err.printf(dateFormatted + separator + level + separator + message + lineFeed, args);
         }
     }
 
     public static void debug(String message, Object... args) {
-        log("DEBUG", message, args);
+        log(LogLevel.DEBUG, message, args);
     }
 
     public static void info(String message, Object... args) {
-        log("INFO", message, args);
+        log(LogLevel.INFO, message, args);
     }
 
     public static void warn(String message, Object... args) {
-        log("WARN", message, args);
+        log(LogLevel.WARN, message, args);
     }
 
     public static void error(String message, Object... args) {
-        log("ERR", message, args);
+        log(LogLevel.ERROR, message, args);
     }
 
     public static void debug(Class<?> className, String message, Object... args) {
-        log("DEBUG", className.getCanonicalName() + "|" + message, args);
+        log(LogLevel.DEBUG, className.getCanonicalName() + separator + message, args);
     }
 
     public static void info(Class<?> className, String message, Object... args) {
-        log("INFO", className.getCanonicalName() + "|" + message, args);
+        log(LogLevel.INFO, className.getCanonicalName() + separator + message, args);
     }
 
     public static void warn(Class<?> className, String message, Object... args) {
-        log("WARN", className.getCanonicalName() + "|" + message, args);
+        log(LogLevel.WARN, className.getCanonicalName() + separator + message, args);
     }
 
     public static void error(Class<?> className, String message, Object... args) {
-        log("ERR", className.getCanonicalName() + "|" + message, args);
+        log(LogLevel.ERROR, className.getCanonicalName() + separator + message, args);
+    }
+
+    public static void fatal(Class<?> className, String message, Object... args) {
+        log(LogLevel.FATAL, className.getCanonicalName() + separator + message, args);
     }
 
 

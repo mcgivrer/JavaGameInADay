@@ -46,11 +46,11 @@ public class Game extends JPanel {
     public Game() {
         super();
         Log.info("Initialization application %s (%s) %n- running on JDK %s %n- at %s %n- with classpath = %s%n",
-                getI18n("app.name"),
-                getI18n("app.version"),
-                System.getProperty("java.version"),
-                System.getProperty("java.home"),
-                System.getProperty("java.class.path"));
+            getI18n("app.name"),
+            getI18n("app.version"),
+            System.getProperty("java.version"),
+            System.getProperty("java.home"),
+            System.getProperty("java.class.path"));
     }
 
     public void run(String[] args) {
@@ -111,8 +111,8 @@ public class Game extends JPanel {
     public void input(Scene scene) {
         scene.input(inputListener);
         scene.getEntities().values()
-                .forEach(e -> e.getBehaviors()
-                        .forEach(b -> b.input(inputListener, e)));
+            .forEach(e -> e.getBehaviors()
+                .forEach(b -> b.input(inputListener, e)));
     }
 
     public void update(Scene scene, long elapsed) {
@@ -126,9 +126,11 @@ public class Game extends JPanel {
 
     private void dispose() {
         physicEngine.dispose();
+        collisionManager.dispose();
         renderer.dispose();
         scnMgr.dispose();
-        Log.info("End of application ");
+
+        Log.info("End of application execution");
     }
 
     public static void main(String[] argc) {
@@ -179,8 +181,8 @@ public class Game extends JPanel {
         boolean status = false;
         setPause(true);
         int response = JOptionPane.showConfirmDialog(renderer.getWindow(),
-                getI18n("app.exit.confirm.message"),
-                getI18n("app.exit.confirm.title"), JOptionPane.YES_NO_OPTION);
+            getI18n("app.exit.confirm.message"),
+            getI18n("app.exit.confirm.title"), JOptionPane.YES_NO_OPTION);
         if (response == JOptionPane.YES_OPTION) {
             status = true;
         }
