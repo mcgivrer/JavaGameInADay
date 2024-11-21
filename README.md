@@ -4,11 +4,25 @@
 
 ## Context
 
-This is the readme file for "Java Game In A Week" tutorial projects (1.0.2) 
+This is the readme file for "Java Game In A Week" tutorial projects (1.0.2)
 where building a simple 2D game framework step by step by adding features, with a moderate ramp-up on complexity.
 
-Hope this small project will help you on-boarding into the game development adventure with a common and accessible
- language.
+Hope this demo project will help you to on-board into the game development adventure with a common and accessible
+language.
+
+## Documentation
+
+For more detailed information about implementation and design, look at the `src/docs` file path, two documents moving
+step by
+step on the design will drive you to explore each concept.
+
+```plaintext
+JavaGameOnADay
+|_src
+  |_ docs
+     |_ 01-design       => Step by step driving you through the concetps
+     |_ 02-user-manual  => Help you execute and configure the resulting demo
+```
 
 ## Build
 

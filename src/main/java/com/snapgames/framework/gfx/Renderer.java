@@ -4,46 +4,49 @@ import com.snapgames.framework.Game;
 import com.snapgames.framework.entity.*;
 import com.snapgames.framework.io.InputListener;
 import com.snapgames.framework.io.ResourceManager;
+import com.snapgames.framework.physic.PhysicEngine;
+import com.snapgames.framework.physic.math.Vector2d;
 import com.snapgames.framework.scene.Scene;
-import com.snapgames.framework.utils.Log;
+import com.snapgames.framework.scene.SceneManager;
+import com.snapgames.framework.system.GSystem;
+import com.snapgames.framework.system.SystemManager;
+import com.snapgames.framework.utils.Config;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Optional;
+import java.util.List;
+import java.util.*;
 
-import static com.snapgames.framework.utils.I18n.getI18n;
 import static com.snapgames.framework.utils.Log.debug;
 import static com.snapgames.framework.utils.Log.error;
 
-public class Renderer implements Serializable {
+public class Renderer implements GSystem, Serializable {
     private final Game app;
 
     private JFrame window;
     private BufferedImage drawbuffer;
     private Font debugFont;
 
-    public Renderer(Game app, Dimension bufferSize) {
+    private boolean fullScreen = false;
+
+    public Renderer(Game app) {
         this.app = app;
-        drawbuffer = new BufferedImage(bufferSize.width, bufferSize.height, BufferedImage.TYPE_INT_ARGB);
         debug(Renderer.class, "start of processing");
     }
 
-    public void createWindow(String title, Dimension size) {
+    private void createWindow(String title, Dimension size) {
         newWindow(title, size, false);
         debugFont = window.getGraphics().getFont().deriveFont(9.0f);
         debug(Renderer.class, "Window %s created with size of %dx%d", title, size.width, size.height);
     }
 
-    public void newWindow(String title, Dimension size, boolean fullScreen) {
+    private void newWindow(String title, Dimension size, boolean fullScreen) {
         KeyListener il = null;
         if (window != null && window.isActive()) {
             il = window.getKeyListeners()[0];
@@ -86,7 +89,7 @@ public class Renderer implements Serializable {
         debug(Renderer.class, "adding this %s as a KeyListener", il.getClass());
     }
 
-    public void render(Scene scene) {
+    private void render(Scene scene) {
 
         Graphics2D g = (Graphics2D) drawbuffer.createGraphics();
         g.setRenderingHints(Map.of(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
@@ -144,14 +147,17 @@ public class Renderer implements Serializable {
     }
 
     private void drawDebugInfoEntity(Graphics2D g, Scene scene, Entity<?> e) {
+        Vector2d velocity = e.getVelocity();
+        Vector2d acc = e.getAcceleration();
+
         g.setColor(Color.ORANGE);
         g.draw(e);
         g.setFont(debugFont);
         g.drawString("#%d:%s".formatted(e.getId(), e.getName()), (int) (e.getX() + e.getWidth() + 4), (int) e.getY());
         // draw velocity vector
-        drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), e.dx * 100, e.dy * 100, Color.CYAN);
+        drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), velocity.getX() * 100, velocity.getY() * 100, Color.CYAN);
         // draw acceleration vector
-        drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), e.ax * 100, e.ay * 100, Color.RED);
+        drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), acc.getX() * 100, acc.getY() * 100, Color.RED);
         // draw forces vector
         e.getForces().forEach(f -> {
             drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), f.getX() * 100, f.getY() * 100, Color.YELLOW);
@@ -169,28 +175,29 @@ public class Renderer implements Serializable {
     public void drawEntity(Graphics2D g, Scene scene, Entity<?> e) {
         switch (e.getClass().getSimpleName()) {
             case "GameObject", "WorldArea" -> {
-
-                g.setColor(e.getFillColor());
-                g.fill(new Rectangle2D.Double(e.x, e.y, e.width, e.height));
+                drawObject(g, e);
             }
             case "TextObject" -> {
-                TextObject te = (TextObject) e;
-                drawText(g, te);
+                drawText(g, (TextObject) e);
             }
             case "GridObject" -> {
-                GridObject go = (GridObject) e;
-                drawGrid(g, scene.getWorld(), go.getTileWidth(), go.getTileHeight(), go.getColor());
+                drawGrid(g, scene, (GridObject) e);
             }
             case "GaugeObject" -> {
-                GaugeObject gg = (GaugeObject) e;
-                drawGauge(g, gg);
+                drawGauge(g, (GaugeObject) e);
             }
-
             default -> {
                 error(Renderer.class, "Unknown object class %s", e.getClass());
             }
         }
         e.getBehaviors().forEach(b -> b.draw(g, e));
+    }
+
+    private static void drawObject(Graphics2D g, Entity<?> e) {
+        if (e.getFillColor() != null) {
+            g.setColor(e.getFillColor());
+            g.fill(e);
+        }
     }
 
     private static void drawText(Graphics2D g, TextObject te) {
@@ -213,11 +220,13 @@ public class Renderer implements Serializable {
             (int) (gg.getWidth() - 5 * ((gg.getMaxValue() - gg.getMinValue()) / gg.getValue())), (int) gg.getHeight() - 5);
     }
 
-    private void drawGrid(Graphics2D g, Rectangle2D playArea, int tileW, int tileH, Color color) {
-        g.setColor(color);
-        for (int iy = 0; iy < playArea.getHeight(); iy += tileH) {
-            for (int ix = 0; ix < playArea.getWidth(); ix += tileW) {
-                g.drawRect(ix, iy, tileW, (int) (iy + tileH < playArea.getHeight() ? tileH : tileH - (playArea.getHeight() - iy)));
+    private void drawGrid(Graphics2D g, Scene scene, GridObject go) {
+        g.setColor(go.getColor());
+        for (int iy = 0; iy < scene.getWorld().getHeight(); iy += go.getTileWidth()) {
+            for (int ix = 0; ix < scene.getWorld().getWidth(); ix += go.getTileWidth()) {
+                g.drawRect(ix, iy, go.getTileWidth(), (int) (iy + go.getTileHeight() < scene.getWorld().getHeight()
+                    ? go.getTileHeight()
+                    : go.getTileHeight() - (scene.getWorld().getHeight() - iy)));
             }
         }
     }
@@ -233,5 +242,64 @@ public class Renderer implements Serializable {
 
     public JFrame getWindow() {
         return window;
+    }
+
+    @Override
+    public Collection<Class<?>> getDependencies() {
+        return List.of(Config.class, SceneManager.class, PhysicEngine.class, InputListener.class);
+    }
+
+    @Override
+    public void initialize(Game game) {
+        Config config = SystemManager.get(Config.class);
+        Dimension bufferSize = config.get("app.render.buffer.size");
+        drawbuffer = new BufferedImage(bufferSize.width, bufferSize.height, BufferedImage.TYPE_INT_ARGB);
+
+        Dimension windowSize = config.get("app.render.window.size");
+        String title = config.get("app.render.window.title");
+        createWindow(title, windowSize);
+
+        InputListener inputListener = SystemManager.get(InputListener.class);
+        setInputListener(inputListener);
+    }
+
+    public void switchFullScreenMode() {
+        app.setPause(true);
+        fullScreen = !fullScreen;
+        JFrame w = getWindow();
+        Dimension dim = w.getSize();
+        String title = w.getTitle();
+        newWindow(title, dim, fullScreen);
+        app.setPause(false);
+    }
+
+    @Override
+    public void start(Game game) {
+
+    }
+
+    @Override
+    public void process(Game game, double elapsed) {
+        SceneManager sm = SystemManager.get(SceneManager.class);
+        render(sm.getActiveScene());
+    }
+
+    @Override
+    public void postProcess(Game game) {
+        PhysicEngine pe = SystemManager.get(PhysicEngine.class);
+        SceneManager sm = SystemManager.get(SceneManager.class);
+        if (sm != null && pe != null) {
+            pe.resetForces(sm.getActiveScene());
+        }
+    }
+
+    @Override
+    public void stop(Game game) {
+
+    }
+
+    @Override
+    public void dispose(Game game) {
+        dispose();
     }
 }

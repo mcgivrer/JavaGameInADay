@@ -1,20 +1,24 @@
 package com.snapgames.framework.io;
 
 import com.snapgames.framework.Game;
-import com.snapgames.framework.physic.CollisionManager;
+import com.snapgames.framework.gfx.Renderer;
+import com.snapgames.framework.scene.Scene;
+import com.snapgames.framework.scene.SceneManager;
+import com.snapgames.framework.system.GSystem;
+import com.snapgames.framework.system.SystemManager;
+import com.snapgames.framework.utils.Config;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 
 import static com.snapgames.framework.utils.Log.debug;
 
-public class InputListener implements KeyListener, Serializable {
+public class InputListener implements KeyListener, Serializable, GSystem {
     private final Game app;
     public boolean[] keys = new boolean[1024];
-    private boolean fullScreen = false;
 
     public InputListener(Game app) {
         this.app = app;
@@ -37,11 +41,13 @@ public class InputListener implements KeyListener, Serializable {
 
     @Override
     public void keyReleased(KeyEvent e) {
+
+        SceneManager scnMgr = SystemManager.get(SceneManager.class);
         if (isKeyPressed(KeyEvent.VK_Q) || isKeyPressed(KeyEvent.VK_ESCAPE)) {
             app.requestExit();
         }
         if (isKeyPressed(KeyEvent.VK_Z) && e.isControlDown()) {
-            app.getSceneManager().getActiveScene().reset();
+            scnMgr.getActiveScene().reset();
         }
         if (isKeyPressed(KeyEvent.VK_D)) {
             app.setDebug(app.getDebug() + 1 < 6 ? app.getDebug() + 1 : 0);
@@ -50,22 +56,43 @@ public class InputListener implements KeyListener, Serializable {
             app.setPause(app.isNotPaused());
         }
         if (isKeyPressed(KeyEvent.VK_F11)) {
-            switchFullScreenMode();
+            Renderer renderer = SystemManager.get(Renderer.class);
+            renderer.switchFullScreenMode();
         }
         keys[e.getKeyCode()] = false;
     }
 
-    private void switchFullScreenMode() {
-        app.setPause(true);
-        fullScreen = !fullScreen;
-        JFrame w = app.getRenderer().getWindow();
-        Dimension dim = w.getSize();
-        String title = w.getTitle();
-        app.getRenderer().newWindow(title, dim, fullScreen);
-        app.setPause(false);
+    @Override
+    public Collection<Class<?>> getDependencies() {
+        return List.of(Config.class, Renderer.class);
     }
 
-    public void dispose() {
-        debug(InputListener.class, "End of processing");
+    @Override
+    public void initialize(Game game) {
+    }
+
+    @Override
+    public void start(Game game) {
+
+    }
+
+    @Override
+    public void process(Game game, double elapsed) {
+        SceneManager sceneManager = SystemManager.get(SceneManager.class);
+        Scene scene = sceneManager.getActiveScene();
+        scene.input(this);
+        scene.getEntities().values()
+            .forEach(e -> e.getBehaviors()
+                .forEach(b -> b.input(this, e)));
+    }
+
+    @Override
+    public void stop(Game game) {
+
+    }
+
+    @Override
+    public void dispose(Game game) {
+
     }
 }

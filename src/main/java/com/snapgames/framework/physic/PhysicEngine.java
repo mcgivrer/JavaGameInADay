@@ -2,10 +2,14 @@ package com.snapgames.framework.physic;
 
 import com.snapgames.framework.Game;
 import com.snapgames.framework.entity.Entity;
-import com.snapgames.framework.entity.WorldArea;
-import com.snapgames.framework.gfx.Renderer;
+import com.snapgames.framework.physic.math.Vector2d;
 import com.snapgames.framework.scene.Scene;
+import com.snapgames.framework.scene.SceneManager;
+import com.snapgames.framework.system.GSystem;
+import com.snapgames.framework.system.SystemManager;
+import com.snapgames.framework.utils.Config;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.snapgames.framework.utils.Log.debug;
@@ -24,8 +28,9 @@ import static com.snapgames.framework.utils.Log.debug;
  * @author Frédéric Delorme
  * @since 1.0.0
  */
-public class PhysicEngine {
+public class PhysicEngine implements GSystem {
     private final Game app;
+    private long currentTime = 0;
 
     public PhysicEngine(Game app) {
         this.app = app;
@@ -33,81 +38,89 @@ public class PhysicEngine {
         debug(PhysicEngine.class, "Start of processing");
     }
 
-    public void update(Scene scene, long elapsed) {
+    private void update(Scene scene, double elapsed) {
         scene.getEntities().values().stream()
             .filter(Entity::isActive)
-            .forEach(e -> {
-                if (e.getPhysicType() == PhysicType.DYNAMIC) {
-                    e.setContact(false);
-                    applyWorldEffects(scene, e);
-                    applyPhysicRules(scene, elapsed, e);
-                    keepEntityIntoWorld(scene, e);
+            .forEach(entity -> {
+                World world = scene.getWorld();
+                if (entity.getPhysicType().equals(PhysicType.DYNAMIC)) {
+                    applyWorldPhysicRules(entity, world);
+                    updatePhysicEntity(entity, world, elapsed);
                 }
-                e.getBehaviors().forEach(b -> b.update(e, elapsed));
+                entity.getBehaviors().forEach(b -> b.update(entity, elapsed));
+                constrainToWorldArea(entity, world);
             });
         if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
             scene.getActiveCamera().update(elapsed);
         }
     }
 
-    private void applyWorldEffects(Scene scene, Entity<?> e) {
-        scene.getWorld().getChildren().forEach(a -> {
-            if (a.contains(e) || a.intersects(e)) {
-                e.getForces().addAll(((WorldArea) a).getForces());
-                e.dx *= ((WorldArea) a).getMaterial().friction;
-                e.dy *= ((WorldArea) a).getMaterial().friction;
-                e.setContact(true);
+    private void updatePhysicEntity(Entity<?> entity, World world, double elapsed) {
+
+        entity.setContact(false);
+        switch (entity.getType()) {
+
+            case DYNAMIC -> {
+
+                entity.setAcceleration(new Vector2d().addAll(entity.getForces()).maximize(0.5));
+                entity.setVelocity(entity.getVelocity().add(entity.getAcceleration().multiply(0.5 * elapsed)).maximize(1.0));
+                entity.setPosition(entity.getPosition().add(entity.getVelocity().multiply(elapsed)));
+
+                entity.getForces().clear();
+                constrainToWorldArea(entity, world);
+
+                // apply Material roughness on velocity
+                entity.setVelocity(entity.getVelocity().multiply(entity.getMaterial().friction));
+
             }
-        });
-    }
-
-    private void applyPhysicRules(Scene scene, long elapsed, Entity<?> e) {
-        e.ax = 0;
-        e.ay = 0;
-        e.addForce(0.0, -scene.getWorld().getGravity() / e.getMass());
-        e.getForces().forEach(f -> {
-            e.ax += f.getX();
-            e.ay += f.getY();
-        });
-
-        e.dx += 0.5 * e.ax * elapsed * elapsed * 0.001;
-        e.dy += 0.5 * e.ay * elapsed * elapsed * 0.001;
-
-        e.x += e.dx * (elapsed);
-        e.y += e.dy * (elapsed);
-
-        if (e.hasContact()) {
-            e.dx *= e.getMaterial().friction;
-            e.dy *= e.getMaterial().friction;
-        }
-        e.dx = Math.signum(e.dx) * Math.min(Math.abs(e.dx), 16.0);
-        e.dy = Math.signum(e.dy) * Math.min(Math.abs(e.dy), 16.0);
-    }
-
-    private void keepEntityIntoWorld(Scene scene, Entity<?> e) {
-        World w = scene.getWorld();
-        if (!w.contains(e) || w.intersects(e)) {
-            if (e.x < w.x) {
-                e.x = w.x;
-                e.dx *= -e.getMaterial().elasticity;
-                e.setContact(true);
+            case STATIC -> {
+                // TODO define processing for static entity
             }
-            if (e.x + e.width > w.width) {
-                e.x = w.width - e.width;
-                e.dx *= -e.getMaterial().elasticity;
-                e.setContact(true);
-            }
-            if (e.y < w.y) {
-                e.y = w.y;
-                e.dy *= -e.getMaterial().elasticity;
-                e.setContact(true);
-            }
-            if (e.y > w.height - e.height) {
-                e.y = w.height - e.height;
-                e.dy *= -e.getMaterial().elasticity;
-                e.setContact(true);
+            default -> {
+                // TODO define default processing (if any)
             }
         }
+    }
+
+
+    /**
+     * Apply all {@link World} rules: apply all world forces on any contained
+     * {@link Entity}.
+     *
+     * @param entity the {@link Entity} to be updated
+     * @param world  the {@link World} instance to take into account.
+     */
+    private void applyWorldPhysicRules(Entity<?> entity, World world) {
+        if (world.contains(entity)) {
+            // apply all World forces to the PhysicComponent.
+            entity.getForces().addAll(world.getForces());
+        }
+    }
+
+    /**
+     * Keep all {@link Entity} position into the
+     * {@link World}'s play area.
+     *
+     * @param entity the  {@link Entity} to be updated
+     * @param world  the {@link World} instance to take into account.
+     */
+    private void constrainToWorldArea(Entity<?> entity, World world) {
+        Vector2d position = entity.getPosition();
+        Vector2d size = new Vector2d(entity.getWidth(), entity.getHeight());
+
+        if (position.x < world.getX()) {
+            position.x = world.getX();
+        }
+        if (position.x + size.x > world.getX() + world.getWidth()) {
+            position.x = world.getX() + world.getWidth() - size.x;
+        }
+        if (position.y < world.getY()) {
+            position.y = world.getY();
+        }
+        if (position.y + size.y > world.getY() + world.getHeight()) {
+            position.y = world.getY() + world.getHeight() - size.y;
+        }
+        entity.setPosition(position);
     }
 
     public void dispose() {
@@ -117,5 +130,44 @@ public class PhysicEngine {
 
     public void resetForces(Scene scene) {
         scene.getEntities().values().forEach(e -> e.getForces().clear());
+    }
+
+    @Override
+    public List<Class<?>> getDependencies() {
+        return List.of(Config.class, SceneManager.class);
+    }
+
+    @Override
+    public void initialize(Game game) {
+
+    }
+
+    @Override
+    public void start(Game game) {
+
+    }
+
+    @Override
+    public void process(Game game, double elapsed) {
+        if (game.isNotPaused()) {
+            SceneManager sm = SystemManager.get(SceneManager.class);
+            update(sm.getActiveScene(), elapsed);
+        }
+    }
+
+    @Override
+    public void postProcess(Game game) {
+        SceneManager sm = SystemManager.get(SceneManager.class);
+        resetForces(sm.getActiveScene());
+    }
+
+    @Override
+    public void stop(Game game) {
+
+    }
+
+    @Override
+    public void dispose(Game game) {
+
     }
 }

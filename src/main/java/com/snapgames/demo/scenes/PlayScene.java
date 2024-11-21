@@ -10,6 +10,7 @@ import com.snapgames.framework.physic.Material;
 import com.snapgames.framework.physic.PhysicType;
 import com.snapgames.framework.physic.World;
 import com.snapgames.framework.entity.WorldArea;
+import com.snapgames.framework.physic.math.Vector2d;
 import com.snapgames.framework.scene.AbstractScene;
 
 import java.awt.*;
@@ -31,11 +32,14 @@ public class PlayScene extends AbstractScene {
 
     @Override
     public void create() {
-        Dimension windowSize = app.getConfig().get("app.window.size");
 
-        world = new World("earth", -0.981)
+        Dimension windowSize = getConfig().get("app.window.size");
+        Rectangle2D playArea = getConfig().get("app.physic.world.play.area.size");
+
+
+        setWorld(new World("earth", new Vector2d(0, -0.981))
             .setSize(800, 600)
-            .setPosition(0, 0);
+            .setPosition(0, 0));
 
         GridObject go = new GridObject("grid").setTileSize(16, 16).setColor(Color.DARK_GRAY).setPriority(1);
         add(go);
@@ -133,7 +137,7 @@ public class PlayScene extends AbstractScene {
             .addForce(0.02, -0.21)
             .setPriority(20)
             .add(new WaveWaterSimulator());
-        world.addArea(water);
+        getWorld().addArea(water);
         add(water);
 
         WorldArea sky = (WorldArea) new WorldArea("sky")
@@ -158,7 +162,7 @@ public class PlayScene extends AbstractScene {
                     }
                 }
             });
-        world.addArea(sky);
+        getWorld().addArea(sky);
         add(sky);
         //activate our camera as the default one.
         setActiveCamera(camera);

@@ -3,6 +3,7 @@ package com.snapgames.framework.entity;
 import com.snapgames.framework.behaviors.Behavior;
 import com.snapgames.framework.physic.Material;
 import com.snapgames.framework.physic.PhysicType;
+import com.snapgames.framework.physic.math.Vector2d;
 import com.snapgames.framework.utils.Node;
 
 import java.awt.*;
@@ -12,10 +13,11 @@ import java.util.List;
 
 public class Entity<T> extends Node<T> {
 
-    List<Point2D> forces = new ArrayList<>();
 
-    public double ax, ay;
-    public double dx, dy;
+    public Vector2d position = new Vector2d();
+    public Vector2d velocity = new Vector2d();
+    public Vector2d acceleration = new Vector2d();
+    public List<Vector2d> forces = new ArrayList<>();
     private Material material = Material.DEFAULT;
     private double mass = 1.0;
 
@@ -39,10 +41,6 @@ public class Entity<T> extends Node<T> {
         super(name);
     }
 
-    public T setPosition(double x, double y) {
-        super.setRect(x, y, width, height);
-        return (T) this;
-    }
 
     public T setSize(double w, double h) {
         super.setRect(x, y, w, h);
@@ -88,16 +86,16 @@ public class Entity<T> extends Node<T> {
     }
 
     public T addForce(double fx, double fy) {
-        forces.add(new Point2D.Double(fx, fy));
+        forces.add(new Vector2d(fx, fy));
         return (T) this;
     }
 
-    public T addForce(Point2D f) {
+    public T addForce(Vector2d f) {
         forces.add(f);
         return (T) this;
     }
 
-    public List<Point2D> getForces() {
+    public List<Vector2d> getForces() {
         return forces;
     }
 
@@ -156,15 +154,55 @@ public class Entity<T> extends Node<T> {
         return (T) this;
     }
 
+
+    public T setPosition(double x, double y) {
+        super.setRect(x, y, width, height);
+        position.set(x, y);
+        return (T) this;
+    }
+
+
+    public T setPosition(Vector2d p) {
+        super.setRect(p.getX(), p.getY(), width, height);
+        position.set(p.getX(), p.getY());
+        return (T) this;
+    }
+
+    public Vector2d getPosition() {
+        return position;
+    }
+
+    public T setVelocity(Vector2d velocity) {
+        this.velocity = velocity;
+        return (T) this;
+    }
+
+    public T setAcceleration(Vector2d acceleration) {
+        this.acceleration = acceleration;
+        return (T) this;
+    }
+
+    public Vector2d getVelocity() {
+        return velocity;
+    }
+
+    public Vector2d getAcceleration() {
+        return acceleration;
+    }
+
     @Override
     public String toString() {
         return "Entity{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", width=" + width +
-                ", height=" + height +
-                ", x=" + x +
-                ", y=" + y +
-                '}';
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", width=" + width +
+            ", height=" + height +
+            ", x=" + x +
+            ", y=" + y +
+            '}';
+    }
+
+    public PhysicType getType() {
+        return this.physicType;
     }
 }

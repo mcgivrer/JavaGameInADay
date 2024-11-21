@@ -1,29 +1,62 @@
 package com.snapgames.framework.scene;
 
 import com.snapgames.framework.Game;
-import com.snapgames.framework.gfx.Renderer;
+import com.snapgames.framework.system.GSystem;
+import com.snapgames.framework.system.SystemManager;
+import com.snapgames.framework.utils.Config;
 import com.snapgames.framework.utils.Log;
 import com.snapgames.framework.utils.Node;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 import static com.snapgames.framework.utils.Log.debug;
 
-public class SceneManager {
+public class SceneManager implements GSystem {
 
-    private final Game app;
+    private final Game game;
     // Scene Management
-    private Map<String, Scene> scenes = new HashMap<>();
+    private final Map<String, Scene> scenes = new HashMap<>();
     private Scene activeScene;
     private String defaultSceneName;
 
     public SceneManager(Game app) {
-        this.app = app;
+        this.game = app;
+        initialize();
     }
 
-    public void addScene(Scene scene) {
+    /**
+     * Read all the scenes available in the configuration 'app.scene.list' config key,
+     * create corresponding instances and cache these in the internal map.
+     */
+    private void initialize() {
+    }
+
+    /**
+     * Create a {@link Scene} instance according to the className and the sceneName.
+     *
+     * @param sceneName the name for this scene in the {@link SceneManager} cache,
+     * @param className the {@link Scene} class name to instantiate.
+     * @return the corresponding {@link Scene} instance.
+     */
+    private Scene createInstance(String sceneName, String className) {
+        Scene scene = null;
+        try {
+            Class<?> sceneClass = Class.forName(className);
+            Constructor<?> constructor = sceneClass.getConstructor(Game.class, String.class);
+            scene = (Scene) constructor.newInstance(this.game, sceneName);
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException e) {
+            Log.error("Unable to load Scene class for %s : %s", className, e.getMessage());
+        }
+        return scene;
+    }
+
+    /**
+     * @param scene the Scene instance to be added to the list.
+     */
+    private void addScene(Scene scene) {
         if (!scenes.containsKey(scene.getName())) {
             scenes.put(scene.getName(), scene);
         } else {
@@ -45,12 +78,11 @@ public class SceneManager {
     }
 
     public void switchScene() {
-        switchScene(defaultSceneName);
     }
 
     private static void displaySceneTreeOnLog(Node<?> node, String space) {
         String spaces = space + "  ";
-        Log.debug(Game.class, "%s |_ Node<%s> named '%s' : %s", spaces, node.getClass().getSimpleName(), node.getName(), node);
+        debug(Game.class, "%s |_ Node<%s> named '%s' : %s", spaces, node.getClass().getSimpleName(), node.getName(), node);
         node.getChildren().forEach(c -> displaySceneTreeOnLog(c, spaces));
     }
 
@@ -67,5 +99,45 @@ public class SceneManager {
 
     public Scene getActiveScene() {
         return activeScene;
+    }
+
+    @Override
+    public Collection<Class<?>> getDependencies() {
+        return List.of(Config.class);
+    }
+
+    @Override
+    public void initialize(Game game) {
+        Config config = SystemManager.get(Config.class);
+        String[] scenesList = config.get("app.scene.list");
+        Arrays.stream(scenesList).forEach(sceneItem -> {
+            String[] kv = sceneItem.split(":");
+            Scene scene = createInstance(kv[0], kv[1]);
+            addScene(scene);
+        });
+    }
+
+    @Override
+    public void start(Game game) {
+        Config config = SystemManager.get(Config.class);
+        defaultSceneName = config.get("app.scene.default");
+        switchScene(defaultSceneName);
+    }
+
+    @Override
+    public void process(Game game, double elapsed) {
+        if (Optional.ofNullable(this.activeScene).isPresent()) {
+            activeScene.process(game, elapsed);
+        }
+    }
+
+    @Override
+    public void stop(Game game) {
+
+    }
+
+    @Override
+    public void dispose(Game game) {
+
     }
 }

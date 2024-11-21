@@ -2,17 +2,18 @@ package com.snapgames.framework.physic;
 
 import com.snapgames.framework.entity.Entity;
 import com.snapgames.framework.entity.WorldArea;
+import com.snapgames.framework.physic.math.Vector2d;
 
 public class World extends Entity<World> {
-    private double gravity;
+    private Vector2d gravity;
 
     public World(String name) {
         super(name);
-        this.gravity = 0.0;
+        this.gravity = new Vector2d();
         setRect(0, 0, 640, 400);
     }
 
-    public World(String name, double gravity) {
+    public World(String name, Vector2d gravity) {
         super(name);
         this.gravity = gravity;
     }
@@ -25,10 +26,6 @@ public class World extends Entity<World> {
     public World setPosition(double x, double y) {
         setRect(x, y, width, height);
         return this;
-    }
-
-    public double getGravity() {
-        return gravity;
     }
 
     public World addArea(WorldArea a) {
