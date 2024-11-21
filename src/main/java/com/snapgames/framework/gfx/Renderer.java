@@ -143,12 +143,12 @@ public class Renderer implements Serializable {
         g.setFont(debugFont);
         g.drawString("#%d:%s".formatted(e.getId(), e.getName()), (int) (e.getX() + e.getWidth() + 4), (int) e.getY());
         // draw velocity vector
-        drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), e.dx * 70, e.dy * 70, Color.CYAN);
+        drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), e.dx * 100, e.dy * 100, Color.CYAN);
         // draw acceleration vector
-        drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), e.ax * 40, e.ay * 40, Color.RED);
+        drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), e.ax * 100, e.ay * 100, Color.RED);
         // draw forces vector
         e.getForces().forEach(f -> {
-            drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), f.getX() * 40, f.getY() * 40, Color.YELLOW);
+            drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), f.getX() * 100, f.getY() * 100, Color.YELLOW);
         });
     }
 

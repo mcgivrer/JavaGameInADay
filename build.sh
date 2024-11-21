@@ -45,7 +45,7 @@ export AUTHOR_NAME=$(prop project.author.email)
 export JAVA_VERSION=$(prop project.build.jdk.version)
 export EXTERNAL_JARS=$(prop project.build.jars)
 # CheckStyle rules set can be set to 'sun' or 'google'
-expot CHECKSTYLES_RULES=$(prop project.quality.rules)
+export CHECKSTYLES_RULES=$(prop project.quality.rules)
 
 # ---- to enforce preview compatibility use the --enable-preview mode,
 # ---- for more information, see https://docs.oracle.com/en/java/javase/18/language/preview-language-and-vm-features.html
