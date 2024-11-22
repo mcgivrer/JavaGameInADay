@@ -105,22 +105,22 @@ public class Vector2d {
         return String.format("{x:%04.2f,y:%04.2f}", x, y);
     }
 
-    public Vector2d maximize(double maxAccel) {
-        if (Math.abs(x) > maxAccel) {
-            x = Math.signum(x) * maxAccel;
+    public Vector2d maximize(double maxValue) {
+        if (Math.abs(x) > maxValue) {
+            x = Math.signum(x) * maxValue;
         }
-        if (Math.abs(y) > maxAccel) {
-            y = Math.signum(y) * maxAccel;
+        if (Math.abs(y) > maxValue) {
+            y = Math.signum(y) * maxValue;
         }
         return this;
     }
 
-    public Vector2d maximize(double maxAccelX, double maxAccelY) {
-        if (Math.abs(x) > maxAccelX) {
-            x = Math.signum(x) * maxAccelX;
+    public Vector2d maximize(double maxX, double maxY) {
+        if (Math.abs(x) > maxX) {
+            x = Math.signum(x) * maxX;
         }
-        if (Math.abs(y) > maxAccelY) {
-            y = Math.signum(y) * maxAccelY;
+        if (Math.abs(y) > maxY) {
+            y = Math.signum(y) * maxY;
         }
         return this;
     }

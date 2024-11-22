@@ -40,16 +40,17 @@ public class PhysicEngine implements GSystem {
 
     private void update(Scene scene, double elapsed) {
         scene.getEntities().values().stream()
-            .filter(Entity::isActive)
-            .forEach(entity -> {
-                World world = scene.getWorld();
-                if (entity.getPhysicType().equals(PhysicType.DYNAMIC)) {
-                    applyWorldPhysicRules(entity, world);
-                    updatePhysicEntity(entity, world, elapsed);
-                }
-                entity.getBehaviors().forEach(b -> b.update(entity, elapsed));
-                constrainToWorldArea(entity, world);
-            });
+                .filter(Entity::isActive)
+                .forEach(entity -> {
+                    World world = scene.getWorld();
+                    if (entity.getPhysicType().equals(PhysicType.DYNAMIC)) {
+                        applyWorldPhysicRules(entity, world);
+                        updatePhysicEntity(entity, world, elapsed);
+                        constrainToWorldArea(entity, world);
+                    }
+                    entity.getBehaviors().forEach(b -> b.update(entity, elapsed));
+                    constrainToWorldArea(entity, world);
+                });
         if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
             scene.getActiveCamera().update(elapsed);
         }
@@ -67,7 +68,6 @@ public class PhysicEngine implements GSystem {
                 entity.setPosition(entity.getPosition().add(entity.getVelocity().multiply(elapsed)));
 
                 entity.getForces().clear();
-                constrainToWorldArea(entity, world);
 
                 // apply Material roughness on velocity
                 entity.setVelocity(entity.getVelocity().multiply(entity.getMaterial().friction));

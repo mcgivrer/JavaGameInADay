@@ -137,7 +137,7 @@ public class PlayScene extends AbstractScene {
             .addForce(0.02, -0.21)
             .setPriority(20)
             .add(new WaveWaterSimulator());
-        getWorld().addArea(water);
+        getWorld().add(water);
         add(water);
 
         WorldArea sky = (WorldArea) new WorldArea("sky")
@@ -162,7 +162,7 @@ public class PlayScene extends AbstractScene {
                     }
                 }
             });
-        getWorld().addArea(sky);
+        getWorld().add(sky);
         add(sky);
         //activate our camera as the default one.
         setActiveCamera(camera);

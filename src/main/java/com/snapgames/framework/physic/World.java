@@ -5,17 +5,18 @@ import com.snapgames.framework.entity.WorldArea;
 import com.snapgames.framework.physic.math.Vector2d;
 
 public class World extends Entity<World> {
-    private Vector2d gravity;
+
+    private Vector2d gravity = new Vector2d();
 
     public World(String name) {
         super(name);
-        this.gravity = new Vector2d();
         setRect(0, 0, 640, 400);
     }
 
     public World(String name, Vector2d gravity) {
         super(name);
         this.gravity = gravity;
+        getForces().add(gravity.negate().multiply(0.01));
     }
 
     public World setSize(double w, double h) {
@@ -23,12 +24,7 @@ public class World extends Entity<World> {
         return this;
     }
 
-    public World setPosition(double x, double y) {
-        setRect(x, y, width, height);
-        return this;
-    }
-
-    public World addArea(WorldArea a) {
+    public World add(WorldArea a) {
         getChildren().add(a);
         return this;
     }

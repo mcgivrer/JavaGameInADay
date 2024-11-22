@@ -7,8 +7,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SystemManager {
+
     private static SystemManager instance = new SystemManager();
+
     private static Game parent;
+
     private static final Map<Class<? extends GSystem>, GSystem> systems = new ConcurrentHashMap<>();
 
     private SystemManager() {
@@ -34,7 +37,7 @@ public class SystemManager {
     public static void process(double elapsed) {
         systems.values().stream().sorted(
                         (s1, s2) -> s2.getDependencies() != null && s2.getDependencies().contains(s1.getClass()) ? -1 : 1)
-                .forEach(s -> s.process(parent,elapsed));
+                .forEach(s -> s.process(parent, elapsed));
     }
 
     public static void postProcess() {
@@ -53,5 +56,11 @@ public class SystemManager {
         systems.values().stream().sorted(
                         (s1, s2) -> s2.getDependencies() != null && s2.getDependencies().contains(s1.getClass()) ? -1 : 1)
                 .forEach(s -> s.start(parent));
+    }
+
+    public static void stop(Game game) {
+        systems.values().stream().sorted(
+                        (s1, s2) -> s2.getDependencies() != null && s2.getDependencies().contains(s1.getClass()) ? -1 : 1)
+                .forEach(s -> s.stop(parent));
     }
 }
