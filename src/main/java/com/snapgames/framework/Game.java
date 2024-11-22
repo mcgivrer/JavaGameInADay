@@ -79,7 +79,7 @@ public class Game extends JPanel implements GameInterface {
         long startTime = System.currentTimeMillis();
         long endTime = startTime;
         double elapsed = 0;
-        while (!exit) {
+        while (!isExitRequested()) {
             elapsed = endTime - startTime;
             startTime = endTime;
             SystemManager.process(elapsed);
@@ -122,6 +122,11 @@ public class Game extends JPanel implements GameInterface {
     @Override
     public void setExit(boolean e) {
         this.exit = e;
+    }
+
+    @Override
+    public boolean isExitRequested() {
+        return exit;
     }
 
     public boolean isNotPaused() {

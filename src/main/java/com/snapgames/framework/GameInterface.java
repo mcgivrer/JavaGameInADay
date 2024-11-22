@@ -12,4 +12,6 @@ public interface GameInterface {
     void setPause(boolean p);
 
     void setExit(boolean b);
+
+    boolean isExitRequested();
 }

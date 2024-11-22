@@ -15,7 +15,7 @@ public class Config extends HashMap<String, Object> {
 
     private final Properties props = new Properties();
 
-    private String configFilePath = "/config2.properties";
+    private String configFilePath = "/config.properties";
 
     public Config(GameInterface app) {
         super();
@@ -32,6 +32,11 @@ public class Config extends HashMap<String, Object> {
     }
 
     public void load(String filePath) {
+        this.configFilePath = filePath;
+        load();
+    }
+
+    public void load() {
         try {
             System.out.printf("# Load configuration Properties file %s%n", configFilePath);
             props.load(this.getClass().getResourceAsStream(configFilePath));
@@ -50,8 +55,11 @@ public class Config extends HashMap<String, Object> {
                 case "app.render.window.title" -> {
                     put("app.render.window.title", (String) e.getValue());
                 }
-                case "app.exit" -> {
-                    app.setExit(Boolean.parseBoolean(props.getProperty("app.exit")));
+                case "app.test" -> {
+                    put("app.test", Boolean.parseBoolean(props.getProperty("app.test")));
+                }
+                case "app.test.loop.max.count" -> {
+                    put("app.test.loop.max.count", Integer.parseInt(props.getProperty("app.test.loop.max.count")));
                 }
                 case "app.debug.level" -> {
                     app.setDebug(Integer.parseInt(props.getProperty("app.debug.level")));
@@ -79,7 +87,7 @@ public class Config extends HashMap<String, Object> {
                     put("app.scene.list", ((String) e.getValue()).split(","));
                 }
                 default -> {
-                    System.out.printf("Unknown value for %s=%s%n", e.getKey(), e.getValue());
+                    System.out.printf("~ Unknown value for %s=%s%n", e.getKey(), e.getValue());
                 }
             }
         });

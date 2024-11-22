@@ -312,7 +312,7 @@ java -cp target/demo-classes MonProgrammeConfig2
 
 Vous obtenez l'affichage suivante sur la console :
 
-```bash
+```plaintext
 # Démarrage de MonProgrammeConfig2
 # Load configuration Properties file /config2.properties
 - app.scene.list=play:com.snapgames.demo.scenes.PlayScene,
@@ -325,7 +325,7 @@ Vous obtenez l'affichage suivante sur la console :
 - app.unknown.key=not known
 - app.render.window.title="Test Game App (config2)"
 - app.render.buffer.size=320x200
-Unknown value for app.unknown.key=not known
+~ Unknown value for app.unknown.key=not known
 => Configuration for title:"Test Game App (config2)"
 ```
 
