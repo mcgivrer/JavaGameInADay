@@ -5,6 +5,8 @@ import com.snapgames.framework.entity.Camera;
 import com.snapgames.framework.entity.Entity;
 import com.snapgames.framework.io.InputListener;
 import com.snapgames.framework.physic.World;
+import com.snapgames.framework.system.SystemManager;
+import com.snapgames.framework.utils.Config;
 import com.snapgames.framework.utils.Node;
 
 import java.util.List;
@@ -30,6 +32,11 @@ public abstract class AbstractScene extends Node<AbstractScene> implements Scene
     public World getWorld() {
         return world;
     }
+
+    public void setWorld(World w) {
+        this.world = w;
+    }
+
 
     public void add(Entity<?> entity) {
         entities.put(entity.getName(), entity);
@@ -68,6 +75,11 @@ public abstract class AbstractScene extends Node<AbstractScene> implements Scene
         entities.clear();
         create();
     }
+
+    public Config getConfig() {
+        return SystemManager.get(Config.class);
+    }
+
 
     @Override
     public String toString() {

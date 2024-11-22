@@ -25,8 +25,8 @@ public class Node<T> extends Rectangle2D.Double {
         return (T) this;
     }
 
-    public long getId() {
-        return this.id;
+    public Long getId() {
+        return Long.valueOf(this.id);
     }
 
     public String getName() {
