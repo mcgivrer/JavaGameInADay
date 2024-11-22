@@ -6,10 +6,13 @@ import com.snapgames.framework.utils.Log;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.snapgames.framework.utils.Log.debug;
+
 public class SystemManager {
     private static SystemManager instance = new SystemManager();
     private static Game parent;
     private static final Map<Class<? extends GSystem>, GSystem> systems = new ConcurrentHashMap<>();
+    private static Map<String, Object> stats = new ConcurrentHashMap<>();
 
     private SystemManager() {
         Log.info("Start SystemManager");
@@ -32,26 +35,34 @@ public class SystemManager {
     }
 
     public static void process(double elapsed) {
+        stats.put("elapsed", elapsed);
         systems.values().stream().sorted(
-                        (s1, s2) -> s2.getDependencies() != null && s2.getDependencies().contains(s1.getClass()) ? -1 : 1)
-                .forEach(s -> s.process(parent,elapsed));
+                (s1, s2) -> s2.getDependencies() != null && s2.getDependencies().contains(s1.getClass()) ? -1 : 1)
+            .forEach(s -> {
+                s.process(parent, elapsed, stats);
+                debug(SystemManager.class, "process %s", s.getClass().getSimpleName());
+            });
     }
 
     public static void postProcess() {
         systems.values().stream().sorted(
-                        (s1, s2) -> s2.getDependencies() != null && s2.getDependencies().contains(s1.getClass()) ? -1 : 1)
-                .forEach(s -> s.postProcess(parent));
+                (s1, s2) -> s2.getDependencies() != null && s2.getDependencies().contains(s1.getClass()) ? -1 : 1)
+            .forEach(s -> s.postProcess(parent));
     }
 
     public static void initialize() {
         systems.values().stream().sorted(
-                        (s1, s2) -> s2.getDependencies() != null && s2.getDependencies().contains(s1.getClass()) ? -1 : 1)
-                .forEach(s -> s.initialize(parent));
+                (s1, s2) -> s2.getDependencies() != null && s2.getDependencies().contains(s1.getClass()) ? -1 : 1)
+            .forEach(s -> s.initialize(parent));
     }
 
     public static void start(Game game) {
         systems.values().stream().sorted(
-                        (s1, s2) -> s2.getDependencies() != null && s2.getDependencies().contains(s1.getClass()) ? -1 : 1)
-                .forEach(s -> s.start(parent));
+                (s1, s2) -> s2.getDependencies() != null && s2.getDependencies().contains(s1.getClass()) ? -1 : 1)
+            .forEach(s -> s.start(parent));
+    }
+
+    public Map<String, Object> getStats() {
+        return stats;
     }
 }

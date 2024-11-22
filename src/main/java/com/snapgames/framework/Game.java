@@ -23,7 +23,7 @@ import static com.snapgames.framework.utils.I18n.getI18n;
  * @author Frédéric Delorme frederic.delorme@gmail.com
  * @since 1.0.0
  */
-public class Game extends JPanel {
+public class Game extends JPanel implements GameInterface {
     private static final double FPS = 60.0;
 
     // Game exit request flag.
@@ -38,11 +38,11 @@ public class Game extends JPanel {
     public Game() {
         super();
         Log.info("Initialization application %s (%s) %n- running on JDK %s %n- at %s %n- with classpath = %s%n",
-                getI18n("app.name"),
-                getI18n("app.version"),
-                System.getProperty("java.version"),
-                System.getProperty("java.home"),
-                System.getProperty("java.class.path"));
+            getI18n("app.name"),
+            getI18n("app.version"),
+            System.getProperty("java.version"),
+            System.getProperty("java.home"),
+            System.getProperty("java.class.path"));
     }
 
     public void run(String[] args) {
@@ -78,7 +78,7 @@ public class Game extends JPanel {
 
         long startTime = System.currentTimeMillis();
         long endTime = startTime;
-        long elapsed = 0;
+        double elapsed = 0;
         while (!exit) {
             elapsed = endTime - startTime;
             startTime = endTime;
@@ -119,6 +119,11 @@ public class Game extends JPanel {
         this.pause = p;
     }
 
+    @Override
+    public void setExit(boolean e) {
+        this.exit = e;
+    }
+
     public boolean isNotPaused() {
         return !pause;
     }
@@ -134,8 +139,8 @@ public class Game extends JPanel {
         setPause(true);
         Renderer renderer = SystemManager.get(Renderer.class);
         int response = JOptionPane.showConfirmDialog(renderer.getWindow(),
-                getI18n("app.exit.confirm.message"),
-                getI18n("app.exit.confirm.title"), JOptionPane.YES_NO_OPTION);
+            getI18n("app.exit.confirm.message"),
+            getI18n("app.exit.confirm.title"), JOptionPane.YES_NO_OPTION);
         if (response == JOptionPane.YES_OPTION) {
             status = true;
         }

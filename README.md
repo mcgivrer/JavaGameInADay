@@ -4,7 +4,7 @@
 
 ## Context
 
-This is the readme file for "Java Game In A Week" tutorial projects (1.0.2)
+This is the readme file for "Java com.snapgames.framework.GameInterface In A Week" tutorial projects (1.0.2)
 where building a simple 2D game framework step by step by adding features, with a moderate ramp-up on complexity.
 
 Hope this demo project will help you to on-board into the game development adventure with a common and accessible

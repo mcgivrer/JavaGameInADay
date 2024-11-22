@@ -1,6 +1,7 @@
 package com.snapgames.framework.scene;
 
 import com.snapgames.framework.Game;
+import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.system.GSystem;
 import com.snapgames.framework.system.SystemManager;
 import com.snapgames.framework.utils.Config;
@@ -13,7 +14,7 @@ import java.util.*;
 
 public class SceneManager implements GSystem {
 
-    private final Game game;
+    private final GameInterface game;
     // Scene Management
     private final Map<String, Scene> scenes = new HashMap<>();
     private Scene activeScene;
@@ -104,7 +105,7 @@ public class SceneManager implements GSystem {
     }
 
     @Override
-    public void initialize(Game game) {
+    public void initialize(GameInterface game) {
         Config config = SystemManager.get(Config.class);
         String[] scenesList = config.get("app.scene.list");
         Arrays.stream(scenesList).forEach(sceneItem -> {
@@ -115,26 +116,26 @@ public class SceneManager implements GSystem {
     }
 
     @Override
-    public void start(Game game) {
+    public void start(GameInterface game) {
         Config config = SystemManager.get(Config.class);
         defaultSceneName = config.get("app.scene.default");
         switchScene(defaultSceneName);
     }
 
     @Override
-    public void process(Game game, double elapsed) {
+    public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
         if (Optional.ofNullable(this.activeScene).isPresent()) {
             activeScene.process(game, elapsed);
         }
     }
 
     @Override
-    public void stop(Game game) {
+    public void stop(GameInterface game) {
 
     }
 
     @Override
-    public void dispose(Game game) {
+    public void dispose(GameInterface game) {
 
     }
 }

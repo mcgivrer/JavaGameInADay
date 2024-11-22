@@ -1,6 +1,7 @@
 package com.snapgames.framework.physic;
 
 import com.snapgames.framework.Game;
+import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.entity.Entity;
 import com.snapgames.framework.scene.Scene;
 import com.snapgames.framework.scene.SceneManager;
@@ -10,6 +11,7 @@ import com.snapgames.framework.utils.Config;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class CollisionManager implements GSystem {
 
@@ -42,17 +44,17 @@ public class CollisionManager implements GSystem {
     }
 
     @Override
-    public void initialize(Game game) {
+    public void initialize(GameInterface game) {
 
     }
 
     @Override
-    public void start(Game game) {
+    public void start(GameInterface game) {
 
     }
 
     @Override
-    public void process(Game game, double elapsed) {
+    public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
         if (game.isNotPaused()) {
             SceneManager sm = SystemManager.get(SceneManager.class);
             update(sm.getActiveScene(), elapsed);
@@ -60,12 +62,12 @@ public class CollisionManager implements GSystem {
     }
 
     @Override
-    public void stop(Game game) {
+    public void stop(GameInterface game) {
 
     }
 
     @Override
-    public void dispose(Game game) {
+    public void dispose(GameInterface game) {
 
     }
 }

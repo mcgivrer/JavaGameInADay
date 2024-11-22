@@ -1,6 +1,7 @@
 package com.snapgames.framework.gfx;
 
 import com.snapgames.framework.Game;
+import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.entity.*;
 import com.snapgames.framework.io.InputListener;
 import com.snapgames.framework.io.ResourceManager;
@@ -102,16 +103,16 @@ public class Renderer implements GSystem, Serializable {
         }
         // draw the scene
         scene.getEntities().values().stream()
-                .filter(e -> !(e instanceof Camera))
-                .filter(Entity::isActive)
-                .filter(e -> e.getCameraIsStickedTo() == null)
-                .sorted(Comparator.comparingInt(Entity::getPriority))
-                .forEach(e -> {
-                    drawEntity(g, scene, e);
-                    if (app.isDebugGreaterThan(0)) {
-                        drawDebugInfoEntity(g, scene, e);
-                    }
-                });
+            .filter(e -> !(e instanceof Camera))
+            .filter(Entity::isActive)
+            .filter(e -> e.getCameraIsStickedTo() == null)
+            .sorted(Comparator.comparingInt(Entity::getPriority))
+            .forEach(e -> {
+                drawEntity(g, scene, e);
+                if (app.isDebugGreaterThan(0)) {
+                    drawDebugInfoEntity(g, scene, e);
+                }
+            });
 
         // draw World borders
         g.setColor(Color.DARK_GRAY);
@@ -122,13 +123,13 @@ public class Renderer implements GSystem, Serializable {
         }
         // draw all entities fixed to the active Camera.
         scene.getEntities().values().stream()
-                .filter(e -> !(e instanceof Camera))
-                .filter(Entity::isActive)
-                .filter(e -> e.getCameraIsStickedTo() != null && e.getCameraIsStickedTo().equals(scene.getActiveCamera()))
-                .sorted(Comparator.comparingInt(Entity::getPriority))
-                .forEach(e -> {
-                    drawEntity(g, scene, e);
-                });
+            .filter(e -> !(e instanceof Camera))
+            .filter(Entity::isActive)
+            .filter(e -> e.getCameraIsStickedTo() != null && e.getCameraIsStickedTo().equals(scene.getActiveCamera()))
+            .sorted(Comparator.comparingInt(Entity::getPriority))
+            .forEach(e -> {
+                drawEntity(g, scene, e);
+            });
 
         g.dispose();
 
@@ -137,7 +138,7 @@ public class Renderer implements GSystem, Serializable {
             BufferStrategy bf = window.getBufferStrategy();
             if (bf != null) {
                 bf.getDrawGraphics().drawImage(drawbuffer, 0, 0, window.getWidth(), window.getHeight(),
-                        0, 0, drawbuffer.getWidth(), drawbuffer.getHeight(), null);
+                    0, 0, drawbuffer.getWidth(), drawbuffer.getHeight(), null);
                 if (!bf.contentsLost()) {
                     bf.show();
                 }
@@ -163,8 +164,8 @@ public class Renderer implements GSystem, Serializable {
     private void drawVector(Graphics2D g, double x, double y, double dx, double dy, Color c) {
         g.setColor(c);
         g.drawLine(
-                (int) x, (int) y,
-                (int) (x + dx), (int) (y + dy));
+            (int) x, (int) y,
+            (int) (x + dx), (int) (y + dy));
 
     }
 
@@ -212,8 +213,8 @@ public class Renderer implements GSystem, Serializable {
         g.drawRect((int) gg.getX() + 1, (int) gg.getY() + 1, (int) gg.getWidth() - 2, (int) gg.getHeight() - 2);
         g.setColor(gg.getFillColor());
         g.fillRect(
-                (int) gg.getX() + 3, (int) gg.getY() + 3,
-                (int) (gg.getWidth() - 5 * ((gg.getMaxValue() - gg.getMinValue()) / gg.getValue())), (int) gg.getHeight() - 5);
+            (int) gg.getX() + 3, (int) gg.getY() + 3,
+            (int) (gg.getWidth() - 5 * ((gg.getMaxValue() - gg.getMinValue()) / gg.getValue())), (int) gg.getHeight() - 5);
     }
 
     private void drawGrid(Graphics2D g, Scene scene, GridObject go) {
@@ -221,8 +222,8 @@ public class Renderer implements GSystem, Serializable {
         for (int iy = 0; iy < scene.getWorld().getHeight(); iy += go.getTileWidth()) {
             for (int ix = 0; ix < scene.getWorld().getWidth(); ix += go.getTileWidth()) {
                 g.drawRect(ix, iy, go.getTileWidth(), (int) (iy + go.getTileHeight() < scene.getWorld().getHeight()
-                        ? go.getTileHeight()
-                        : go.getTileHeight() - (scene.getWorld().getHeight() - iy)));
+                    ? go.getTileHeight()
+                    : go.getTileHeight() - (scene.getWorld().getHeight() - iy)));
             }
         }
     }
@@ -243,7 +244,7 @@ public class Renderer implements GSystem, Serializable {
     }
 
     @Override
-    public void initialize(Game game) {
+    public void initialize(GameInterface game) {
         Config config = SystemManager.get(Config.class);
         Dimension bufferSize = config.get("app.render.buffer.size");
         drawbuffer = new BufferedImage(bufferSize.width, bufferSize.height, BufferedImage.TYPE_INT_ARGB);
@@ -267,18 +268,18 @@ public class Renderer implements GSystem, Serializable {
     }
 
     @Override
-    public void start(Game game) {
+    public void start(GameInterface game) {
 
     }
 
     @Override
-    public void process(Game game, double elapsed) {
+    public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
         SceneManager sm = SystemManager.get(SceneManager.class);
         render(sm.getActiveScene());
     }
 
     @Override
-    public void postProcess(Game game) {
+    public void postProcess(GameInterface game) {
         PhysicEngine pe = SystemManager.get(PhysicEngine.class);
         SceneManager sm = SystemManager.get(SceneManager.class);
         if (sm != null && pe != null) {
@@ -287,12 +288,12 @@ public class Renderer implements GSystem, Serializable {
     }
 
     @Override
-    public void stop(Game game) {
+    public void stop(GameInterface game) {
 
     }
 
     @Override
-    public void dispose(Game game) {
+    public void dispose(GameInterface game) {
         dispose();
     }
 }

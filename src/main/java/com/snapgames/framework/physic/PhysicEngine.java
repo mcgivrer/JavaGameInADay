@@ -1,6 +1,7 @@
 package com.snapgames.framework.physic;
 
 import com.snapgames.framework.Game;
+import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.entity.Entity;
 import com.snapgames.framework.scene.Scene;
 import com.snapgames.framework.scene.SceneManager;
@@ -8,9 +9,8 @@ import com.snapgames.framework.system.GSystem;
 import com.snapgames.framework.system.SystemManager;
 import com.snapgames.framework.utils.Config;
 
-import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -37,16 +37,16 @@ public class PhysicEngine implements GSystem {
 
     private void update(Scene scene, double elapsed) {
         scene.getEntities().values().stream()
-                .filter(Entity::isActive)
-                .forEach(e -> {
-                    if (e.getPhysicType() == PhysicType.DYNAMIC) {
-                        e.setContact(false);
-                        applyWorldEffects(scene, e);
-                        applyPhysicRules(scene, elapsed, e);
-                        keepEntityIntoWorld(scene, e);
-                    }
-                    e.getBehaviors().forEach(b -> b.update(e, elapsed));
-                });
+            .filter(Entity::isActive)
+            .forEach(e -> {
+                if (e.getPhysicType() == PhysicType.DYNAMIC) {
+                    e.setContact(false);
+                    applyWorldEffects(scene, e);
+                    applyPhysicRules(scene, elapsed, e);
+                    keepEntityIntoWorld(scene, e);
+                }
+                e.getBehaviors().forEach(b -> b.update(e, elapsed));
+            });
         if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
             scene.getActiveCamera().update(elapsed);
         }
@@ -126,17 +126,17 @@ public class PhysicEngine implements GSystem {
     }
 
     @Override
-    public void initialize(Game game) {
+    public void initialize(GameInterface game) {
 
     }
 
     @Override
-    public void start(Game game) {
+    public void start(GameInterface game) {
 
     }
 
     @Override
-    public void process(Game game, double elapsed) {
+    public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
         if (game.isNotPaused()) {
             SceneManager sm = SystemManager.get(SceneManager.class);
             update(sm.getActiveScene(), elapsed);
@@ -144,18 +144,18 @@ public class PhysicEngine implements GSystem {
     }
 
     @Override
-    public void postProcess(Game game) {
+    public void postProcess(GameInterface game) {
         SceneManager sm = SystemManager.get(SceneManager.class);
         resetForces(sm.getActiveScene());
     }
 
     @Override
-    public void stop(Game game) {
+    public void stop(GameInterface game) {
 
     }
 
     @Override
-    public void dispose(Game game) {
+    public void dispose(GameInterface game) {
 
     }
 }

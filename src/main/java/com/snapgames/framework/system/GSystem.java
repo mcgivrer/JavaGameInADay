@@ -1,6 +1,7 @@
 package com.snapgames.framework.system;
 
 import com.snapgames.framework.Game;
+import com.snapgames.framework.GameInterface;
 
 import java.util.Collection;
 import java.util.Map;
@@ -9,16 +10,16 @@ public interface GSystem {
 
     Collection<Class<?>> getDependencies();
 
-    void initialize(Game game);
+    void initialize(GameInterface game);
 
-    void start(Game game);
+    void start(GameInterface game);
 
-    void process(Game game, double elapsed);
+    void process(GameInterface game, double elapsed, Map<String, Object> stats);
 
-    default void postProcess(Game game) {
+    default void postProcess(GameInterface game) {
     }
 
-    void stop(Game game);
+    void stop(GameInterface game);
 
-    void dispose(Game game);
+    void dispose(GameInterface game);
 }

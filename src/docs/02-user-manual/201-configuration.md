@@ -37,7 +37,7 @@ This configuration file contains multiple keys sections. Let's discover those.
 | Configuration Key | Description                                                                                                                                                                      | Default value |
 |:------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------|
 | `app.debug.level` | define the level of debug output on the console. Value from 0 (No output) to 5(max output) <br/></br>**WARNING** Using level 5 will be highly verbose and can slowdown the game. | 0 (No output) |
-| `app.test`        | set to `true` will the game in a test mode preventing from Game looping.                                                                                                         | false         |
+| `app.test`        | set to `true` will the game in a test mode preventing from com.snapgames.framework.GameInterface looping.                                                                                                         | false         |
 
 ### Rendering `app.render`
 
@@ -61,4 +61,4 @@ This configuration file contains multiple keys sections. Let's discover those.
 | Configuration Key   | Description                                          | Default value                          |
 |:--------------------|:-----------------------------------------------------|:---------------------------------------|
 | `app.scene.default` | Define the starting 'scene' instance.                | "play"                                 |
-| `app.scene.list`    | Set the list of Scene instance available in the Game | "play:com.snapgames.demo.scenes.Play," |||
+| `app.scene.list`    | Set the list of Scene instance available in the com.snapgames.framework.GameInterface | "play:com.snapgames.demo.scenes.Play," |||

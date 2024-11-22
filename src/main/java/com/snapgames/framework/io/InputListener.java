@@ -1,6 +1,7 @@
 package com.snapgames.framework.io;
 
 import com.snapgames.framework.Game;
+import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.gfx.Renderer;
 import com.snapgames.framework.scene.Scene;
 import com.snapgames.framework.scene.SceneManager;
@@ -13,12 +14,13 @@ import java.awt.event.KeyListener;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class InputListener implements KeyListener, Serializable, GSystem {
-    private final Game app;
+    private final GameInterface app;
     public boolean[] keys = new boolean[1024];
 
-    public InputListener(Game app) {
+    public InputListener(GameInterface app) {
         this.app = app;
     }
 
@@ -65,31 +67,31 @@ public class InputListener implements KeyListener, Serializable, GSystem {
     }
 
     @Override
-    public void initialize(Game game) {
+    public void initialize(GameInterface game) {
     }
 
     @Override
-    public void start(Game game) {
+    public void start(GameInterface game) {
 
     }
 
     @Override
-    public void process(Game game, double elapsed) {
+    public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
         SceneManager sceneManager = SystemManager.get(SceneManager.class);
         Scene scene = sceneManager.getActiveScene();
         scene.input(this);
         scene.getEntities().values()
-                .forEach(e -> e.getBehaviors()
-                        .forEach(b -> b.input(this, e)));
+            .forEach(e -> e.getBehaviors()
+                .forEach(b -> b.input(this, e)));
     }
 
     @Override
-    public void stop(Game game) {
+    public void stop(GameInterface game) {
 
     }
 
     @Override
-    public void dispose(Game game) {
+    public void dispose(GameInterface game) {
 
     }
 }
