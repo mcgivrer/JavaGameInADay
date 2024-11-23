@@ -1,10 +1,19 @@
 package com.snapgames.framework.physic;
 
 import com.snapgames.framework.Game;
+import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.entity.Entity;
 import com.snapgames.framework.scene.Scene;
+import com.snapgames.framework.scene.SceneManager;
+import com.snapgames.framework.system.GSystem;
+import com.snapgames.framework.system.SystemManager;
+import com.snapgames.framework.utils.Config;
 
-public class CollisionManager {
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+public class CollisionManager implements GSystem {
 
     private final Game app;
 
@@ -26,5 +35,39 @@ public class CollisionManager {
                     });
 
         });
+    }
+
+    @Override
+    public Collection<Class<?>> getDependencies() {
+
+        return List.of(Config.class, PhysicEngine.class,SceneManager.class);
+    }
+
+    @Override
+    public void initialize(GameInterface game) {
+
+    }
+
+    @Override
+    public void start(GameInterface game) {
+
+    }
+
+    @Override
+    public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
+        if (game.isNotPaused()) {
+            SceneManager sm = SystemManager.get(SceneManager.class);
+            update(sm.getActiveScene(), elapsed);
+        }
+    }
+
+    @Override
+    public void stop(GameInterface game) {
+
+    }
+
+    @Override
+    public void dispose(GameInterface game) {
+
     }
 }

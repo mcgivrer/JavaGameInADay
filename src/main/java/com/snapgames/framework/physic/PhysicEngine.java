@@ -1,10 +1,16 @@
 package com.snapgames.framework.physic;
 
 import com.snapgames.framework.Game;
+import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.entity.Entity;
 import com.snapgames.framework.scene.Scene;
+import com.snapgames.framework.scene.SceneManager;
+import com.snapgames.framework.system.GSystem;
+import com.snapgames.framework.system.SystemManager;
+import com.snapgames.framework.utils.Config;
 
-import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -21,25 +27,26 @@ import java.util.Optional;
  * @author Frédéric Delorme
  * @since 1.0.0
  */
-public class PhysicEngine {
+public class PhysicEngine implements GSystem {
     private final Game app;
+    private long currentTime = 0;
 
     public PhysicEngine(Game app) {
         this.app = app;
     }
 
-    public void update(Scene scene, long elapsed) {
+    private void update(Scene scene, double elapsed) {
         scene.getEntities().values().stream()
-                .filter(Entity::isActive)
-                .forEach(e -> {
-                    if (e.getPhysicType() == PhysicType.DYNAMIC) {
-                        e.setContact(false);
-                        applyWorldEffects(scene, e);
-                        applyPhysicRules(scene, elapsed, e);
-                        keepEntityIntoWorld(scene, e);
-                    }
-                    e.getBehaviors().forEach(b -> b.update(e, elapsed));
-                });
+            .filter(Entity::isActive)
+            .forEach(e -> {
+                if (e.getPhysicType() == PhysicType.DYNAMIC) {
+                    e.setContact(false);
+                    applyWorldEffects(scene, e);
+                    applyPhysicRules(scene, elapsed, e);
+                    keepEntityIntoWorld(scene, e);
+                }
+                e.getBehaviors().forEach(b -> b.update(e, elapsed));
+            });
         if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
             scene.getActiveCamera().update(elapsed);
         }
@@ -56,7 +63,7 @@ public class PhysicEngine {
         });
     }
 
-    private void applyPhysicRules(Scene scene, long elapsed, Entity<?> e) {
+    private void applyPhysicRules(Scene scene, double elapsed, Entity<?> e) {
         e.ax = 0;
         e.ay = 0;
         e.addForce(0.0, -scene.getWorld().getGravity() / e.getMass());
@@ -111,5 +118,44 @@ public class PhysicEngine {
 
     public void resetForces(Scene scene) {
         scene.getEntities().values().forEach(e -> e.getForces().clear());
+    }
+
+    @Override
+    public List<Class<?>> getDependencies() {
+        return List.of(Config.class, SceneManager.class);
+    }
+
+    @Override
+    public void initialize(GameInterface game) {
+
+    }
+
+    @Override
+    public void start(GameInterface game) {
+
+    }
+
+    @Override
+    public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
+        if (game.isNotPaused()) {
+            SceneManager sm = SystemManager.get(SceneManager.class);
+            update(sm.getActiveScene(), elapsed);
+        }
+    }
+
+    @Override
+    public void postProcess(GameInterface game) {
+        SceneManager sm = SystemManager.get(SceneManager.class);
+        resetForces(sm.getActiveScene());
+    }
+
+    @Override
+    public void stop(GameInterface game) {
+
+    }
+
+    @Override
+    public void dispose(GameInterface game) {
+
     }
 }

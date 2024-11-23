@@ -7,6 +7,7 @@ import com.snapgames.framework.physic.CollisionManager;
 import com.snapgames.framework.physic.PhysicEngine;
 import com.snapgames.framework.scene.Scene;
 import com.snapgames.framework.scene.SceneManager;
+import com.snapgames.framework.system.SystemManager;
 import com.snapgames.framework.utils.Config;
 import com.snapgames.framework.utils.Log;
 
@@ -22,7 +23,7 @@ import static com.snapgames.framework.utils.I18n.getI18n;
  * @author Frédéric Delorme frederic.delorme@gmail.com
  * @since 1.0.0
  */
-public class Game extends JPanel {
+public class Game extends JPanel implements GameInterface {
     private static final double FPS = 60.0;
 
     // Game exit request flag.
@@ -34,23 +35,14 @@ public class Game extends JPanel {
     // debug level
     private int debug = 1;
 
-    // Services
-    private Config config;
-    private InputListener inputListener;
-    private PhysicEngine physicEngine;
-    private CollisionManager collisionManager;
-    private Renderer renderer;
-    private SceneManager scnMgr;
-
-
     public Game() {
         super();
         Log.info("Initialization application %s (%s) %n- running on JDK %s %n- at %s %n- with classpath = %s%n",
-                getI18n("app.name"),
-                getI18n("app.version"),
-                System.getProperty("java.version"),
-                System.getProperty("java.home"),
-                System.getProperty("java.class.path"));
+            getI18n("app.name"),
+            getI18n("app.version"),
+            System.getProperty("java.version"),
+            System.getProperty("java.home"),
+            System.getProperty("java.class.path"));
     }
 
     public void run(String[] args) {
@@ -61,44 +53,37 @@ public class Game extends JPanel {
 
     private void init(String[] args) {
         List<String> lArgs = Arrays.asList(args);
-        config = new Config(this);
-        config.load("/config.properties");
-
         lArgs.forEach(s -> {
             Log.info(Game.class, String.format("Argument: %s", s));
         });
 
-        inputListener = new InputListener(this);
-        physicEngine = new PhysicEngine(this);
-        collisionManager = new CollisionManager(this);
-        renderer = new Renderer(this, config.get("app.render.buffer.size"));
-        renderer.createWindow(config.get("app.window.title"), config.get("app.window.size"));
-        renderer.setInputListener(inputListener);
-        scnMgr = new SceneManager(this);
+        SystemManager.setParent(this);
 
-        Scene scene = new PlayScene(this, "play");
-        scnMgr.addScene(scene);
-        scnMgr.setDefaultScene(config.get("app.scene.default"));
+        Config config = new Config(this);
+        config.parseArgs(args);
+        SystemManager.add(config);
 
-        scnMgr.switchScene();
+        SystemManager.add(new PhysicEngine(this));
+        SystemManager.add(new CollisionManager(this));
+        SystemManager.add(new Renderer(this));
+        SystemManager.add(new InputListener(this));
+        SystemManager.add(new SceneManager(this));
+
+        SystemManager.initialize();
+
+        SystemManager.start(this);
     }
 
     private void loop() {
 
         long startTime = System.currentTimeMillis();
         long endTime = startTime;
-        long elapsed = 0;
+        double elapsed = 0;
         while (!exit) {
-            Scene scene = getSceneManager().getActiveScene();
             elapsed = endTime - startTime;
             startTime = endTime;
-            if (isNotPaused()) {
-                physicEngine.resetForces(scene);
-                input(scene);
-                update(scene, elapsed);
-                render(scene);
-            }
-
+            SystemManager.process(elapsed);
+            SystemManager.postProcess();
             endTime = System.currentTimeMillis();
             try {
                 Thread.sleep((long) (elapsed < (1000 / FPS) ? (1000 / FPS) - elapsed : 1));
@@ -108,40 +93,14 @@ public class Game extends JPanel {
         }
     }
 
-    public void input(Scene scene) {
-        scene.input(inputListener);
-        scene.getEntities().values()
-                .forEach(e -> e.getBehaviors()
-                        .forEach(b -> b.input(inputListener, e)));
-    }
-
-    public void update(Scene scene, long elapsed) {
-        physicEngine.update(scene, elapsed);
-        collisionManager.update(scene, elapsed);
-    }
-
-    public void render(Scene scene) {
-        renderer.render(scene);
-    }
-
     private void dispose() {
-        physicEngine.dispose();
-        renderer.dispose();
-        scnMgr.dispose();
+        SystemManager.dispose();
         Log.info("End of application ");
     }
 
     public static void main(String[] argc) {
         Game app = new Game();
         app.run(argc);
-    }
-
-    public SceneManager getSceneManager() {
-        return scnMgr;
-    }
-
-    public Config getConfig() {
-        return config;
     }
 
     public boolean isDebugGreaterThan(int debugLevel) {
@@ -160,12 +119,13 @@ public class Game extends JPanel {
         this.pause = p;
     }
 
-    public boolean isNotPaused() {
-        return !pause;
+    @Override
+    public void setExit(boolean e) {
+        this.exit = e;
     }
 
-    public Renderer getRenderer() {
-        return renderer;
+    public boolean isNotPaused() {
+        return !pause;
     }
 
     public void requestExit() {
@@ -174,13 +134,13 @@ public class Game extends JPanel {
         }
     }
 
-
     public boolean confirmExit() {
         boolean status = false;
         setPause(true);
+        Renderer renderer = SystemManager.get(Renderer.class);
         int response = JOptionPane.showConfirmDialog(renderer.getWindow(),
-                getI18n("app.exit.confirm.message"),
-                getI18n("app.exit.confirm.title"), JOptionPane.YES_NO_OPTION);
+            getI18n("app.exit.confirm.message"),
+            getI18n("app.exit.confirm.title"), JOptionPane.YES_NO_OPTION);
         if (response == JOptionPane.YES_OPTION) {
             status = true;
         }

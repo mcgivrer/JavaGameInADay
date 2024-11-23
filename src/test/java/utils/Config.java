@@ -1,30 +1,28 @@
-package com.snapgames.framework.utils;
+package utils;
 
-import com.snapgames.framework.Game;
 import com.snapgames.framework.GameInterface;
-import com.snapgames.framework.system.GSystem;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class Config extends HashMap<String, Object> implements GSystem {
-    private final GameInterface app;
+public class Config extends HashMap<String, Object> {
+    private final com.snapgames.framework.GameInterface app;
 
     private final Properties props = new Properties();
 
-    private String configFilePath = "/config.properties";
+    private String configFilePath = "/config2.properties";
 
     public Config(GameInterface app) {
         super();
         this.app = app;
         put("app.test", false);
         put("app.debug.level", 0);
-        put("app.render.window.title", "Test001");
+        put("app.render.window.title", "Default Title");
         put("app.render.window.size", new Dimension(640, 400));
         put("app.render.buffer.size", new Dimension(320, 200));
         put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, 640, 400));
@@ -33,15 +31,16 @@ public class Config extends HashMap<String, Object> implements GSystem {
         put("app.scene.list", "");
     }
 
-    public void load(String configFilePath) {
+    public void load(String filePath) {
         try {
+            System.out.printf("# Load configuration Properties file %s%n", configFilePath);
             props.load(this.getClass().getResourceAsStream(configFilePath));
             props.forEach((k, v) -> {
-                Log.info(Game.class, "%s=%s", k, v);
+                System.out.printf("- %s=%s%n", k, v);
             });
             parseAttributes(props.entrySet().parallelStream().collect(Collectors.toList()));
         } catch (IOException e) {
-            Log.info(Game.class, "Unable to read configuration file: %s", e.getMessage());
+            System.err.printf("Unable to read configuration file: %s", e.getMessage());
         }
     }
 
@@ -80,7 +79,7 @@ public class Config extends HashMap<String, Object> implements GSystem {
                     put("app.scene.list", ((String) e.getValue()).split(","));
                 }
                 default -> {
-                    Log.error(Config.class, "Unknown value %s=%s", e.getKey(), e.getValue());
+                    System.out.printf("Unknown value for %s=%s%n", e.getKey(), e.getValue());
                 }
             }
         });
@@ -102,35 +101,5 @@ public class Config extends HashMap<String, Object> implements GSystem {
 
     public <T> T get(String name) {
         return (T) super.get(name);
-    }
-
-    @Override
-    public Collection<Class<?>> getDependencies() {
-        return null;
-    }
-
-    @Override
-    public void initialize(GameInterface game) {
-        load(configFilePath);
-    }
-
-    @Override
-    public void start(GameInterface game) {
-
-    }
-
-    @Override
-    public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
-
-    }
-
-    @Override
-    public void stop(GameInterface game) {
-
-    }
-
-    @Override
-    public void dispose(GameInterface game) {
-
     }
 }
