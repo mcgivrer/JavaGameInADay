@@ -115,6 +115,30 @@ public class Entity<T> extends Node<T> {
         return (T) this;
     }
 
+    public Point2D getPosition() {
+        return new Point2D.Double(x, y);
+    }
+
+    public Point2D getVelocity() {
+        return new Point2D.Double(dx, dy);
+    }
+
+    public T setVelocity(double dx, double dy) {
+        this.dx = dx;
+        this.dy = dy;
+        return (T) this;
+    }
+
+    public Point2D getAcceleration() {
+        return new Point2D.Double(ax, ay);
+    }
+
+    public T setAcceleration(double ax, double ay) {
+        this.ax = ax;
+        this.ay = ay;
+        return (T) this;
+    }
+
     public boolean hasContact() {
         return contact;
     }
@@ -167,4 +191,5 @@ public class Entity<T> extends Node<T> {
                 ", y=" + y +
                 '}';
     }
+
 }
