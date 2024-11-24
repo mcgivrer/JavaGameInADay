@@ -40,9 +40,12 @@ public class Config extends HashMap<String, Object> {
         try {
             System.out.printf("# Load configuration Properties file %s%n", configFilePath);
             props.load(this.getClass().getResourceAsStream(configFilePath));
-            props.forEach((k, v) -> {
-                System.out.printf("- %s=%s%n", k, v);
-            });
+            props.entrySet().parallelStream().toList().stream()
+                    .sorted((a, b) -> ((String) a.getKey()).compareTo((String) b.getKey()))
+                    .forEach((k) -> {
+                        System.out.printf("- %s=%s%n", (String) k.getKey(), (String) k.getValue());
+                    });
+
             parseAttributes(props.entrySet().parallelStream().collect(Collectors.toList()));
         } catch (IOException e) {
             System.err.printf("Unable to read configuration file: %s", e.getMessage());
@@ -50,47 +53,48 @@ public class Config extends HashMap<String, Object> {
     }
 
     private void parseAttributes(List<Entry<Object, Object>> collect) {
-        collect.forEach(e -> {
-            switch (e.getKey().toString()) {
-                case "app.render.window.title" -> {
-                    put("app.render.window.title", (String) e.getValue());
-                }
-                case "app.test" -> {
-                    put("app.test", Boolean.parseBoolean(props.getProperty("app.test")));
-                }
-                case "app.test.loop.max.count" -> {
-                    put("app.test.loop.max.count", Integer.parseInt(props.getProperty("app.test.loop.max.count")));
-                }
-                case "app.debug.level" -> {
-                    app.setDebug(Integer.parseInt(props.getProperty("app.debug.level")));
-                }
-                case "app.render.window.size" -> {
-                    String[] values = ((String) e.getValue()).split("x");
-                    put("app.render.window.size", new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
-                }
-                case "app.render.buffer.size" -> {
-                    String[] values = ((String) e.getValue()).split("x");
-                    put("app.render.buffer.size", new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
-                }
-                case "app.physic.world.play.area.size" -> {
-                    String[] values = ((String) e.getValue()).split("x");
-                    put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, Double.parseDouble(values[0]), Double.parseDouble(values[1])));
-                }
-                case "app.physic.world.gravity" -> {
-                    String[] values = ((String) e.getValue()).substring(((String) e.getValue()).indexOf("(") + 1, ((String) e.getValue()).lastIndexOf(")")).split(",");
-                    put("app.physic.world.gravity", new Point2D.Double(Double.parseDouble(values[0]), Double.parseDouble(values[1])));
-                }
-                case "app.scene.default" -> {
-                    put("app.scene.default", (String) e.getValue());
-                }
-                case "app.scene.list" -> {
-                    put("app.scene.list", ((String) e.getValue()).split(","));
-                }
-                default -> {
-                    System.out.printf("~ Unknown value for %s=%s%n", e.getKey(), e.getValue());
-                }
-            }
-        });
+        collect.stream()
+                .forEach(e -> {
+                    switch (e.getKey().toString()) {
+                        case "app.render.window.title" -> {
+                            put("app.render.window.title", (String) e.getValue());
+                        }
+                        case "app.test" -> {
+                            put("app.test", Boolean.parseBoolean(props.getProperty("app.test")));
+                        }
+                        case "app.test.loop.max.count" -> {
+                            put("app.test.loop.max.count", Integer.parseInt(props.getProperty("app.test.loop.max.count")));
+                        }
+                        case "app.debug.level" -> {
+                            app.setDebug(Integer.parseInt(props.getProperty("app.debug.level")));
+                        }
+                        case "app.render.window.size" -> {
+                            String[] values = ((String) e.getValue()).split("x");
+                            put("app.render.window.size", new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
+                        }
+                        case "app.render.buffer.size" -> {
+                            String[] values = ((String) e.getValue()).split("x");
+                            put("app.render.buffer.size", new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
+                        }
+                        case "app.physic.world.play.area.size" -> {
+                            String[] values = ((String) e.getValue()).split("x");
+                            put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, Double.parseDouble(values[0]), Double.parseDouble(values[1])));
+                        }
+                        case "app.physic.world.gravity" -> {
+                            String[] values = ((String) e.getValue()).substring(((String) e.getValue()).indexOf("(") + 1, ((String) e.getValue()).lastIndexOf(")")).split(",");
+                            put("app.physic.world.gravity", new Point2D.Double(Double.parseDouble(values[0]), Double.parseDouble(values[1])));
+                        }
+                        case "app.scene.default" -> {
+                            put("app.scene.default", (String) e.getValue());
+                        }
+                        case "app.scene.list" -> {
+                            put("app.scene.list", ((String) e.getValue()).split(","));
+                        }
+                        default -> {
+                            System.out.printf("~ Unknown value for %s=%s%n", e.getKey(), e.getValue());
+                        }
+                    }
+                });
     }
 
     public void parseArgs(String[] args) {
