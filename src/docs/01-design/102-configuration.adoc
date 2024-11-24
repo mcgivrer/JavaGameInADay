@@ -1,0 +1,344 @@
+= Configuration
+
+Ce court châpitre fera le tour des besoins en configuration que nous avons et comment nous pourrons fournir
+un service permettant de gérer les entrées et les consommer.
+
+== Contexte
+
+La configuration sera servie via un fichier java ".properties".
+Les différents services et traitement internes auront le propre section dans le fichier.
+
+Quelques règles :
+
+. Chaque clé de configuration dans le fichier aura son nom préfixé apr `app.`.
+. Le nom de section doit suivre le préfixe `app.`, exemple `app.physic` définira toutes les clés pour le moteur
+ physique.
+. Pas plus de QUATRE suffixes dans le nommage, après le nom de la section correspondant au service.
+
+== Les sections
+
+=== Rendering
+
+La section rendering fournira la taille de la fenêtre d'affichage ainsi que la résolution du buffer de rendu interne.
+Ces 2 entrées seront au format `[width]x[height]`
+
+Voici les valeurs par défaut :
+
+* app.render.window.title = Java com.snapgames.framework.GameInterface In A Week
+* app.render.window.size = 640x400
+* app.render.buffer.size = 320x200
+
+=== Physic
+
+La section physic permettra de définir la zone de jeu ansi que la gravité
+
+* app.physic.world.play.area.size = 1080x800
+* app.physic.world.gravity = (0,-0.981)
+
+=== Scene
+
+La section Scene définit la liste des implementations de `Scene` pour le jeu ainsi que la scene à activer par défaut au
+démarrage du jeu.
+
+* `app.scene.list` = play:com.snapgames.demo.scenes.PlayScene,
+* `app.scene.default` = play
+
+=== Mode test et debug
+
+Certaines fonctions ne doivent être activées que dans un contexte d'exécution lié aux tests ou au débogage.
+C'est ce que permettront de configurer les clés suivantes :
+
+* `app.debug.level` = le niveau de finesse du débogage, de 0 à 5,
+* `app.debug.filter` = list de package/entité, au format text, pour lesquels vous souhaitez activer la trace de
+ débogage,
+ exemple:`com.snapggames.scene.PlayScene`
+* `app.test.mode` = false/true, la valeur `true` activant le mode test.
+ La game loop ne se jouant qu'un nombre limité de fois, au minimum 1 fois si la clé `app.test.loop.maxcount` n'est pas
+ définie.
+* `app.test.loop.max.count` indique, si nécessaire, le nombre maximum de fois que l boucle principale doit être
+ exécutée.
+
+Maintenant que nous avons fait le tour des clés de configuration, nous allons passer à l'implémentation de ce service.
+
+== Implementation de la configuration
+
+Tout d'abord, nous allons installer cette configuration dans un nouveau package que nous allons appeler
+`com.snapgames.framework.utils`.
+Ensuite, la classe implémentant le service de configuration se nommera `Config`.
+
+[source,java]
+----
+public class Config {
+
+}
+----
+
+Ce nouvel object recevra à sa création l'application parente, ici notre classe com.snapgames.framework.GameInterface (
+dont nous verrons plus tard les
+détails)
+
+[source,java]
+----
+public class Config {
+    com.snapgames.framework.GameInterface app;
+
+    public Config(com.snapgames.framework.GameInterface app) {
+        this.app = app;
+        //...
+    }
+}
+----
+
+Ensuite, nous allons définir les valeurs par défault.
+Nous stockerons les valeurs de configuration dans une Map.
+Pour nous faciliter la gestion des valeurs de configuration, nous allons étendre la class link:[HashMap] du JDK
+et ainsi bénéficier de toutes ses fonctionnalités.
+
+[source,java]
+----
+public class Config extends HashMap<String, Object> {
+    GameInterface app;
+
+    public Config(GameInterface app) {
+        this.app = app;
+        put("app.test", false);
+        put("app.test.loop.max.count", 1);
+        put("app.debug.level", 0);
+        put("app.render.window.title", "Java com.snapgames.framework.GameInterface In A Week");
+        put("app.render.window.size", new Dimension(640, 400));
+        put("app.render.buffer.size", new Dimension(320, 200));
+        put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, 640, 400));
+        put("app.physic.world.gravity", new Point2D.Double(0, -0.981));
+        put("app.scene.default", "");
+        put("app.scene.list", "");
+    }
+}
+----
+
+Nous avons maintenant un ensemble de valeurs prêtes à être servie via le getter de la Map:
+
+[source,java]
+----
+import com.snapgames.framework.GameInterface;
+
+public class MonProgrammeConfig1 extends TestGame {
+    private String configurationFilePath = "/config.properties";
+    private Config config;
+
+    public MonProgrammeConfig1() {
+        System.out.println("Démarrage de mon Programme3");
+        config = new Config(this);
+    }
+
+    public void run(String[] args) {
+        System.out.printf("configuration for title:%s%n", (String) config.get("app.render.window.title"));
+    }
+
+    public static void main(String[] args) {
+        MonProgrammeConfig1 prog = new MonProgrammeConfig1();
+        prog.run(args);
+    }
+}
+----
+
+En exécutant cette classe `MonProgrammeConfig1`
+
+[source,bash]
+----
+javac -d target/demo-classes src/main/java/com/snapgames/framework/GameInterface.java src/test/java/*.java src/test/java/**/*.java
+java -cp target/demo-classes MonProgrammeConfig1
+----
+
+Vous obtenez l'affichage suivante sur la console :
+
+[source,bash]
+----
+java -cp target/demo-classes MonProgrammeConfig1
+# Démarrage de MonProgrammeConfig1
+=> Configuration for title:Default Title
+
+----
+
+=== initialization depuis un fichier
+
+Passons au plus intéressant : chargeons un fichier `*.properties` et parcourons ses valeurs afin de le typer et le
+stocker dans la map.
+
+L'opération de lecture est grandement facilité par l'utilisation de l'objet link:[Properties] du JDK, il faut ensuite
+parcourir chaque valeur et interprêter chaque valeur pour stocker une valeur typée, c'est-à-dire convertie en
+`Interger`, `Long`, `Boolean`, `Double` ou en toute autre classe nécessaire, correspondante dans notre map.
+
+. Chargement du fichier
+
+Nous avons un fichier de propriétés qui contient les valeurs suivantes :
+
+[source,properties]
+----
+## Debug & Test
+app.exit=false
+app.debug.level=3
+app.render.window.title="Test Game App"
+## Render
+app.render.window.size=640x400
+app.render.buffer.size=320x200
+## Physic Engine
+app.physic.world.play.area.size=1080x800
+app.physic.world.gravity=(0,-0.981)
+## Scene
+app.scene.default=play
+app.scene.list=play:com.snapgames.demo.scenes.PlayScene,
+# error
+app.unknown.key=not known
+----
+
+Modifions maintenant notre classe Config pour lire le fichier de propriétés avec `Properties.load(String)` :
+
+[source,java]
+----
+public class Config extends HashMap<String, Object> {
+    GameInterface app;
+
+    public Config(GameInterface app) {
+        //..
+    }
+
+    public void load(String filePath) {
+        try {
+            props.load(this.getClass().getResourceAsStream(configFilePath));
+            props.forEach((k, v) -> {
+                System.out.printf("%s=%s%n", k, v);
+            });
+            parseAttributes(props.entrySet().parallelStream().collect(Collectors.toList()));
+        } catch (IOException e) {
+            System.err.printf("Unable to read configuration file: %s", e.getMessage());
+        }
+    }
+}
+----
+
+Il faut maintenant parcourir toutes les entrées du fichier créer les vraies valeurs typées:
+
+. Parcours des valeurs
+[source,java]
+----
+public class Config extends HashMap<String, Object> {
+    //...
+
+    private void parseAttributes(List<Entry<Object, Object>> collect) {
+        collect.forEach(e -> {
+            switch (e.getKey().toString()) {
+                case "app.render.window.title" -> {
+                    put("app.render.window.title", (String) e.getValue());
+                }
+                case "app.exit" -> {
+                    app.setExit(Boolean.parseBoolean(props.getProperty("app.exit")));
+                }
+                case "app.debug.level" -> {
+                    app.setDebug(Integer.parseInt(props.getProperty("app.debug.level")));
+                }
+                case "app.render.window.size" -> {
+                    String[] values = ((String) e.getValue()).split("x");
+                    put("app.render.window.size", new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
+                }
+                case "app.render.buffer.size" -> {
+                    String[] values = ((String) e.getValue()).split("x");
+                    put("app.render.buffer.size", new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
+                }
+                case "app.physic.world.play.area.size" -> {
+                    String[] values = ((String) e.getValue()).split("x");
+                    put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, Double.parseDouble(values[0]), Double.parseDouble(values[1])));
+                }
+                case "app.physic.world.gravity" -> {
+                    String[] values = ((String) e.getValue()).substring(((String) e.getValue()).indexOf("(") + 1, ((String) e.getValue()).lastIndexOf(")")).split(",");
+                    put("app.physic.world.gravity", new Point2D.Double(Double.parseDouble(values[0]), Double.parseDouble(values[1])));
+                }
+                case "app.scene.default" -> {
+                    put("app.scene.default", (String) e.getValue());
+                }
+                case "app.scene.list" -> {
+                    put("app.scene.list", ((String) e.getValue()).split(","));
+                }
+                default -> {
+                    System.err.printf("Unknown value for %s=%s%n", e.getKey(), e.getValue());
+                }
+            }
+        });
+    }
+}
+----
+
+La méthode `parseAttribute(List<Entry<Object, Object>> collect)` permet de parcourir la collection clé/valeur et entrée
+par entrée,
+exécuter la conversion correspondante à chaque clé connue.
+
+par exemple, pour la clé `app.exit` dont la valeur typée correspondante doit être un booléen:
+
+[source,java]
+----
+//...
+case"app.exit"->{
+  app.setExit(Boolean.parseBoolean(props.getProperty("app.exit")));
+}
+//...
+----
+
+Nous pouvons voir ici que la valeur obtenue est positionnée directement, dans l'instance de `app`.
+
+Dans le second exemple, la valeur est stockée dans la map pour un usage futur :
+
+[source,java]
+----
+//...
+case"app.render.window.title"->{
+  put("app.render.window.title",(String) e.getValue());
+}
+//...
+----
+
+Dans ce troisième et dernier exemple, la valeur du fichier de propriété est convertie en une instance de link:[Dimension],
+et est
+stockée dans la map:
+
+[source,java]
+----
+//...
+case"app.render.window.size"->{
+  String[] values = ((String) e.getValue()).split("x");
+  
+  put("app.render.window.size",
+    new Dimension(
+      Integer.parseInt(values[0]),
+      Integer.parseInt(values[1])));
+}
+//...
+----
+
+En exécutant cette classe `MonProgrammeConfig2`
+
+[source,bash]
+----
+javac -d target/demo-classes src/main/java/com/snapgames/framework/GameInterface.java src/test/java/*.java src/test/java/**/*.java
+java -cp target/demo-classes MonProgrammeConfig2
+----
+
+Vous obtenez l'affichage suivante sur la console :
+
+[source,plaintext]
+----
+# Démarrage de MonProgrammeConfig2
+# Load configuration Properties file /config2.properties
+- app.scene.list=play:com.snapgames.demo.scenes.PlayScene,
+- app.render.window.size=640x400
+- app.exit=false
+- app.physic.world.play.area.size=1080x800
+- app.physic.world.gravity=(0,-0.981)
+- app.scene.default=play
+- app.debug.level=3
+- app.unknown.key=not known
+- app.render.window.title="Test Game App (config2)"
+- app.render.buffer.size=320x200
+~ Unknown value for app.unknown.key=not known
+=> Configuration for title:"Test Game App (config2)"
+----
+
+Nous voilà fin prêt à passer à un autre sujet, l'affichage dans une fenêtre.

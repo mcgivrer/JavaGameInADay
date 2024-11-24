@@ -4,10 +4,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Log class to trace everything standard on the console output.
- *
- * @author Frédéric Delorme
- * @version 1.0.0
+ * A utility class that provides logging capabilities with different levels of severity.
+ * <p>
+ * The supported log levels are ERR, WARN, INFO, and DEBUG. Messages are logged with a
+ * timestamp and can optionally include additional arguments.
+ * <p>
+ * Log filtering can be controlled through the logger filter, and a debug level can be set
+ * to control the verbosity of debug messages.
  */
 public class Log {
 
@@ -35,50 +38,119 @@ public class Log {
     private static String debugFilter = "";
     private static String loggerFilter = "ERR,WARN,INFO,DEBUG";
 
-    public static void log(LogLevel level, String message, Object... args) {
-        String dateFormatted = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(LocalDateTime.now());
-        if (loggerFilter.contains(level.getValue())) {
-            System.out.printf(dateFormatted + separator + level + separator + message + lineFeed, args);
-        }
+    /**
+     * Logs a message at a specified log level.
+     * <p>
+     * The message is timestamped and formatted according to the specified log level and
+     * provided arguments. Logging will only be performed if the specified log level is
+     * included in the logger filter.
+     *
+     * @param level   the severity level of the log (e.g., ERR, WARN, INFO, DEBUG)
+     * @param message the log message to be recorded
+     * @param args    additional arguments to be included in the log message
+     */
+    public static void log(Class<?> className, LogLevel level, String message, Object... args) {
+
         if ((level.equals(LogLevel.ERROR) || level.equals(LogLevel.FATAL))) {
-            System.err.printf(dateFormatted + separator + level + separator + message + lineFeed, args);
+            System.out.printf("%s %s %s %s %s %s %s%n", LocalDateTime.now(), separator, level, separator, className.getCanonicalName(), separator,
+                    message.formatted(args));
         }
     }
 
+    /**
+     * Logs a message at the DEBUG log level.
+     *
+     * @param message the log message to be recorded
+     * @param args    additional arguments to be included in the log message
+     */
+    @Deprecated
     public static void debug(String message, Object... args) {
-        log(LogLevel.DEBUG, message, args);
+        log(null, LogLevel.DEBUG, message, args);
     }
 
+    /**
+     * Logs a message at the INFO log level.
+     *
+     * @param message the log message to be recorded
+     * @param args    additional arguments to be included in the log message
+     */
+    @Deprecated
     public static void info(String message, Object... args) {
-        log(LogLevel.INFO, message, args);
+        log(null, LogLevel.INFO, message, args);
     }
 
+    /**
+     * Logs a message at the WARN log level.
+     *
+     * @param message the log message to be recorded
+     * @param args    additional arguments to be included in the log message
+     */
+    @Deprecated
     public static void warn(String message, Object... args) {
-        log(LogLevel.WARN, message, args);
+        log(null, LogLevel.WARN, message, args);
     }
 
+    /**
+     * Logs a message at the ERROR log level.
+     *
+     * @param message the log message to be recorded
+     * @param args    additional arguments to be included in the log message
+     */
+    @Deprecated
     public static void error(String message, Object... args) {
-        log(LogLevel.ERROR, message, args);
+        log(null, LogLevel.ERROR, message, args);
     }
 
+    /**
+     * Logs a message at the DEBUG log level, specifically including the name of the class
+     * from which the logging call was made.
+     *
+     * @param className the class object from which the logging call is made
+     * @param message   the log message to be recorded
+     * @param args      additional arguments to be included in the log message
+     */
     public static void debug(Class<?> className, String message, Object... args) {
-        log(LogLevel.DEBUG, className.getCanonicalName() + separator + message, args);
+        log(className, LogLevel.DEBUG, message, args);
     }
 
+    /**
+     * Logs a message at the INFO log level, specifically including the name of the class
+     * from which the logging call was made.
+     *
+     * @param className the class object from which the logging call is made
+     * @param message   the log message to be recorded
+     * @param args      additional arguments to be included in the log message
+     */
     public static void info(Class<?> className, String message, Object... args) {
-        log(LogLevel.INFO, className.getCanonicalName() + separator + message, args);
+        log(className, LogLevel.INFO, message, args);
     }
 
+    /**
+     * Logs a message at the WARN log level, specifically including the name of the class
+     * from which the logging call was made.
+     *
+     * @param className the class object from which the logging call is made
+     * @param message   the log message to be recorded
+     * @param args      additional arguments to be included in the log message
+     */
     public static void warn(Class<?> className, String message, Object... args) {
-        log(LogLevel.WARN, className.getCanonicalName() + separator + message, args);
+        log(className, LogLevel.WARN, message, args);
     }
 
+    /**
+     * Logs a message at the ERROR log level, specifically including the name of the class
+     * from which the logging call was made.
+     *
+     * @param className the class object from which the logging call is made
+     * @param message   the log message to be recorded
+     * @param args      additional arguments to be included in the log message
+     */
     public static void error(Class<?> className, String message, Object... args) {
-        log(LogLevel.ERROR, className.getCanonicalName() + separator + message, args);
+        log(className, LogLevel.ERROR, message, args);
     }
 
     public static void fatal(Class<?> className, String message, Object... args) {
-        log(LogLevel.FATAL, className.getCanonicalName() + separator + message, args);
+        log(className, LogLevel.FATAL, message, args);
     }
 
 

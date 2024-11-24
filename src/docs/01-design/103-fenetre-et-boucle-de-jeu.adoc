@@ -1,0 +1,150 @@
+= Fenêtre et boucle de jeu
+
+Nous allons maintenant nous intéresser à l'affichage. Mais pour cela, nous devons mettre en place une structure de code
+bien connu des développeurs de jeu : la "boucle de jeu" ou "Game Loop".
+
+Historiquement, cette structure est héritée des premiers jeux vidéos et des contraintes techniques des années 70-80. Et
+nous devons bien avouer que depuis, même si les frameworks ont terriblement évolués, la notion de GameLoop a perduré, et
+aujourd'hui encore, elle est présente dans les gros moteurs.
+
+Cette structure est assez simple et repose sur un triplet d'actions :
+
+. initialiser les resources du jeu
+. gérer les entrées du joueur,
+. mettre à jour en respectant la mécanique du jeu les objects du jeu,
+. faire le rendu graphique des objets concernés.
+. libérer toutes les resources
+
+image:https://www.plantuml.com/plantuml/svg/NOuz2WD128NxFSKhas8la6BPBkSGna9mVfXH23bz558isoYyx_FXkOocUTLjUrFb_SZvaYOcfFBbn_EQQ-yZabpmPgBWZnXamQRp1gI5_S2_PRY53f0QMZSC8b_ftKmVXOnJ1RU2Uz6Ca6VWXDT_YgpHLnwUWRpg3m00[La boucle principale]
+
+_figure 1 - la boucle principale_
+
+Ce qui se résume assez bien par :
+
+* input
+* update
+* render
+
+Si nous mettons ajour notre précédent exemple de code issu du chapitre de la configuration, nous avons :
+
+[source,java]
+----
+public class MonProgrammeWinAndLoop1 extends TestGame {
+    //...
+    public MonProgrammeWinAndLoop1() {
+        //...
+    }
+
+    public void loop() {
+        while (!isExitRequested()) {
+            input();
+            update();
+            render();
+        }
+    }
+
+    private void initialize() {}
+
+    private void input() {}
+
+    private void update() {}
+
+    private void render() {}
+
+    private void dispose() {}
+
+    public void run(String[] args) {
+        System.out.printf("=> Configuration for title:%s%n", (String) config.get("app.render.window.title"));
+        initialize();
+        loop();
+        dispose();
+    }
+
+    //...
+
+    public static void main(String[] args) {
+        MonProgrammeWinAndLoop1 prog = new MonProgrammeWinAndLoop1();
+        prog.run(args);
+    }
+}
+----
+
+Ansi, tant que rien ne demande de quitter le jeu, on boucle sur les trois actions.
+
+Comme nous l'avons introduit dans le chapitre précédent, nous devons prendre en compte un mode test limitant le nombre
+de 'tours' dans la boucle, aussi, adaptons notre code en conséquence :
+
+[source,java]
+----
+public class MonProgrammeWinAndLoop1 extends TestGame {
+    //...
+    private boolean testMode = false;
+    private int maxLoopCount = 1;
+
+    public initialize() {
+        testMode = config.get("app.test");
+        maxLoopCount = (int) config.get("app.test.loop.max.count");
+        System.out.printf("# %s est initialisé%n", this.getClass().getSimpleName());
+    }
+
+    public void loop() {
+        int loopCount = 0;
+        while (!isExitRequested() && (!testMode || loopCount < maxLoopCount)) {
+            input();
+            update();
+            render();
+            loopCount++;
+        }
+        System.out.printf("=> Game loops %d times%n", loopCount);
+    }
+
+    //...
+    private void dispose() {
+        System.out.printf("# %s est terminé.%n", this.getClass().getSimpleName());
+    }
+    //...
+}
+----
+
+Si vous positionnez les valeurs suivantes dans le fichier de configuration :
+
+[source,properties]
+----
+## Debug & Test
+app.test=true
+app.test.loop.max.count=3
+----
+
+Et que vous lanciez l'exécution de notre nouvel exemple :
+
+[source,bash]
+----
+javac -d target/demo-classes src/main/java/com/snapgames/framework/GameInterface.java src/test/java/*.java src/test/java/**/*.java
+java -cp target/demo-classes MonProgrammeWinAndLoop1
+----
+
+Vous obtenez sur la console la sortie suivante :
+
+[source,plaintext]
+----
+# Démarrage de MonProgrammeWinAndLoop1
+# Load configuration Properties file /config2.properties
+- app.render.window.size=640x400
+- app.physic.world.play.area.size=1080x800
+- app.exit=false
+- app.debug.level=3
+- app.unknown.key=not known
+- app.scene.list=play:com.snapgames.demo.scenes.PlayScene,
+- app.test=true
+- app.test.loop.max.count=3
+- app.physic.world.gravity=(0,-0.981)
+- app.scene.default=play
+- app.render.window.title="Test Game App (config2)"
+- app.render.buffer.size=320x200
+~ Unknown value for app.exit=false
+~ Unknown value for app.unknown.key=not known
+=> Configuration for title:"Test Game App (config2)"
+# MonProgrammeWinAndLoop1 est initialisé
+=> Game loops 3 times
+# MonProgrammeWinAndLoop1 est terminé.
+----

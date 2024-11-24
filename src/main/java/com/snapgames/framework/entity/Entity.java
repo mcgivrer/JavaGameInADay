@@ -113,6 +113,16 @@ public class Entity<T> extends Node<T> {
         return (T) this;
     }
 
+    public T setVelocity(double dx, double dy) {
+        this.velocity.set(dx, dy);
+        return (T) this;
+    }
+
+    public T setAcceleration(double ax, double ay) {
+        this.acceleration.set(ax, ay);
+        return (T) this;
+    }
+
     public boolean hasContact() {
         return contact;
     }
@@ -193,16 +203,17 @@ public class Entity<T> extends Node<T> {
     @Override
     public String toString() {
         return "Entity{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", width=" + width +
-            ", height=" + height +
-            ", x=" + x +
-            ", y=" + y +
-            '}';
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", width=" + width +
+                ", height=" + height +
+                ", x=" + x +
+                ", y=" + y +
+                '}';
     }
 
     public PhysicType getType() {
         return this.physicType;
     }
+
 }

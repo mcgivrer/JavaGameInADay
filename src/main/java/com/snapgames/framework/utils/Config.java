@@ -1,6 +1,7 @@
 package com.snapgames.framework.utils;
 
 import com.snapgames.framework.Game;
+import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.physic.math.Vector2d;
 import com.snapgames.framework.system.GSystem;
 
@@ -8,20 +9,18 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class Config extends HashMap<String, Object> implements GSystem {
-    private final Game app;
+    private final GameInterface app;
 
     private final Properties props = new Properties();
 
     private String configFilePath = "/config.properties";
 
-    public Config(Game app) {
+    public Config(GameInterface app) {
         super();
         this.app = app;
         put("app.test", false);
@@ -54,7 +53,7 @@ public class Config extends HashMap<String, Object> implements GSystem {
                     put("app.render.window.title", (String) e.getValue());
                 }
                 case "app.exit" -> {
-                    app.exit = Boolean.parseBoolean(props.getProperty("app.exit"));
+                    app.setExit(Boolean.parseBoolean(props.getProperty("app.exit")));
                 }
                 case "app.debug.level" -> {
                     app.setDebug(Integer.parseInt(props.getProperty("app.debug.level")));
@@ -112,27 +111,27 @@ public class Config extends HashMap<String, Object> implements GSystem {
     }
 
     @Override
-    public void initialize(Game game) {
+    public void initialize(GameInterface game) {
         load(configFilePath);
     }
 
     @Override
-    public void start(Game game) {
+    public void start(GameInterface game) {
 
     }
 
     @Override
-    public void process(Game game, double elapsed) {
+    public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
 
     }
 
     @Override
-    public void stop(Game game) {
+    public void stop(GameInterface game) {
 
     }
 
     @Override
-    public void dispose(Game game) {
+    public void dispose(GameInterface game) {
 
     }
 }
