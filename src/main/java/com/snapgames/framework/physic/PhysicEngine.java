@@ -109,9 +109,9 @@ public class PhysicEngine implements GSystem {
         });
         if (e.getName().equals("player") && !e.getForces().isEmpty()) {
             e.getForces().forEach(f -> {
-                Log.debug(PhysicEngine.class, "f:%s%n", e.getAcceleration());
+                Log.debug(PhysicEngine.class, "f:%s", e.getAcceleration());
             });
-            Log.debug(PhysicEngine.class, "acc:%s%n", e.getAcceleration());
+            Log.debug(PhysicEngine.class, "acc:%s", e.getAcceleration());
         }
         e.dx += 0.5 * e.ax * elapsed * elapsed * 0.001;
         e.dy += 0.5 * e.ay * elapsed * elapsed * 0.001;
