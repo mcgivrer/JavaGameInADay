@@ -20,6 +20,10 @@ public class TestGame implements GameInterface {
         return debug;
     }
 
+    public boolean isDebugGreaterThan(int debugLevel) {
+        return debug > debugLevel;
+    }
+
     @Override
     public boolean isNotPaused() {
         return pause;
@@ -33,5 +37,10 @@ public class TestGame implements GameInterface {
     @Override
     public void setExit(boolean e) {
         this.exit = e;
+    }
+
+    @Override
+    public boolean isExitRequested() {
+        return exit;
     }
 }
