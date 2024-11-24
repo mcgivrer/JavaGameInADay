@@ -1,4 +1,4 @@
-# Fenêtre et boucle de jeu
+= Fenêtre et boucle de jeu
 
 Nous allons maintenant nous intéresser à l'affichage. Mais pour cela, nous devons mettre en place une structure de code
 bien connu des développeurs de jeu : la "boucle de jeu" ou "Game Loop".
@@ -9,19 +9,26 @@ aujourd'hui encore, elle est présente dans les gros moteurs.
 
 Cette structure est assez simple et repose sur un triplet d'actions :
 
-1. gérer les entrées du joueur,
-2. mettre à jour en respectant la mécanique du jeu les objects du jeu,
-3. faire le rendu graphique des objets concernés.
+. initialiser les resources du jeu
+. gérer les entrées du joueur,
+. mettre à jour en respectant la mécanique du jeu les objects du jeu,
+. faire le rendu graphique des objets concernés.
+. libérer toutes les resources
+
+image:https://www.plantuml.com/plantuml/svg/NOuz2WD128NxFSKhas8la6BPBkSGna9mVfXH23bz558isoYyx_FXkOocUTLjUrFb_SZvaYOcfFBbn_EQQ-yZabpmPgBWZnXamQRp1gI5_S2_PRY53f0QMZSC8b_ftKmVXOnJ1RU2Uz6Ca6VWXDT_YgpHLnwUWRpg3m00[La boucle principale]
+
+_figure 1 - la boucle principale_
 
 Ce qui se résume assez bien par :
 
-- input
-- update
-- render
+* input
+* update
+* render
 
 Si nous mettons ajour notre précédent exemple de code issu du chapitre de la configuration, nous avons :
 
-```java
+[source,java]
+----
 public class MonProgrammeWinAndLoop1 extends TestGame {
     //...
     public MonProgrammeWinAndLoop1() {
@@ -46,7 +53,6 @@ public class MonProgrammeWinAndLoop1 extends TestGame {
 
     private void dispose() {}
 
-
     public void run(String[] args) {
         System.out.printf("=> Configuration for title:%s%n", (String) config.get("app.render.window.title"));
         initialize();
@@ -61,15 +67,15 @@ public class MonProgrammeWinAndLoop1 extends TestGame {
         prog.run(args);
     }
 }
-```
+----
 
 Ansi, tant que rien ne demande de quitter le jeu, on boucle sur les trois actions.
 
 Comme nous l'avons introduit dans le chapitre précédent, nous devons prendre en compte un mode test limitant le nombre
 de 'tours' dans la boucle, aussi, adaptons notre code en conséquence :
 
-
-```java
+[source,java]
+----
 public class MonProgrammeWinAndLoop1 extends TestGame {
     //...
     private boolean testMode = false;
@@ -98,26 +104,29 @@ public class MonProgrammeWinAndLoop1 extends TestGame {
     }
     //...
 }
-```
+----
 
 Si vous positionnez les valeurs suivantes dans le fichier de configuration :
 
-```properties
+[source,properties]
+----
 ## Debug & Test
 app.test=true
 app.test.loop.max.count=3
-```
+----
 
 Et que vous lanciez l'exécution de notre nouvel exemple :
 
-```bash
+[source,bash]
+----
 javac -d target/demo-classes src/main/java/com/snapgames/framework/GameInterface.java src/test/java/*.java src/test/java/**/*.java
 java -cp target/demo-classes MonProgrammeWinAndLoop1
-```
+----
 
-vous obtenez sur la console la sortie suivante :
+Vous obtenez sur la console la sortie suivante :
 
-```plaintext
+[source,plaintext]
+----
 # Démarrage de MonProgrammeWinAndLoop1
 # Load configuration Properties file /config2.properties
 - app.render.window.size=640x400
@@ -138,4 +147,4 @@ vous obtenez sur la console la sortie suivante :
 # MonProgrammeWinAndLoop1 est initialisé
 => Game loops 3 times
 # MonProgrammeWinAndLoop1 est terminé.
-```
+----

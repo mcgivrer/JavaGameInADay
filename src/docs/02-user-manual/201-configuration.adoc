@@ -1,0 +1,105 @@
+= Manuel utilisateur : Configuration
+
+== Exécution
+
+Pour exécuter le projet, utilisez le script de build (uniquement en contexte de développement) :
+
+[source,java]
+----
+build.sh r
+----
+
+Pour une exécution standard, utilisez la ligne de commande suivante :
+
+[source,java]
+----
+java -jar target/JavaGameInADay-1.0.2.jar
+----
+
+Ou, pour les utilisateurs de machines Linux ou dans un terminal Windows Git Bash :
+
+[source,java]
+----
+target/build/JavaGameInADay-1.0.2.run
+----
+
+== Configuration
+
+La configuration du jeu est fournie via un fichier de propriétés passé en ligne de commande :
+
+[source,java]
+----
+target/build/JavaGameInADay-1.0.2.run -config=./my-config.properties
+----
+
+Le fichier `./my-config-properties` doit se trouver au même endroit que le fichier `JavaGameInADay-1.0.2.run`.
+
+Ce fichier de configuration contient plusieurs sections de clés. Découvrons-les.
+
+=== Debug et test `app.debug`
+
+[cols="1,4,1",options="header"]
+|===
+| Clé de configuration  | Description | Valeur par défaut
+
+| `app.debug.level`
+| Définit le niveau de détail des sorties de débogage dans la console. Valeurs de 0 (Aucune sortie) à 5 (sortie maximale).
+
+*ATTENTION* : Le niveau 5 est très verbeux et peut ralentir le jeu.
+| 0 (Aucune sortie)
+
+| `app.test`
+| Si `true`, le jeu s'exécute en mode test, empêchant `com.snapgames.framework.GameInterface` de boucler.
+| false
+|===
+
+=== Rendu `app.render`
+
+[cols="1,4,1",options="header"]
+|===
+| Clé de configuration            | Description | Valeur par défaut
+
+| `app.render.window.title`
+| Définit le titre de la fenêtre ou de l'application
+| "Test001 Demo App"
+
+| `app.render.window.size`
+| Définit la taille de la fenêtre, au format "`[largeur]x[hauteur]`"
+| 640x400
+
+| `app.render.buffer.size`
+| Définit la taille du buffer de rendu interne en pixels : "`[largeur]x[hauteur]`"
+| 320x200
+|===
+
+=== Moteur physique `app.physic`
+
+==== Monde
+
+[cols="1,4,1",options="header"]
+|===
+| Clé de configuration                 | Description | Valeur par défaut
+
+| `app.physic.world.play.area.size`
+| Définit la zone de jeu dans le monde. Format attendu : "`[largeur]x[hauteur]`"
+| 800x600
+
+| `app.physic.world.gravity`
+| Définit la gravité par défaut utilisée dans les calculs du moteur physique
+| (0,-0.981)
+|===
+
+=== Scènes `app.scene`
+
+[cols="1,4,1",options="header"]
+|===
+| Clé de configuration    | Description | Valeur par défaut
+
+| `app.scene.default`
+| Définit l'instance de la scène de démarrage.
+| "play"
+
+| `app.scene.list`
+| Liste des instances de scènes disponibles dans `com.snapgames.framework.GameInterface`
+| "play:com.snapgames.demo.scenes.Play,"
+|===
