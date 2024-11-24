@@ -40,7 +40,7 @@ public class SystemManager {
                 (s1, s2) -> s2.getDependencies() != null && s2.getDependencies().contains(s1.getClass()) ? -1 : 1)
             .forEach(s -> {
                 s.process(parent, elapsed, stats);
-                debug(SystemManager.class, "process %s", s.getClass().getSimpleName());
+                //debug(SystemManager.class, "process %s", s.getClass().getSimpleName());
             });
     }
 

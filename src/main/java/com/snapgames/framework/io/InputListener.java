@@ -3,6 +3,7 @@ package com.snapgames.framework.io;
 import com.snapgames.framework.Game;
 import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.gfx.Renderer;
+import com.snapgames.framework.physic.PhysicEngine;
 import com.snapgames.framework.scene.Scene;
 import com.snapgames.framework.scene.SceneManager;
 import com.snapgames.framework.system.GSystem;
@@ -79,10 +80,16 @@ public class InputListener implements KeyListener, Serializable, GSystem {
     public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
         SceneManager sceneManager = SystemManager.get(SceneManager.class);
         Scene scene = sceneManager.getActiveScene();
+
+        PhysicEngine physicEngine = SystemManager.get(PhysicEngine.class);
+        if (physicEngine != null) {
+            physicEngine.resetForces(scene);
+        }
+
         scene.input(this);
         scene.getEntities().values()
-            .forEach(e -> e.getBehaviors()
-                .forEach(b -> b.input(this, e)));
+                .forEach(e -> e.getBehaviors()
+                        .forEach(b -> b.input(this, e)));
     }
 
     @Override

@@ -280,11 +280,6 @@ public class Renderer implements GSystem, Serializable {
 
     @Override
     public void postProcess(GameInterface game) {
-        PhysicEngine pe = SystemManager.get(PhysicEngine.class);
-        SceneManager sm = SystemManager.get(SceneManager.class);
-        if (sm != null && pe != null) {
-            pe.resetForces(sm.getActiveScene());
-        }
     }
 
     @Override

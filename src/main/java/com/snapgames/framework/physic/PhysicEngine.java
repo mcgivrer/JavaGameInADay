@@ -8,6 +8,7 @@ import com.snapgames.framework.scene.SceneManager;
 import com.snapgames.framework.system.GSystem;
 import com.snapgames.framework.system.SystemManager;
 import com.snapgames.framework.utils.Config;
+import com.snapgames.framework.utils.Log;
 
 import java.util.List;
 import java.util.Map;
@@ -100,12 +101,18 @@ public class PhysicEngine implements GSystem {
      */
     private void applyPhysicRules(Scene scene, double elapsed, Entity<?> e) {
         e.setAcceleration(0, 0);
+
         e.addForce(0.0, -scene.getWorld().getGravity() / e.getMass());
         e.getForces().forEach(f -> {
             e.setAcceleration(e.getAcceleration().getX() + f.getX(),
                     e.getAcceleration().getY() + f.getY());
         });
-
+        if (e.getName().equals("player") && !e.getForces().isEmpty()) {
+            e.getForces().forEach(f -> {
+                Log.debug(PhysicEngine.class, "f:%s%n", e.getAcceleration());
+            });
+            Log.debug(PhysicEngine.class, "acc:%s%n", e.getAcceleration());
+        }
         e.dx += 0.5 * e.ax * elapsed * elapsed * 0.001;
         e.dy += 0.5 * e.ay * elapsed * elapsed * 0.001;
 
@@ -210,9 +217,9 @@ public class PhysicEngine implements GSystem {
      * Processes the game state for the given elapsed time and updates the scene if the game is not paused.
      * This includes managing scenes and integrating game-related statistics.
      *
-     * @param game   The current game interface instance.
+     * @param game    The current game interface instance.
      * @param elapsed The time elapsed since the last update in milliseconds.
-     * @param stats  A map containing various statistics and metrics related to the game's state.
+     * @param stats   A map containing various statistics and metrics related to the game's state.
      */
     @Override
     public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
@@ -230,8 +237,6 @@ public class PhysicEngine implements GSystem {
      */
     @Override
     public void postProcess(GameInterface game) {
-        SceneManager sm = SystemManager.get(SceneManager.class);
-        resetForces(sm.getActiveScene());
     }
 
     /**
