@@ -54,7 +54,7 @@ public class PlayScene extends AbstractScene {
             .add(new Behavior<Entity<?>>() {
                 @Override
                 public void input(InputListener inputListener, Entity<?> player) {
-                    double speed = 0.2;
+                    double speed = 0.05;
                     if (inputListener.isKeyPressed(KeyEvent.VK_UP)) {
                         player.addForce(0.0, -speed * 2);
                     }

@@ -92,7 +92,7 @@ public class PhysicEngine implements GSystem {
         if (world.contains(entity)) {
             // apply all World forces to the PhysicComponent.
             entity.getForces().addAll(world.getForces());
-            applyWorldEffects(world,entity);
+            applyWorldEffects(world, entity);
         }
     }
 
@@ -103,14 +103,13 @@ public class PhysicEngine implements GSystem {
      * friction effects from the area to the entity.
      *
      * @param world The world containing multiple areas that may exert forces.
-     * @param e The entity on which the world effects are to be applied.
+     * @param e     The entity on which the world effects are to be applied.
      */
     private void applyWorldEffects(World world, Entity<?> e) {
         world.getChildren().forEach(a -> {
             if (a.contains(e) || a.intersects(e)) {
                 e.getForces().addAll(((WorldArea) a).getForces());
-                e.setVelocity(e.getVelocity().getX() * ((WorldArea) a).getMaterial().friction,
-                        e.getVelocity().getY() * ((WorldArea) a).getMaterial().friction);
+                e.setVelocity(e.getVelocity().multiply(((WorldArea) a).getMaterial().friction));
                 e.setContact(true);
             }
         });
@@ -121,8 +120,8 @@ public class PhysicEngine implements GSystem {
      * It adjusts the entity's position, velocity, and acceleration based on its type
      * and applies world constraints and material properties.
      *
-     * @param entity the entity to be updated. Its type determines if it is dynamic or static.
-     * @param world the world in which the entity resides. Used for applying physical constraints.
+     * @param entity  the entity to be updated. Its type determines if it is dynamic or static.
+     * @param world   the world in which the entity resides. Used for applying physical constraints.
      * @param elapsed the time elapsed since the last update, in seconds.
      */
     private void updatePhysicEntity(Entity<?> entity, World world, double elapsed) {
@@ -132,8 +131,8 @@ public class PhysicEngine implements GSystem {
 
             case DYNAMIC -> {
 
-                entity.setAcceleration(new Vector2d().addAll(entity.getForces()).maximize(0.5));
-                entity.setVelocity(entity.getVelocity().add(entity.getAcceleration().multiply(0.5 * elapsed)).maximize(1.0));
+                entity.setAcceleration(new Vector2d().addAll(entity.getForces()).maximize(0.3));
+                entity.setVelocity(entity.getVelocity().add(entity.getAcceleration().multiply(0.5 * elapsed)).maximize(0.5));
                 entity.setPosition(entity.getPosition().add(entity.getVelocity().multiply(elapsed)));
 
                 entity.getForces().clear();

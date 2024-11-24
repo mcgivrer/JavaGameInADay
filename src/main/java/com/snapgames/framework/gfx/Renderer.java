@@ -30,6 +30,11 @@ import java.util.Optional;
 import static com.snapgames.framework.utils.Log.debug;
 import static com.snapgames.framework.utils.Log.error;
 
+/**
+ * The Renderer class is responsible for rendering game scenes and entities onto a window.
+ * It implements the GSystem interface and utilizes various graphics operations to draw
+ * the game world, entities, and debug information.
+ */
 public class Renderer implements GSystem {
     private final GameInterface app;
 
@@ -39,17 +44,38 @@ public class Renderer implements GSystem {
 
     private boolean fullScreen = false;
 
+    /**
+     * Constructs a new Renderer instance associated with the provided GameInterface.
+     * This constructor initializes the Renderer by linking it to the game application
+     * and begins the debug logging process.
+     *
+     * @param app the GameInterface instance that the Renderer will be linked to,
+     *            representing the game application that this renderer will manage.
+     */
     public Renderer(GameInterface app) {
         this.app = app;
         debug(Renderer.class, "start of processing");
     }
 
+    /**
+     * Creates a new window with the specified title and size.
+     *
+     * @param title the title of the window to be created
+     * @param size  the dimensions of the window to be created
+     */
     private void createWindow(String title, Dimension size) {
         newWindow(title, size, false);
         debugFont = window.getGraphics().getFont().deriveFont(9.0f);
         debug(Renderer.class, "Window %s created with size of %dx%d", title, size.width, size.height);
     }
 
+    /**
+     * Creates a new window with the specified title, size, and fullscreen mode.
+     *
+     * @param title      the title of the window to be created
+     * @param size       the dimensions of the window if not in fullscreen
+     * @param fullScreen whether the window should be created in fullscreen mode
+     */
     private void newWindow(String title, Dimension size, boolean fullScreen) {
         KeyListener il = null;
         if (window != null && window.isActive()) {
@@ -87,6 +113,9 @@ public class Renderer implements GSystem {
         });
     }
 
+    /**
+     *
+     */
     public void setInputListener(InputListener il) {
         window.addKeyListener(il);
 
