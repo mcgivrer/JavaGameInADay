@@ -2,6 +2,7 @@ package com.snapgames.framework.utils;
 
 import com.snapgames.framework.Game;
 import com.snapgames.framework.GameInterface;
+import com.snapgames.framework.physic.math.Vector2d;
 import com.snapgames.framework.system.GSystem;
 
 import java.awt.*;
@@ -71,7 +72,7 @@ public class Config extends HashMap<String, Object> implements GSystem {
                 }
                 case "app.physic.world.gravity" -> {
                     String[] values = ((String) e.getValue()).substring(((String) e.getValue()).indexOf("(") + 1, ((String) e.getValue()).lastIndexOf(")")).split(",");
-                    put("app.physic.world.gravity", new Point2D.Double(Double.parseDouble(values[0]), Double.parseDouble(values[1])));
+                    put("app.physic.world.gravity", new Vector2d(Double.parseDouble(values[0]), Double.parseDouble(values[1])));
                 }
                 case "app.scene.default" -> {
                     put("app.scene.default", (String) e.getValue());

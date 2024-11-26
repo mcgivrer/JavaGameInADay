@@ -12,6 +12,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
+import static com.snapgames.framework.utils.Log.debug;
+
 public class SceneManager implements GSystem {
 
     private final GameInterface game;
@@ -81,7 +83,7 @@ public class SceneManager implements GSystem {
 
     private static void displaySceneTreeOnLog(Node<?> node, String space) {
         String spaces = space + "  ";
-        Log.debug(Game.class, "%s |_ Node<%s> named '%s' : %s", spaces, node.getClass().getSimpleName(), node.getName(), node);
+        debug(Game.class, "%s |_ Node<%s> named '%s' : %s", spaces, node.getClass().getSimpleName(), node.getName(), node);
         node.getChildren().forEach(c -> displaySceneTreeOnLog(c, spaces));
     }
 
@@ -89,6 +91,7 @@ public class SceneManager implements GSystem {
         if (Optional.ofNullable(activeScene).isPresent()) {
             activeScene.dispose();
         }
+        debug(SceneManager.class, "End of processing.");
     }
 
     public void setDefaultScene(String defaultSceneName) {

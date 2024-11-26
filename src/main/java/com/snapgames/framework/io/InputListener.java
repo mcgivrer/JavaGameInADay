@@ -17,12 +17,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static com.snapgames.framework.utils.Log.debug;
+
 public class InputListener implements KeyListener, Serializable, GSystem {
     private final GameInterface app;
     public boolean[] keys = new boolean[1024];
 
     public InputListener(GameInterface app) {
         this.app = app;
+        debug(InputListener.class, "Start of processing");
     }
 
     public boolean isKeyPressed(int keyCode) {

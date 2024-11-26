@@ -9,7 +9,8 @@ import com.snapgames.framework.io.ResourceManager;
 import com.snapgames.framework.physic.Material;
 import com.snapgames.framework.physic.PhysicType;
 import com.snapgames.framework.physic.World;
-import com.snapgames.framework.physic.WorldArea;
+import com.snapgames.framework.entity.WorldArea;
+import com.snapgames.framework.physic.math.Vector2d;
 import com.snapgames.framework.scene.AbstractScene;
 
 import java.awt.*;
@@ -36,7 +37,7 @@ public class PlayScene extends AbstractScene {
         Rectangle2D playArea = getConfig().get("app.physic.world.play.area.size");
 
 
-        setWorld(new World("earth", -0.981)
+        setWorld(new World("earth", new Vector2d(0, -0.981))
             .setSize(800, 600)
             .setPosition(0, 0));
 
@@ -53,7 +54,7 @@ public class PlayScene extends AbstractScene {
             .add(new Behavior<Entity<?>>() {
                 @Override
                 public void input(InputListener inputListener, Entity<?> player) {
-                    double speed = 0.2;
+                    double speed = 0.05;
                     if (inputListener.isKeyPressed(KeyEvent.VK_UP)) {
                         player.addForce(0.0, -speed * 2);
                     }
@@ -85,46 +86,46 @@ public class PlayScene extends AbstractScene {
         add(score);
 
         TextObject lives = new TextObject("lives")
-                .setPosition(camera.getWidth() - 30, 32)
-                .setFont(scoreFont.deriveFont(17.0f))
-                .setText("3")
-                .setColor(Color.WHITE)
-                .setPhysicType(PhysicType.STATIC)
-                .setFixedToCamera(camera)
-                .setPriority(100);
+            .setPosition(camera.getWidth() - 30, 32)
+            .setFont(scoreFont.deriveFont(17.0f))
+            .setText("3")
+            .setColor(Color.WHITE)
+            .setPhysicType(PhysicType.STATIC)
+            .setFixedToCamera(camera)
+            .setPriority(100);
         add(lives);
 
         GaugeObject energy = new GaugeObject("energy")
-                .setPosition(camera.getWidth()-78,20)
-                .setSize(40,7)
-                .setColor(Color.LIGHT_GRAY)
-                .setFillColor(Color.RED)
-                .setMinValue(0).setMaxValue(100).setValue(100)
-                .setPhysicType(PhysicType.STATIC)
-                .setFixedToCamera(camera)
-                .setPriority(100);
+            .setPosition(camera.getWidth() - 78, 20)
+            .setSize(40, 7)
+            .setColor(Color.LIGHT_GRAY)
+            .setFillColor(Color.RED)
+            .setMinValue(0).setMaxValue(100).setValue(100)
+            .setPhysicType(PhysicType.STATIC)
+            .setFixedToCamera(camera)
+            .setPriority(100);
         add(energy);
 
         GaugeObject mana = new GaugeObject("mana")
-                .setPosition(camera.getWidth()-78,27)
-                .setSize(40,7)
-                .setColor(Color.LIGHT_GRAY)
-                .setFillColor(Color.BLUE)
-                .setMinValue(0).setMaxValue(100).setValue(100)
-                .setPhysicType(PhysicType.STATIC)
-                .setFixedToCamera(camera)
-                .setPriority(100);
+            .setPosition(camera.getWidth() - 78, 27)
+            .setSize(40, 7)
+            .setColor(Color.LIGHT_GRAY)
+            .setFillColor(Color.BLUE)
+            .setMinValue(0).setMaxValue(100).setValue(100)
+            .setPhysicType(PhysicType.STATIC)
+            .setFixedToCamera(camera)
+            .setPriority(100);
         add(mana);
 
-        generate("star_%d", world, 20, 1, 1,
-                Color.WHITE, 100000000,
-                Material.DEFAULT,
-                PhysicType.STATIC,
-                5);
+        generate("star_%d", world, 20, 2, 2,
+            Color.WHITE, 100000000,
+            Material.DEFAULT,
+            PhysicType.STATIC,
+            5);
         generate("ball_%d", world, 5, 20, 20,
-                Color.RED, 5.0,
-                new Material("ball_mat", 1.0, 0.7, 0.8),
-                PhysicType.DYNAMIC, 5);
+            Color.RED, 5.0,
+            new Material("ball_mat", 1.0, 0.7, 0.8),
+            PhysicType.DYNAMIC, 5);
 
         WorldArea water = (WorldArea) new WorldArea("water")
             .setFillColor(new Color(0.1f, 0.1f, 0.7f, 0.8f))
@@ -136,19 +137,19 @@ public class PlayScene extends AbstractScene {
             .addForce(0.02, -0.21)
             .setPriority(20)
             .add(new WaveWaterSimulator());
-        getWorld().addArea(water);
+        getWorld().add(water);
         add(water);
 
         WorldArea sky = (WorldArea) new WorldArea("sky")
-                .setFillColor(new Color(0.0f, 0.1f, 0.3f, 0.9f))
-                .setColor(null)
-                .setSize(world.width, world.height - 64)
-                .setPosition(0, 0)
-                .addForce(0.01, 0.0)
-                .setPriority(2)
-                .setPhysicType(PhysicType.STATIC)
-                .add(new Behavior<Entity<?>>() {
-                    double cumul = 0;
+            .setFillColor(new Color(0.0f, 0.1f, 0.3f, 0.9f))
+            .setColor(null)
+            .setSize(world.width, world.height - 64)
+            .setPosition(0, 0)
+            .addForce(0.01, 0.0)
+            .setPriority(2)
+            .setPhysicType(PhysicType.STATIC)
+            .add(new Behavior<Entity<?>>() {
+                double cumul = 0;
 
                 @Override
                 public void update(Entity<?> e, double elapsed) {
@@ -161,7 +162,7 @@ public class PlayScene extends AbstractScene {
                     }
                 }
             });
-        getWorld().addArea(sky);
+        getWorld().add(sky);
         add(sky);
         //activate our camera as the default one.
         setActiveCamera(camera);
@@ -175,10 +176,11 @@ public class PlayScene extends AbstractScene {
                           PhysicType pt,
                           int priority) {
         for (int i = 0; i < nb; i++) {
-            GameObject star = new GameObject(templateName.formatted(Integer.valueOf(i)))
+            GameObject star = new GameObject(templateName.formatted(i))
                 .setSize(maxW * Math.random(), maxH * Math.random())
                 .setPosition(windowSize.getWidth() * Math.random(), windowSize.getHeight() * Math.random())
                 .setFillColor(color)
+                .setColor(null)
                 .setMass(mass)
                 .setMaterial(mat)
                 .setPhysicType(pt)

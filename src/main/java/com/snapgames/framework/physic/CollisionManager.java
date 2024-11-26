@@ -13,26 +13,30 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static com.snapgames.framework.utils.Log.debug;
+
 public class CollisionManager implements GSystem {
 
     private final Game app;
 
     public CollisionManager(Game app) {
         this.app = app;
+        debug(CollisionManager.class, "Start of processing");
+
     }
 
     public void update(Scene scn, double elapsed) {
         scn.getEntities().values().stream().filter(Entity::isActive).forEach(e1 -> {
             scn.getEntities().values().stream()
-                    .filter(e2 -> {
-                        return e2.isActive()
-                                && !e2.getName().equals(e1.getName());
-                    }).forEach(e2 -> {
-                        if (e1.intersects(e2)) {
-                            e1.getBehaviors().forEach(b -> b.onCollision(e1, e2));
-                            e2.getBehaviors().forEach(b -> b.onCollision(e2, e1));
-                        }
-                    });
+                .filter(e2 -> {
+                    return e2.isActive()
+                        && !e2.getName().equals(e1.getName());
+                }).forEach(e2 -> {
+                    if (e1.intersects(e2)) {
+                        e1.getBehaviors().forEach(b -> b.onCollision(e1, e2));
+                        e2.getBehaviors().forEach(b -> b.onCollision(e2, e1));
+                    }
+                });
 
         });
     }

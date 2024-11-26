@@ -6,6 +6,7 @@ import com.snapgames.framework.entity.*;
 import com.snapgames.framework.io.InputListener;
 import com.snapgames.framework.io.ResourceManager;
 import com.snapgames.framework.physic.PhysicEngine;
+import com.snapgames.framework.physic.math.Vector2d;
 import com.snapgames.framework.scene.Scene;
 import com.snapgames.framework.scene.SceneManager;
 import com.snapgames.framework.system.GSystem;
@@ -17,7 +18,6 @@ import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
@@ -27,11 +27,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.snapgames.framework.utils.I18n.getI18n;
+import static com.snapgames.framework.utils.Log.debug;
 import static com.snapgames.framework.utils.Log.error;
 
-public class Renderer implements GSystem, Serializable {
-    private final Game app;
+/**
+ * The Renderer class is responsible for rendering game scenes and entities onto a window.
+ * It implements the GSystem interface and utilizes various graphics operations to draw
+ * the game world, entities, and debug information.
+ */
+public class Renderer implements GSystem {
+    private final GameInterface app;
 
     private JFrame window;
     private BufferedImage drawbuffer;
@@ -39,15 +44,38 @@ public class Renderer implements GSystem, Serializable {
 
     private boolean fullScreen = false;
 
-    public Renderer(Game app) {
+    /**
+     * Constructs a new Renderer instance associated with the provided GameInterface.
+     * This constructor initializes the Renderer by linking it to the game application
+     * and begins the debug logging process.
+     *
+     * @param app the GameInterface instance that the Renderer will be linked to,
+     *            representing the game application that this renderer will manage.
+     */
+    public Renderer(GameInterface app) {
         this.app = app;
+        debug(Renderer.class, "start of processing");
     }
 
+    /**
+     * Creates a new window with the specified title and size.
+     *
+     * @param title the title of the window to be created
+     * @param size  the dimensions of the window to be created
+     */
     private void createWindow(String title, Dimension size) {
         newWindow(title, size, false);
         debugFont = window.getGraphics().getFont().deriveFont(9.0f);
+        debug(Renderer.class, "Window %s created with size of %dx%d", title, size.width, size.height);
     }
 
+    /**
+     * Creates a new window with the specified title, size, and fullscreen mode.
+     *
+     * @param title      the title of the window to be created
+     * @param size       the dimensions of the window if not in fullscreen
+     * @param fullScreen whether the window should be created in fullscreen mode
+     */
     private void newWindow(String title, Dimension size, boolean fullScreen) {
         KeyListener il = null;
         if (window != null && window.isActive()) {
@@ -85,8 +113,13 @@ public class Renderer implements GSystem, Serializable {
         });
     }
 
+    /**
+     *
+     */
     public void setInputListener(InputListener il) {
         window.addKeyListener(il);
+
+        debug(Renderer.class, "adding this %s as a KeyListener", il.getClass());
     }
 
     private void render(Scene scene) {
@@ -103,16 +136,16 @@ public class Renderer implements GSystem, Serializable {
         }
         // draw the scene
         scene.getEntities().values().stream()
-            .filter(e -> !(e instanceof Camera))
-            .filter(Entity::isActive)
-            .filter(e -> e.getCameraIsStickedTo() == null)
-            .sorted(Comparator.comparingInt(Entity::getPriority))
-            .forEach(e -> {
-                drawEntity(g, scene, e);
-                if (app.isDebugGreaterThan(0)) {
-                    drawDebugInfoEntity(g, scene, e);
-                }
-            });
+                .filter(e -> !(e instanceof Camera))
+                .filter(Entity::isActive)
+                .filter(e -> e.getCameraIsStickedTo() == null)
+                .sorted(Comparator.comparingInt(Entity::getPriority))
+                .forEach(e -> {
+                    drawEntity(g, scene, e);
+                    if (app.isDebugGreaterThan(0)) {
+                        drawDebugInfoEntity(g, scene, e);
+                    }
+                });
 
         // draw World borders
         g.setColor(Color.DARK_GRAY);
@@ -123,13 +156,13 @@ public class Renderer implements GSystem, Serializable {
         }
         // draw all entities fixed to the active Camera.
         scene.getEntities().values().stream()
-            .filter(e -> !(e instanceof Camera))
-            .filter(Entity::isActive)
-            .filter(e -> e.getCameraIsStickedTo() != null && e.getCameraIsStickedTo().equals(scene.getActiveCamera()))
-            .sorted(Comparator.comparingInt(Entity::getPriority))
-            .forEach(e -> {
-                drawEntity(g, scene, e);
-            });
+                .filter(e -> !(e instanceof Camera))
+                .filter(Entity::isActive)
+                .filter(e -> e.getCameraIsStickedTo() != null && e.getCameraIsStickedTo().equals(scene.getActiveCamera()))
+                .sorted(Comparator.comparingInt(Entity::getPriority))
+                .forEach(e -> {
+                    drawEntity(g, scene, e);
+                });
 
         g.dispose();
 
@@ -138,7 +171,7 @@ public class Renderer implements GSystem, Serializable {
             BufferStrategy bf = window.getBufferStrategy();
             if (bf != null) {
                 bf.getDrawGraphics().drawImage(drawbuffer, 0, 0, window.getWidth(), window.getHeight(),
-                    0, 0, drawbuffer.getWidth(), drawbuffer.getHeight(), null);
+                        0, 0, drawbuffer.getWidth(), drawbuffer.getHeight(), null);
                 if (!bf.contentsLost()) {
                     bf.show();
                 }
@@ -147,25 +180,28 @@ public class Renderer implements GSystem, Serializable {
     }
 
     private void drawDebugInfoEntity(Graphics2D g, Scene scene, Entity<?> e) {
+        Vector2d velocity = e.getVelocity();
+        Vector2d acc = e.getAcceleration();
+
         g.setColor(Color.ORANGE);
         g.draw(e);
         g.setFont(debugFont);
         g.drawString("#%d:%s".formatted(e.getId(), e.getName()), (int) (e.getX() + e.getWidth() + 4), (int) e.getY());
         // draw velocity vector
-        drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), e.dx * 70, e.dy * 70, Color.CYAN);
+        drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), velocity.getX() * 100, velocity.getY() * 100, Color.CYAN);
         // draw acceleration vector
-        drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), e.ax * 40, e.ay * 40, Color.RED);
+        drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), acc.getX() * 100, acc.getY() * 100, Color.RED);
         // draw forces vector
         e.getForces().forEach(f -> {
-            drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), f.getX() * 40, f.getY() * 40, Color.YELLOW);
+            drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), f.getX() * 100, f.getY() * 100, Color.YELLOW);
         });
     }
 
     private void drawVector(Graphics2D g, double x, double y, double dx, double dy, Color c) {
         g.setColor(c);
         g.drawLine(
-            (int) x, (int) y,
-            (int) (x + dx), (int) (y + dy));
+                (int) x, (int) y,
+                (int) (x + dx), (int) (y + dy));
 
     }
 
@@ -184,7 +220,7 @@ public class Renderer implements GSystem, Serializable {
                 drawGauge(g, (GaugeObject) e);
             }
             default -> {
-                error("Unknown object class %s", e.getClass());
+                error(Renderer.class, "Unknown object class %s", e.getClass());
             }
         }
         e.getBehaviors().forEach(b -> b.draw(g, e));
@@ -213,8 +249,8 @@ public class Renderer implements GSystem, Serializable {
         g.drawRect((int) gg.getX() + 1, (int) gg.getY() + 1, (int) gg.getWidth() - 2, (int) gg.getHeight() - 2);
         g.setColor(gg.getFillColor());
         g.fillRect(
-            (int) gg.getX() + 3, (int) gg.getY() + 3,
-            (int) (gg.getWidth() - 5 * ((gg.getMaxValue() - gg.getMinValue()) / gg.getValue())), (int) gg.getHeight() - 5);
+                (int) gg.getX() + 3, (int) gg.getY() + 3,
+                (int) (gg.getWidth() - 5 * ((gg.getMaxValue() - gg.getMinValue()) / gg.getValue())), (int) gg.getHeight() - 5);
     }
 
     private void drawGrid(Graphics2D g, Scene scene, GridObject go) {
@@ -222,8 +258,8 @@ public class Renderer implements GSystem, Serializable {
         for (int iy = 0; iy < scene.getWorld().getHeight(); iy += go.getTileWidth()) {
             for (int ix = 0; ix < scene.getWorld().getWidth(); ix += go.getTileWidth()) {
                 g.drawRect(ix, iy, go.getTileWidth(), (int) (iy + go.getTileHeight() < scene.getWorld().getHeight()
-                    ? go.getTileHeight()
-                    : go.getTileHeight() - (scene.getWorld().getHeight() - iy)));
+                        ? go.getTileHeight()
+                        : go.getTileHeight() - (scene.getWorld().getHeight() - iy)));
             }
         }
     }
@@ -231,7 +267,10 @@ public class Renderer implements GSystem, Serializable {
     public void dispose() {
         if (window != null && window.isEnabled() && window.isActive()) {
             window.dispose();
+
+            debug(Renderer.class, "windows has been closed.");
         }
+        debug(Renderer.class, "End of processing.");
     }
 
     public JFrame getWindow() {
@@ -280,6 +319,11 @@ public class Renderer implements GSystem, Serializable {
 
     @Override
     public void postProcess(GameInterface game) {
+        PhysicEngine pe = SystemManager.get(PhysicEngine.class);
+        SceneManager sm = SystemManager.get(SceneManager.class);
+        if (sm != null && pe != null) {
+            pe.resetForces(sm.getActiveScene());
+        }
     }
 
     @Override

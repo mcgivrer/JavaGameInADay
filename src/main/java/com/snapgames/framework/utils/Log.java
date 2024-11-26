@@ -14,6 +14,26 @@ import java.time.format.DateTimeFormatter;
  */
 public class Log {
 
+    public enum LogLevel {
+        DEBUG("DEBUG"),
+        INFO("INFO"),
+        WARN("WARN"),
+        ERROR("ERROR"),
+        FATAL("FATAL");
+
+        String value;
+
+        LogLevel(String value) {
+            this.value = value;
+        }
+
+        String getValue() {
+            return this.value;
+        }
+    }
+
+    private static final String separator = "\t";
+    private static final String lineFeed = "%n";
     private static int debug = 0;
     private static String debugFilter = "";
     private static String loggerFilter = "ERR,WARN,INFO,DEBUG";
@@ -29,9 +49,10 @@ public class Log {
      * @param message the log message to be recorded
      * @param args    additional arguments to be included in the log message
      */
-    public static void log(Class<?> className, String level, String message, Object... args) {
-        if (loggerFilter.contains(level)) {
-            System.out.printf("%s | %s | %s | %s%n", LocalDateTime.now(), level, className.getCanonicalName(),
+    public static void log(Class<?> className, LogLevel level, String message, Object... args) {
+
+        if ((level.equals(LogLevel.ERROR) || level.equals(LogLevel.FATAL))) {
+            System.out.printf("%s %s %s %s %s %s %s%n", LocalDateTime.now(), separator, level, separator, className.getCanonicalName(), separator,
                     message.formatted(args));
         }
     }
@@ -44,7 +65,7 @@ public class Log {
      */
     @Deprecated
     public static void debug(String message, Object... args) {
-        log(null,"DEBUG", message, args);
+        log(null, LogLevel.DEBUG, message, args);
     }
 
     /**
@@ -55,7 +76,7 @@ public class Log {
      */
     @Deprecated
     public static void info(String message, Object... args) {
-        log(null,"INFO", message, args);
+        log(null, LogLevel.INFO, message, args);
     }
 
     /**
@@ -66,7 +87,7 @@ public class Log {
      */
     @Deprecated
     public static void warn(String message, Object... args) {
-        log(null,"WARN", message, args);
+        log(null, LogLevel.WARN, message, args);
     }
 
     /**
@@ -77,7 +98,7 @@ public class Log {
      */
     @Deprecated
     public static void error(String message, Object... args) {
-        log(null,"ERR", message, args);
+        log(null, LogLevel.ERROR, message, args);
     }
 
     /**
@@ -89,7 +110,7 @@ public class Log {
      * @param args      additional arguments to be included in the log message
      */
     public static void debug(Class<?> className, String message, Object... args) {
-        log(className,"DEBUG",  message, args);
+        log(className, LogLevel.DEBUG, message, args);
     }
 
     /**
@@ -101,7 +122,7 @@ public class Log {
      * @param args      additional arguments to be included in the log message
      */
     public static void info(Class<?> className, String message, Object... args) {
-        log(className,"INFO", message, args);
+        log(className, LogLevel.INFO, message, args);
     }
 
     /**
@@ -113,7 +134,7 @@ public class Log {
      * @param args      additional arguments to be included in the log message
      */
     public static void warn(Class<?> className, String message, Object... args) {
-        log(className,"WARN",  message, args);
+        log(className, LogLevel.WARN, message, args);
     }
 
     /**
@@ -125,7 +146,11 @@ public class Log {
      * @param args      additional arguments to be included in the log message
      */
     public static void error(Class<?> className, String message, Object... args) {
-        log(className,"ERR", message, args);
+        log(className, LogLevel.ERROR, message, args);
+    }
+
+    public static void fatal(Class<?> className, String message, Object... args) {
+        log(className, LogLevel.FATAL, message, args);
     }
 
 

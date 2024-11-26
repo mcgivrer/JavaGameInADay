@@ -1,23 +1,22 @@
 package com.snapgames.framework.physic;
 
 import com.snapgames.framework.entity.Entity;
-
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.List;
+import com.snapgames.framework.entity.WorldArea;
+import com.snapgames.framework.physic.math.Vector2d;
 
 public class World extends Entity<World> {
-    private double gravity;
+
+    private Vector2d gravity = new Vector2d();
 
     public World(String name) {
         super(name);
-        this.gravity = 0.0;
         setRect(0, 0, 640, 400);
     }
 
-    public World(String name, double gravity) {
+    public World(String name, Vector2d gravity) {
         super(name);
         this.gravity = gravity;
+        getForces().add(gravity.negate().multiply(0.01));
     }
 
     public World setSize(double w, double h) {
@@ -25,16 +24,7 @@ public class World extends Entity<World> {
         return this;
     }
 
-    public World setPosition(double x, double y) {
-        setRect(x, y, width, height);
-        return this;
-    }
-
-    public double getGravity() {
-        return gravity;
-    }
-
-    public World addArea(WorldArea a) {
+    public World add(WorldArea a) {
         getChildren().add(a);
         return this;
     }
