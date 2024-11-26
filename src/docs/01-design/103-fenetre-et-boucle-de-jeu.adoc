@@ -1,11 +1,11 @@
+:experimental:
+
 = Fenêtre et boucle de jeu
 
-Nous allons maintenant nous intéresser à l'affichage. Mais pour cela, nous devons mettre en place une structure de code
-bien connu des développeurs de jeu : la "boucle de jeu" ou "Game Loop".
+Nous allons maintenant nous intéresser à l'affichage.
+Mais pour cela, nous devons mettre en place une structure de code bien connu des développeurs de jeu : la "boucle de jeu" ou "Game Loop".
 
-Historiquement, cette structure est héritée des premiers jeux vidéos et des contraintes techniques des années 70-80. Et
-nous devons bien avouer que depuis, même si les frameworks ont terriblement évolués, la notion de GameLoop a perduré, et
-aujourd'hui encore, elle est présente dans les gros moteurs.
+Historiquement, cette structure est héritée des premiers jeux vidéos et des contraintes techniques des années 70-80. Et nous devons bien avouer que depuis, même si les frameworks ont terriblement évolués, la notion de GameLoop a perduré, et aujourd'hui encore, elle est présente dans les gros moteurs.
 
 Cette structure est assez simple et repose sur un triplet d'actions :
 
@@ -15,9 +15,9 @@ Cette structure est assez simple et repose sur un triplet d'actions :
 . faire le rendu graphique des objets concernés.
 . libérer toutes les resources
 
-image:https://www.plantuml.com/plantuml/svg/NOuz2WD128NxFSKhas8la6BPBkSGna9mVfXH23bz558isoYyx_FXkOocUTLjUrFb_SZvaYOcfFBbn_EQQ-yZabpmPgBWZnXamQRp1gI5_S2_PRY53f0QMZSC8b_ftKmVXOnJ1RU2Uz6Ca6VWXDT_YgpHLnwUWRpg3m00[La boucle principale]
 
-_figure 1 - la boucle principale_
+.Diagramme de séquence de notre boucle de jeu
+image::https://www.plantuml.com/plantuml/svg/NOuz2WD128NxFSKhas8la6BPBkSGna9mVfXH23bz558isoYyx_FXkOocUTLjUrFb_SZvaYOcfFBbn_EQQ-yZabpmPgBWZnXamQRp1gI5_S2_PRY53f0QMZSC8b_ftKmVXOnJ1RU2Uz6Ca6VWXDT_YgpHLnwUWRpg3m00["La boucle principale"]
 
 Ce qui se résume assez bien par :
 
@@ -71,8 +71,7 @@ public class MonProgrammeWinAndLoop1 extends TestGame {
 
 Ansi, tant que rien ne demande de quitter le jeu, on boucle sur les trois actions.
 
-Comme nous l'avons introduit dans le chapitre précédent, nous devons prendre en compte un mode test limitant le nombre
-de 'tours' dans la boucle, aussi, adaptons notre code en conséquence :
+Comme nous l'avons introduit dans le chapitre précédent, nous devons prendre en compte un mode test limitant le nombre de 'tours' dans la boucle, aussi, adaptons notre code en conséquence :
 
 [source,java]
 ----
@@ -125,20 +124,15 @@ java -cp target/demo-classes MonProgrammeWinAndLoop1
 
 Vous obtenez sur la console la sortie suivante :
 
-[source,plaintext]
+[source,log]
 ----
 # Démarrage de MonProgrammeWinAndLoop1
 # Load configuration Properties file /config2.properties
-- app.render.window.size=640x400
-- app.physic.world.play.area.size=1080x800
 - app.exit=false
 - app.debug.level=3
 - app.unknown.key=not known
-- app.scene.list=play:com.snapgames.demo.scenes.PlayScene,
 - app.test=true
 - app.test.loop.max.count=3
-- app.physic.world.gravity=(0,-0.981)
-- app.scene.default=play
 - app.render.window.title="Test Game App (config2)"
 - app.render.buffer.size=320x200
 ~ Unknown value for app.exit=false
@@ -148,3 +142,284 @@ Vous obtenez sur la console la sortie suivante :
 => Game loops 3 times
 # MonProgrammeWinAndLoop1 est terminé.
 ----
+
+== Une fenêtre
+
+Passons maintenant à l'affichage ! je vous propose pour cela d'ajouter une fenêtre à notre programme.
+Cette fenêtre sera défini en taille par une configuration.
+Le titre de ladite fenêtre sera également issu d'une entrée dans le fichier la configuration.
+
+Afin d'implémenter cette fenêtre, nous utiliserons l'API SWING et AWT du JDK, et ce même si JavaFX existe, ce dernier ne permettant pas facilement de réaliser un rendu "old school" à base de gros pixels.
+
+[source,java]
+----
+public class MonProgrammeWinAndLoop2 extends TestGame {
+    //...
+    private JFrame window;
+    //...
+
+
+    public void initialize() {
+        testMode = config.get("app.test");
+        maxLoopCount = (int) config.get("app.test.loop.max.count");
+        System.out.printf("# %s est initialisé%n", this.getClass().getSimpleName());
+
+        createWindow();
+    }
+
+    private void createWindow() {
+        // Create the Window
+        window = new JFrame((String) config.get("app.render.window.title"));
+        window.setPreferredSize(config.get("app.render.window.size"));
+        window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        window.pack();
+        window.setVisible(true);
+        window.addKeyListener(this);
+    }
+
+
+}
+----
+
+Et nous ajoutons 2 nouvelles lignes dans le fichier de configuration :
+
+[source,properties]
+----
+## Render
+app.render.window.title=Test Game App (win-and-loop)
+app.render.window.size=640x400
+----
+
+Ainsi, sont défini le titre et la taille en pixels de la fenêtre affichée.
+
+Ajoutons maintenant un peu d'interaction, nous allons ajouter le traitement des évènements liés aux touches du clavier.
+
+=== KeyEvent et KeyListener
+
+Afin de pouvoir procéder à l'interception et au traitement des évènements clavier, nous allons implémenter dans notre classe principale `Game` l'interface `KeyListener` du JDK.
+
+[source,Java]
+----
+
+public class MonProgrammeWinAndLoop2 extends TestGame
+    implements KeyListener {
+
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+}
+----
+
+Et nous souhaitons faire un premier traitement lorsque la touche ESCAPE est appuyée : nous souhaitons metre fin à l'exécution de notre programme.
+
+[source,Java]
+----
+
+public class MonProgrammeWinAndLoop2 extends TestGame
+    implements KeyListener {
+    //...
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            this.requestExit();
+        }
+    }
+}
+----
+
+Ainsi lorsque la touche kbd:[ESCAPE] est relâchée, nous demandons au programme de procéder à la sortie de la boucle principale, et ainsi mettre fin au programme.
+
+.La capture de la fenêtre
+image::illustrations/capture-win-loop-2.png["La capture de la fenetre"]
+
+=== Le buffer
+
+Maintenant que nous avons une fenêtre, nous allons enfin pouvoir passer à la partie artistique !
+
+Comme indiqué précédemment, nous souhaitons réaliser un rendu typé "old-school" avec des pixels assez visible. pour éviter des post traitement compliqué pour le propos de ce livre, nous allons utiliser une technique assez simple permettant de dessiner dans un calque ayant une définition réduite, puis copier le contenu de ce calque vers la fenêtre, procédant ainsi à la mise à l'échelle de la fenêtre.
+
+Nous dessinerons donc dans un buffer un mémoire, puis à chaque rafraichissement, nous copierons ce buffer sur la fenêtre cible.
+
+Commençons par créer ce buffer de travail (ou calque) :
+
+[source,java]
+----
+public class MonProgrammeWinAndLoop3 extends TestGame implements KeyListener {
+    //...
+    private JFrame window;
+    // <1>
+    private BufferedImage renderingBuffer;
+    //..
+    public void initialize() {
+        //...
+        //<2>
+        createBuffer();
+    }
+
+    //...
+    //<3>
+    private void createBuffer() {
+        Dimension renderBufferSize = config.get("app.render.buffer.size");
+        renderingBuffer = new BufferedImage(
+            renderBufferSize.width, renderBufferSize.height,
+            BufferedImage.TYPE_INT_ARGB);
+    }
+
+    public void loop() {
+        int loopCount = 0;
+        int frameTime = 1000 / (int) (config.get("app.render.fps"));
+        while (!isExitRequested() && ((testMode && loopCount < maxLoopCount) || !testMode)) {
+            input();
+            update();
+            render();
+            loopCount++;
+            //<4>
+            waitTime(frameTime);
+        }
+        System.out.printf("=> Game loops %d times%n", loopCount);
+    }
+
+    //...
+    private void render() {
+        //<(6)>
+        Graphics2D g = renderingBuffer.createGraphics();
+        // clear rendering buffer to black
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight());
+
+        // draw something
+        g.dispose();
+
+        //...
+    }
+}
+----
+
+En prenant dans l'ordre :
+
+. On ajoute le buffer de rendu
+. On délègue l'initialisation du buffer
+. La taille du buffer est définie par l'entrée `app.render.buffer.size`
+. on modifie la méthode d'attente pour la prochaine frame en calculant le temps en fonction du taux de rafraichissement cible défini dans `app.render.fps`.
+. Enfin, on efface le buffer avec la couleur noir, et plus tard, nous pourrons dessiner dessus !
+
+.La capture de la fenêtre avec le buffer
+image::illustrations/capture-win-loop-3.png["La capture de la fenetre avec le buffer"]
+
+== Dessinons !
+
+Nous avons maintenant de quoi faire un premier test d'animation.
+
+_**MISSION** : Nous allons donc dessiner un carré bleu de 16 pixels de côté, au centre de notre fenêtre, et à l'aide des touches de direction, nous pourrons le déplacer, en restant dans la limite de la fenêtre._
+
+Nous devrons donc définir quelques variables pour gérer la position, intercepter les touches pressées et modifier la position en conséquence, tout en restant dans l'espace défini par la taille de jeu.
+
+.Un carré dans l'espace (de jeu)
+image::https://docs.google.com/drawings/d/e/2PACX-1vT05-tRYGn2gW16LxyrQY8CQmzmpFPWUVspHfQZNgrSChRALuErfLhPkxLs8s5_mmsTxgIqGxaMqyjd/pub?w=595&h=385["The carré dans l'espace (de jeu)"]
+
+Passons au code.
+
+Tout d'abord, positionnons notre carré, et dessinons-le.
+
+[source,java]
+----
+public class MonProgrammeDemo1 extends TestGame implements KeyListener {
+    //...
+    //<1>
+    private int x, y;
+    //...
+
+    public void initialize() {
+        //...
+        //<2>
+        // blue square position initialization.
+        x = (int) ((renderingBuffer.getWidth() - 16) * 0.5);
+        y = (int) ((renderingBuffer.getHeight() - 16) * 0.5);
+    }
+
+    //...
+    private void render() {
+        Graphics2D g = renderingBuffer.createGraphics();
+        //...
+
+        // draw something
+        //<3>
+        g.setColor(Color.BLUE);
+        g.fillRect(x, y, 16, 16);
+
+        g.dispose();
+        //...
+    }
+
+}
+----
+
+. Nous définissons une position de départ sur un vecteur `(x,y)` où `x=0` et `y=0`,
+. Nous définissons la position centrale sur le buffer de rendu,
+. Et nous dessinons ce fameux carré bleu de 16x16 pixels à la position `(x,y)`.
+
+[source,java]
+----
+public class MonProgrammeDemo1 extends TestGame implements KeyListener {
+    //...
+    //<1>
+    private boolean[] keys = new boolean[1024];
+
+    //...
+    private void input() {
+        //<2>
+        if (keys[KeyEvent.VK_LEFT]) {
+            x = Math.max(x - 2, 0);
+        }
+        if (keys[KeyEvent.VK_RIGHT]) {
+            x = Math.min(x + 2, renderingBuffer.getWidth());
+
+        }
+        if (keys[KeyEvent.VK_UP]) {
+            y = Math.max(y - 2, 0);
+        }
+        if (keys[KeyEvent.VK_DOWN]) {
+            y = Math.min(y + 2, renderingBuffer.getHeight());
+        }
+
+    }
+    //...
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        //<3>
+        keys[e.getKeyCode()] = true;
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        //<4>
+        keys[e.getKeyCode()] = false;
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            this.requestExit();
+        }
+    }
+}
+----
+
+. Ensuite, nous créons un cache d'état pour l'ensemble des touches de clavier,
+. En fonction des touches de direction appuyée, nous déplaçons notre position sur x ou y de 2 pixels dans la direction correspondante,
+. Nous définissons l'état de la touche pressée dans le buffer à vrai,
+. Nous définissons l'état de la touche relâchée dans le buffer à faux.
+
+== Vitesse
+
+Nous pouvons améliorer ce code en décomposant en tre l'action de touches et la mise à jour de la position en séparant le code entre `input()` et `update()`.
+C'est le moment d'introduire une notion de vitesse avec un vecteur `(dx,dy)`.
+
