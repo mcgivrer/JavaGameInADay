@@ -23,7 +23,6 @@ public class MonProgrammeWinAndLoop2 extends TestGame implements KeyListener {
         testMode = config.get("app.test");
         maxLoopCount = (int) config.get("app.test.loop.max.count");
         System.out.printf("# %s est initialisé%n", this.getClass().getSimpleName());
-
         createWindow();
     }
 

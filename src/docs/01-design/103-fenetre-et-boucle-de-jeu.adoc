@@ -317,7 +317,7 @@ En prenant dans l'ordre :
 .La capture de la fenêtre avec le buffer
 image::illustrations/capture-win-loop-3.png["La capture de la fenetre avec le buffer"]
 
-== Dessinons !
+=== Dessinons !
 
 Nous avons maintenant de quoi faire un premier test d'animation.
 
@@ -383,14 +383,14 @@ public class MonProgrammeDemo1 extends TestGame implements KeyListener {
             x = Math.max(x - 2, 0);
         }
         if (keys[KeyEvent.VK_RIGHT]) {
-            x = Math.min(x + 2, renderingBuffer.getWidth());
+            x = Math.min(x + 2, renderingBuffer.getWidth()-16);
 
         }
         if (keys[KeyEvent.VK_UP]) {
             y = Math.max(y - 2, 0);
         }
         if (keys[KeyEvent.VK_DOWN]) {
-            y = Math.min(y + 2, renderingBuffer.getHeight());
+            y = Math.min(y + 2, renderingBuffer.getHeight()-16);
         }
 
     }
@@ -420,6 +420,245 @@ public class MonProgrammeDemo1 extends TestGame implements KeyListener {
 
 == Vitesse
 
-Nous pouvons améliorer ce code en décomposant en tre l'action de touches et la mise à jour de la position en séparant le code entre `input()` et `update()`.
+Nous pouvons améliorer ce code en décomposant entre l'action de touches et la mise à jour de la position en séparant le code entre `input()` et `update()`.
 C'est le moment d'introduire une notion de vitesse avec un vecteur `(dx,dy)`.
 
+C'est ce que nous nous proposons de faire sur notre seconde démo.
+
+C'est dans la méthode `input()` que nous traiterons les évènements claviers en définissant une vitesse sur les 2 axes en fonction des touches pressées, et dans la méthode `update()` que nous calculerons la nouvelle position en s'assurant que notre carré bleu ne sorte pas de la zone visible de l'écran.
+
+[source,java]
+----
+import utils.Config;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+
+public class MonProgrammeDemo2 extends TestGame implements KeyListener {
+    private String configFilePath = "/demo2.properties";
+    //...
+    private int dx, dy;
+
+    public void initialize() {
+        //...
+        dx=0;
+        dy=0;
+    }
+
+    //...
+    private void input() {
+        if (keys[KeyEvent.VK_LEFT]) {
+            dx = -2;
+        }
+        if (keys[KeyEvent.VK_RIGHT]) {
+            dx = +2;
+
+        }
+        if (keys[KeyEvent.VK_UP]) {
+            dy = -2;
+        }
+        if (keys[KeyEvent.VK_DOWN]) {
+            dy = +2;
+        }
+        dx *= 0.5;
+        dy *= 0.5;
+    }
+
+    private void update() {
+        x += dx;
+        y += dy;
+        x = Math.min(Math.max(x, -8), renderingBuffer.getWidth()-8);
+        y = Math.min(Math.max(y, -8), renderingBuffer.getHeight()-8);
+    }
+    //...
+
+}
+----
+
+Si nous lançons l'exécution de `MonProgrammeDemo2`, nous verrons que le comportement visuel reste identique, mais les traitements sont maintenant séparés, facilitant ainsi l'évolution du code et son développement.
+
+== Un peu de Physique du mouvement
+
+Nous pouvons pousser encore un peu plus loin notre première approche de code en intégrant un peu de physique du mouvement.
+
+Passons les couples de variables `(x,y)` et `(dx,dy)` en double plutôt qu'en int, et nous pourrons jouer un peu sur une simulation de déceleration.
+
+[source,java]
+----
+public class MonProgrammeDemo3 extends TestGame implements KeyListener {
+    //...
+    private double x, y;
+    private double dx, dy;
+    //...
+}
+----
+
+Et modifions un peu le code de la méthode update :
+
+[source,java]
+----
+public class MonProgrammeDemo3 extends TestGame implements KeyListener {
+    //...
+    private void update() {
+        // <1>
+        x += dx;
+        y += dy;
+        // <2>
+        x = Math.min(Math.max(x, -8), renderingBuffer.getWidth() - 8);
+        y = Math.min(Math.max(y, -8), renderingBuffer.getHeight() - 8);
+        // <3>
+        dx *= 0.98;
+        dy *= 0.98;
+    }
+    //...
+}
+----
+
+. Nous calculons la future position en fonction de la vitesse courante, et appliquant la simple formule `p1=p0+dv` où `p1` est la future position, `p0` la position actuelle et `dv` la vitesse actuelle,
+. Nous nous assurons que le centre du carré ne sorte pas de la zone délimitée par la fenêtre (en fait, ici, nous utilisons la taille du buffer de rendu),
+. Et ensuite, nous appliquons un facteur de réduction sur la vitesse, afin que le carré décélère lorsque qu'aucune touche du curseur n'est pressée.
+
+Pour rendre les choses plus paramétrables, nous définissons un nouvel attribut de configuration nommé 'app.entity.player.speed' qui est fixé par défaut à 2.0.
+
+[source,properties]
+----
+# Physic
+app.physic.entity.player.speed=2.0
+----
+
+Et notre code d'analyse de valeur évolue de la façon suivante :
+
+[source,java]
+----
+public class Config extends HashMap<String, Object> {
+//...
+    public Config(GameInterface app) {
+        //...
+        // <1>
+        put("app.physic.entity.player.speed", 2);
+        //...
+    }
+    private void parseAttributes(List<Entry<Object, Object>> collect) {
+        collect.stream()
+        .forEach(e -> {
+            switch (e.getKey().toString()) {
+                //...
+                // <2>
+                case "app.physic.entity.player.speed" -> {
+                    put("app.physic.entity.player.speed", Double.parseDouble(props.getProperty("app.physic.entity.player.speed")));
+                }
+                //...
+            }
+        });
+    }
+
+    //...
+}
+----
+
+. Une valeur par défaut est créée dans la map,
+. La valeur issue du fichier properties est convertie en Double et stockée dans la map.
+
+=== Ajout du rebond
+
+Comme nous sommes joueur, nous pouvons ajouter un nouveau paramètre permettant une simulation de physique un peu plus amusante : le rebond lié à un facteur d'élasticité.
+
+En effet, lors de la collision avec le rebord de notre buffer délimitant la zone de jeu, nous pouvons appliquer un facteur d'élasticité à notre carré bleu pour affecter sa vitesse.
+
+Ajoutons ce nouveau paramètre dans notre jeu et rendons le configurable via notre fichier de propriétés.
+
+[source,java]
+----
+public class MonProgrammeDemo3 extends TestGame implements KeyListener {
+    //...
+    private double elasticity = 1.0;
+    private double friction = 1.0;
+    //...
+    private void initialize() {
+        elasticity = (double)config.get("app.physic.entity.elasticity");
+        friction = (double)config.get("app.physic.entity.friction");
+    }
+    //...
+    private void update() {
+        // calcul de la position en fonction de la vitesse courante.
+        x += dx;
+        y += dy;
+
+        // application du rebond si collision avec le bord de la zone de jeu
+        if (x < -8 || x > renderingBuffer.getWidth() - 8) {
+            dx = -dx * elasticity;
+        }
+        if (y < -8 || y > renderingBuffer.getHeight() - 8) {
+            dy = -dy * elasticity;
+        }
+
+        // repositionnement dans la zone de jeu si nécessaire
+        x = Math.min(Math.max(x, -8), renderingBuffer.getWidth() - 8);
+        y = Math.min(Math.max(y, -8), renderingBuffer.getHeight() - 8);
+
+        // application du facteur de friction
+        dx *= friction;
+        dy *= friction;
+    }
+    //...
+}
+----
+
+Ajoutons dans notre fichier de proprietes les deux nouvelles entrees :
+
+[source,properties]
+----
+app.physic.entity.player.elasticity=0.75
+app.physic.entity.player.friction=0.98
+----
+
+Et enfin, dans la classe Config, ajoutons la lecture de ces 2 valeurs en type `double` :
+
+[source,java]
+----
+public class Config extends HashMap<String, Object> {
+//...
+    public Config(GameInterface app) {
+        //...
+        // <1>
+        put("app.physic.entity.player.elasticity", 1.0);
+        put("app.physic.entity.player.friction", 1.0);
+        //...
+    }
+    private void parseAttributes(List<Entry<Object, Object>> collect) {
+        collect.stream()
+        .forEach(e -> {
+            switch (e.getKey().toString()) {
+                //...
+                // <2>
+                case "app.physic.entity.player.elasticity" -> {
+                    put("app.physic.entity.player.elasticity", Double.parseDouble(props.getProperty("app.physic.entity.player.elasticity")));
+                }
+                case "app.physic.entity.player.friction" -> {
+                    put("app.physic.entity.player.friction", Double.parseDouble(props.getProperty("app.physic.entity.player.friction")));
+                }
+                //...
+            }
+        });
+    }
+
+    //...
+}
+----
+
+Executons la classe `MonProgrammeDemo3`, en deplacant le carre bleu, nous constatons qu'en cas de contact avec le bord, il rebondit dans la direction opposee.
+
+== Conclusion
+
+Nous avons passe nos premieres ligne de code a explorer un premier programme java, en introduisant plusieurs concepts:
+
+. La boucle de jeu ou "GameLoop" decomposant le traitement des jeu en 3 principales etapes : `input()`, `update()` et `render()`.
+. La creation d'une premiere fenetre et le traitement de evennement clavier avec la classe `JFrame` et l'interface `KeyListener` proposes par le JDK,
+. L'affichage d'une forme geometrique, ici un carre bleu, que nous animons par l'interception des evenements clavier sur les touches directionnelles, le rendu etantr assure par l'API `Graphics2D` du JDK,
+. Un peu de physique du mouvement, simplifie, permettant d'appliquer une vitesse (`speed` dans notre code) sur notre carre bleu, tout en tenant compte de 2 nouveaux parametres dans le calcul de la vitesse appliquee que sont l'elasticite et la friction (`elasticity` et `friction` dans le code).
+
+Il est grand temps de prendre un peu de recul et de voir un peu plus grand.

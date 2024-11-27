@@ -7,8 +7,8 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
-public class MonProgrammeDemo2 extends TestGame implements KeyListener {
-    private String configFilePath = "/demo2.properties";
+public class MonProgrammeDemo3 extends TestGame implements KeyListener {
+    private String configFilePath = "/demo3.properties";
     private Config config;
 
     private boolean testMode = false;
@@ -18,10 +18,13 @@ public class MonProgrammeDemo2 extends TestGame implements KeyListener {
 
     private boolean[] keys = new boolean[1024];
 
-    private int x, y;
-    private int dx, dy;
+    private double x, y;
+    private double dx, dy;
+    private double elasticity = 0.75;
+    private double friction = 0.98;
+    private double speed = 0.0;
 
-    public MonProgrammeDemo2() {
+    public MonProgrammeDemo3() {
         System.out.printf("# Démarrage de %s%n", this.getClass().getSimpleName());
         config = new Config(this);
         config.load(configFilePath);
@@ -31,13 +34,17 @@ public class MonProgrammeDemo2 extends TestGame implements KeyListener {
         testMode = config.get("app.test");
         maxLoopCount = (int) config.get("app.test.loop.max.count");
         System.out.printf("# %s est initialisé%n", this.getClass().getSimpleName());
-
         createWindow();
         createBuffer();
 
         // blue square position initialization.
         x = (int) ((renderingBuffer.getWidth() - 16) * 0.5);
         y = (int) ((renderingBuffer.getHeight() - 16) * 0.5);
+
+        // load physic factors
+        speed = (double)config.get("app.physic.entity.player.speed");
+        elasticity = (double)config.get("app.physic.entity.player.elasticity");
+        friction = (double)config.get("app.physic.entity.player.friction");
     }
 
     private void createWindow() {
@@ -82,28 +89,40 @@ public class MonProgrammeDemo2 extends TestGame implements KeyListener {
 
     private void input() {
         if (keys[KeyEvent.VK_LEFT]) {
-            dx = -2;
+            dx = -speed;
         }
         if (keys[KeyEvent.VK_RIGHT]) {
-            dx = +2;
+            dx = +speed;
 
         }
         if (keys[KeyEvent.VK_UP]) {
-            dy = -2;
+            dy = -speed;
         }
         if (keys[KeyEvent.VK_DOWN]) {
-            dy = +2;
+            dy = +speed;
         }
-        dx *= 0.6;
-        dy *= 0.6;
     }
 
     private void update() {
+        // calcul de la position en fonction de la vitesse courante.
         x += dx;
         y += dy;
 
-        x = Math.min(Math.max(x, -8), renderingBuffer.getWidth()-8);
-        y = Math.min(Math.max(y, -8), renderingBuffer.getHeight()-8);
+        // application du rebond si collision avec le bord de la zone de jeu
+        if (x < -8 || x > renderingBuffer.getWidth() - 8) {
+            dx = -dx * elasticity;
+        }
+        if (y < -8 || y > renderingBuffer.getHeight() - 8) {
+            dy = -dy * elasticity;
+        }
+
+        // repositionnement dans la zone de jeu si nécessaire
+        x = Math.min(Math.max(x, -8), renderingBuffer.getWidth() - 8);
+        y = Math.min(Math.max(y, -8), renderingBuffer.getHeight() - 8);
+
+        // application du facteur de friction
+        dx *= friction;
+        dy *= friction;
     }
 
     private void render() {
@@ -115,7 +134,7 @@ public class MonProgrammeDemo2 extends TestGame implements KeyListener {
         // draw something
 
         g.setColor(Color.BLUE);
-        g.fillRect(x, y, 16, 16);
+        g.fillRect((int) x, (int) y, 16, 16);
 
         g.dispose();
 
@@ -146,7 +165,7 @@ public class MonProgrammeDemo2 extends TestGame implements KeyListener {
 
 
     public static void main(String[] args) {
-        MonProgrammeDemo2 prog = new MonProgrammeDemo2();
+        MonProgrammeDemo3 prog = new MonProgrammeDemo3();
         prog.run(args);
     }
 
