@@ -60,7 +60,7 @@ public class MonProgrammeDemo3 extends TestGame implements KeyListener {
 
     /**
      * Initializes the application.
-     *
+     * <p>
      * This method sets up the application by:
      * - Configuring test mode using values from the configuration.
      * - Setting the maximum loop count from the configuration.
@@ -82,20 +82,20 @@ public class MonProgrammeDemo3 extends TestGame implements KeyListener {
         y = (int) ((renderingBuffer.getHeight() - 16) * 0.5);
 
         // load physic factors
-        speed = (double)config.get("app.physic.entity.player.speed");
-        elasticity = (double)config.get("app.physic.entity.player.elasticity");
-        friction = (double)config.get("app.physic.entity.player.friction");
+        speed = (double) config.get("app.physic.entity.player.speed");
+        elasticity = (double) config.get("app.physic.entity.player.elasticity");
+        friction = (double) config.get("app.physic.entity.player.friction");
     }
 
     /**
      * Creates and initializes the main application window.
-     *
+     * <p>
      * The window's title, size, and buffer strategy are configured based on the
      * application settings obtained from the config object.
-     *
+     * <p>
      * This method sets the default close operation to exit the application when
      * the window is closed.
-     *
+     * <p>
      * Adds the current instance as a key listener to the window to handle keyboard input.
      */
     private void createWindow() {
@@ -148,7 +148,7 @@ public class MonProgrammeDemo3 extends TestGame implements KeyListener {
 
     /**
      * Handles keyboard input for controlling the movement of an object.
-     *
+     * <p>
      * This method updates the object's movement direction based on the
      * state of the arrow keys:
      * - Left arrow key decreases the horizontal speed.
@@ -174,7 +174,7 @@ public class MonProgrammeDemo3 extends TestGame implements KeyListener {
 
     /**
      * Updates the position and velocity of an object within the game area.
-     *
+     * <p>
      * This method performs the following operations:
      * - Calculates the new position based on the current velocity.
      * - Applies bounce effect if a collision with the game area's edge is detected.
@@ -201,11 +201,13 @@ public class MonProgrammeDemo3 extends TestGame implements KeyListener {
         // application du facteur de friction
         dx *= friction;
         dy *= friction;
+
+
     }
 
     /**
      * Renders the current state of the application to the screen.
-     *
+     * <p>
      * This method performs the following steps:
      * - Clears the rendering buffer and sets it to a black background.
      * - Draws a blue rectangle at the current position (x, y).
@@ -224,7 +226,8 @@ public class MonProgrammeDemo3 extends TestGame implements KeyListener {
 
         g.setColor(Color.BLUE);
         g.fillRect((int) x, (int) y, 16, 16);
-
+        g.setColor(Color.YELLOW);
+        g.drawLine((int) x+8, (int) y+8, (int) (x+8 + dx * 4), (int) (y+8 + dy * 4));
         g.dispose();
 
         // copy buffer to window.
@@ -241,7 +244,7 @@ public class MonProgrammeDemo3 extends TestGame implements KeyListener {
 
     /**
      * Disposes the main application window and outputs a termination message.
-     *
+     * <p>
      * This method performs the following actions:
      * - Calls the dispose method of the main application window to release resources and close the window.
      * - Prints a message to the console indicating that the current instance of the application has terminated.
@@ -254,7 +257,7 @@ public class MonProgrammeDemo3 extends TestGame implements KeyListener {
 
     /**
      * Runs the application.
-     *
+     * <p>
      * This method performs the following steps:
      * - Prints the application window title from the configuration.
      * - Initializes the application.
@@ -273,7 +276,7 @@ public class MonProgrammeDemo3 extends TestGame implements KeyListener {
 
     /**
      * Entry point for the application.
-     *
+     * <p>
      * This method creates an instance of MonProgrammeDemo3 and invokes its run method
      * to start the application.
      *

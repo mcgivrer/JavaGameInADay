@@ -17,7 +17,7 @@ Cette structure est assez simple et repose sur un triplet d'actions :
 
 
 .Diagramme de séquence de notre boucle de jeu
-image::https://www.plantuml.com/plantuml/svg/NOuz2WD128NxFSKhas8la6BPBkSGna9mVfXH23bz558isoYyx_FXkOocUTLjUrFb_SZvaYOcfFBbn_EQQ-yZabpmPgBWZnXamQRp1gI5_S2_PRY53f0QMZSC8b_ftKmVXOnJ1RU2Uz6Ca6VWXDT_YgpHLnwUWRpg3m00["La boucle principale"]
+image::illustrations/game-loop-uml.svg["La boucle principale"]
 
 Ce qui se résume assez bien par :
 
@@ -326,7 +326,7 @@ _**MISSION** : Nous allons donc dessiner un carré bleu de 16 pixels de côté, 
 Nous devrons donc définir quelques variables pour gérer la position, intercepter les touches pressées et modifier la position en conséquence, tout en restant dans l'espace défini par la taille de jeu.
 
 .Un carré dans l'espace (de jeu)
-image::https://docs.google.com/drawings/d/e/2PACX-1vT05-tRYGn2gW16LxyrQY8CQmzmpFPWUVspHfQZNgrSChRALuErfLhPkxLs8s5_mmsTxgIqGxaMqyjd/pub?w=595&h=385["The carré dans l'espace (de jeu)"]
+image::illustrations/game101_blue square.png["The carré dans l'espace (de jeu)"]
 
 Passons au code.
 
@@ -650,7 +650,28 @@ public class Config extends HashMap<String, Object> {
 }
 ----
 
+Ajoutons un trace du vecteur vitesse applique a notre carre bleu afin de rendre plus visuel l'effet des parametre de frictions et d'elasticite.
+
+[source,java]
+----
+private void render() {
+        //...
+        // draw something
+        //...
+        g.setColor(Color.YELLOW);
+        g.drawLine(
+                (int) x+8, (int) y+8,
+                (int) (x+8 + dx * 4), (int) (y+8 + dy * 4));
+        g.dispose();
+        //...
+    }
+----
+
+
 Executons la classe `MonProgrammeDemo3`, en deplacant le carre bleu, nous constatons qu'en cas de contact avec le bord, il rebondit dans la direction opposee.
+
+.Un peu de physique dans notre GameLoop
+image::illustrations/capture-gameloop-physic-3.png["Un peu de physique dans notre GameLoop"]
 
 == Conclusion
 
