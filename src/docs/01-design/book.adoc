@@ -1,0 +1,15 @@
+:experimental:
+:doctype: book
+= Developpons un jeu avec le JDK
+Frederic Delorme<frederic.delorme@gmail.com>
+v1.0, 2024-11-27
+
+:toc:
+
+include::100-preface.md[]
+include::102-configuration.adoc[]
+include::103-fenetre-et-boucle-de-jeu.adoc[]
+include::110-newton-s-physics.adoc[]
+include::120-add-gsystem.adoc[]
+
+== The conclusion
