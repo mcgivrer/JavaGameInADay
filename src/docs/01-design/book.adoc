@@ -1,6 +1,6 @@
 :experimental:
 :doctype: book
-= Developpons un jeu avec le JDK
+= Développons un jeu avec le JDK
 Frederic Delorme<frederic.delorme@gmail.com>
 v1.0, 2024-11-27
 

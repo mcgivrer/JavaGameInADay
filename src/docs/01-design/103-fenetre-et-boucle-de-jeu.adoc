@@ -1,9 +1,11 @@
-:experimental:
+== Fenêtre et boucle de jeu
 
-= Fenêtre et boucle de jeu
+=== Contexte
 
 Nous allons maintenant nous intéresser à l'affichage.
 Mais pour cela, nous devons mettre en place une structure de code bien connu des développeurs de jeu : la "boucle de jeu" ou "Game Loop".
+
+=== Introduction
 
 Historiquement, cette structure est héritée des premiers jeux vidéos et des contraintes techniques des années 70-80. Et nous devons bien avouer que depuis, même si les frameworks ont terriblement évolués, la notion de GameLoop a perduré, et aujourd'hui encore, elle est présente dans les gros moteurs.
 
@@ -143,7 +145,7 @@ Vous obtenez sur la console la sortie suivante :
 # MonProgrammeWinAndLoop1 est terminé.
 ----
 
-== Une fenêtre
+=== Une fenêtre
 
 Passons maintenant à l'affichage ! je vous propose pour cela d'ajouter une fenêtre à notre programme.
 Cette fenêtre sera défini en taille par une configuration.
@@ -194,7 +196,7 @@ Ainsi, sont défini le titre et la taille en pixels de la fenêtre affichée.
 
 Ajoutons maintenant un peu d'interaction, nous allons ajouter le traitement des évènements liés aux touches du clavier.
 
-=== KeyEvent et KeyListener
+==== KeyEvent et KeyListener
 
 Afin de pouvoir procéder à l'interception et au traitement des évènements clavier, nous allons implémenter dans notre classe principale `Game` l'interface `KeyListener` du JDK.
 
@@ -243,7 +245,7 @@ Ainsi lorsque la touche kbd:[ESCAPE] est relâchée, nous demandons au programme
 .La capture de la fenêtre
 image::illustrations/capture-win-loop-2.png["La capture de la fenetre"]
 
-=== Le buffer
+==== Le buffer
 
 Maintenant que nous avons une fenêtre, nous allons enfin pouvoir passer à la partie artistique !
 
@@ -418,7 +420,7 @@ public class MonProgrammeDemo1 extends TestGame implements KeyListener {
 . Nous définissons l'état de la touche pressée dans le buffer à vrai,
 . Nous définissons l'état de la touche relâchée dans le buffer à faux.
 
-== Vitesse
+=== Vitesse
 
 Nous pouvons améliorer ce code en décomposant entre l'action de touches et la mise à jour de la position en séparant le code entre `input()` et `update()`.
 C'est le moment d'introduire une notion de vitesse avec un vecteur `(dx,dy)`.
@@ -481,7 +483,7 @@ public class MonProgrammeDemo2 extends TestGame implements KeyListener {
 
 Si nous lançons l'exécution de `MonProgrammeDemo2`, nous verrons que le comportement visuel reste identique, mais les traitements sont maintenant séparés, facilitant ainsi l'évolution du code et son développement.
 
-== Un peu de Physique du mouvement
+=== Un peu de Physique du mouvement
 
 Nous pouvons pousser encore un peu plus loin notre première approche de code en intégrant un peu de physique du mouvement.
 
@@ -667,19 +669,18 @@ private void render() {
     }
 ----
 
-
-Executons la classe `MonProgrammeDemo3`, en deplacant le carre bleu, nous constatons qu'en cas de contact avec le bord, il rebondit dans la direction opposee.
+Exécutons la classe `MonProgrammeDemo3`, en déplaçant le carré bleu, nous constatons qu'en cas de contact avec le bord, il rebondit dans la direction opposée.
 
 .Un peu de physique dans notre GameLoop
 image::illustrations/capture-gameloop-physic-3.png["Un peu de physique dans notre GameLoop"]
 
-== Conclusion
+=== Conclusion
 
-Nous avons passe nos premieres ligne de code a explorer un premier programme java, en introduisant plusieurs concepts:
+Nous avons passé nos premieres ligne de code à explorer un premier programme java, en introduisant plusieurs concepts :
 
-. La boucle de jeu ou "GameLoop" decomposant le traitement des jeu en 3 principales etapes : `input()`, `update()` et `render()`.
-. La creation d'une premiere fenetre et le traitement de evennement clavier avec la classe `JFrame` et l'interface `KeyListener` proposes par le JDK,
-. L'affichage d'une forme geometrique, ici un carre bleu, que nous animons par l'interception des evenements clavier sur les touches directionnelles, le rendu etantr assure par l'API `Graphics2D` du JDK,
-. Un peu de physique du mouvement, simplifie, permettant d'appliquer une vitesse (`speed` dans notre code) sur notre carre bleu, tout en tenant compte de 2 nouveaux parametres dans le calcul de la vitesse appliquee que sont l'elasticite et la friction (`elasticity` et `friction` dans le code).
+. La boucle de jeu ou "GameLoop" décomposant le traitement des jeux en 3 principales étapes : `input()`, `update()` et `render()`.
+. La creation d'une premiere fenêtre et le traitement des évènements issus du clavier avec la classe `JFrame` et l'interface `KeyListener` proposes par le JDK,
+. L'affichage d'une forme géométrique, ici un carré bleu, que nous animons en fonction des touches directionnelles pressées, le rendu étant assuré par l'API `Graphics2D` du JDK,
+. Un peu de physique du mouvement, simplifie, permettant d'appliquer une vitesse (`speed` dans notre code) sur notre carre bleu, tout en tenant compte de 2 nouveaux paramètres dans le calcul de la vitesse appliquée que sont l'élasticité et la friction (`elasticity` et `friction` dans le code).
 
 Il est grand temps de prendre un peu de recul et de voir un peu plus grand.

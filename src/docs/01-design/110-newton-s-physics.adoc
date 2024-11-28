@@ -1,4 +1,4 @@
-= Ajoutons un peu de Physique
+== Ajoutons un peu de Physique
 
 Dans un jeu 2D, certes le gameplay est important, mais l'aspect simulation de la réalité l'est tout autant.
 
@@ -9,7 +9,7 @@ leur faire subir, du vent, une contrainte magnétique, etc …
 Votre seule limite, alors, sera votre imagination sur comment modifier les paramètre de la simulation pour apporter de
 nouveau gameplay, comme on a pu l'observer dans les jeux Mario ces dernières années.
 
-== Contexte
+=== Contexte
 
 Faisons en sorte que nos objets soient animés de façon un plus réaliste.
 Rendons plus vivante notre scène en ajoutant quelques éléments de la physique du mouvement dont Newton
@@ -29,7 +29,7 @@ Voici résumé les 3 lois de Newton :
 
 Voyons comment passer de ces belles lois à un peu de math, et à du code !
 
-== Un peu de théorie
+=== Un peu de théorie
 
 Dans un monde en deux dimensions, la vitesse ($\vec{v}$) d'un objet peut être exprimée en fonction de l'accélération (
 $\vec{a}$) et du temps ($t$) à l'aide de la formule suivante :
@@ -84,7 +84,7 @@ où :
 * $\vec{V}$ est la vitesse résultante
 * $t$ le temps écoulé depuis le précédent calcul.
 
-== Un peu de code Java
+=== Un peu de code Java
 
 Nous allons voir étape par étape, classe par classe, une solution possible d'implémentation d'un moteur de physique qui
 remplira le rôle principal d'animation et de coordination des mouvements des entités au sein d'une scene.
@@ -93,7 +93,7 @@ Nous commencerons par modéliser un objet censé bouger sur notre écran de jeu,
 construirons notre moteur physique, en implémentant fonction a près fonction l'ensemble des operations nécessaires pour
 obtenir une simulation suffisament précise pour l'emploi dans un jeu de plateforme 2D.
 
-=== Une Entité
+==== Une Entité
 
 Si maintenant, nous souhaitons modéliser nos objets animés, nous devons créer un certain nombre d'attributs permettant
 de représenter ces vecteurs et forces, ainsi que quelques attributs permettant d'identifier facilement les objets.
@@ -168,7 +168,7 @@ et d'élasticité de nos entités.
 
 Regardons d'un peu plus près maintenant l'implementation du moteur physic qui sera en charge des calculs.
 
-=== Le service PhysicEngine
+==== Le service PhysicEngine
 
 Ce que nous savons à travers les lois de Newton, c'est que le mouvement de notre Entité sera dirigé par les forces qui
 lui seront appliquées et du temps écoulé.
@@ -229,7 +229,7 @@ _fig. 3 - Calculs dans le moteur physique pour l'ensemble des entités d'une sce
 Nous avons le fondement de notre moteur de calcul. Il est temps de mettre quelques contraintes, afin de garder les
 entités dans un espace visible, et dans des limites de vitesse et d'accélération contrôlées.
 
-=== Les limites liées au jeu
+==== Les limites liées au jeu
 
 Dans l'absolue, la proposition d'implémentation pourrait suffire, mais dans la réalité, la fenêtre par laquelle nous
 regardons notre espace de jeu est limitée.
@@ -242,7 +242,7 @@ _fig. 2 - Notre Entité soumise à un ensemble de forces et limitée dans l'espa
 
 Nous allons donc passer par un autre objet qui sera attaché à notre scene, et qui définira cette limite.
 
-=== La classe World
+==== La classe World
 
 Notre nouvel object sera défini par une class World, permettant dans un premier temps de définir la zone de jeu dans
 laquelle les entités de la scène évolueront.
@@ -353,7 +353,7 @@ public class PhysicEngine {
 Voilà un moteur de physique permettant le movement des entités d'une scène dans un espace limité et contrôlé.
 Nous pouvons apporter un peu plus de réalisme en introduisant d'autres composantes dans le calcul.
 
-=== l'effet Material
+==== l'effet Material
 
 Afin de simuler au mieux les comportements de nos objets en movement, nous nous proposons d'ajouter de nouvelles notions
 liées à la physique du mouvement, à savoir la friction pour appliquer une resistance sur les délacements en contact avec
@@ -503,7 +503,7 @@ Mais nous pouvons continuer d'améliorer notre moteur en proposant d'autres poss
 Nous allons donc ajouter de nouvelles capacités à notre class World pour définir des zones d'interaction dans notre zone
 de jeu.
 
-=== Les WorldArea
+==== Les WorldArea
 
 La class World telle qu'elle existe ne définit qu'une chose, la taille de la zone de jeu. Nous allons lui adjoindre ne
 nouveaux attributs pour étendre ses effets sur les entitiés d'une scène.
@@ -580,7 +580,7 @@ public class WorldArea extends Entity<WorldArea> {
 }
 ----
 
-==== Modifions l'objet World
+===== Modifions l'objet World
 
 Nous allons définir la liste de zones d'influence dans l'object exstant. ajoutons donc une liste à cette effet:
 
@@ -619,7 +619,7 @@ public class SceneDemo {
 }
 ----
 
-==== Appliquons les effets
+===== Appliquons les effets
 
 Il est maintenant temps de procéder au calcul des effets de ces zones sur nos Entity dans le moteur physique.
 

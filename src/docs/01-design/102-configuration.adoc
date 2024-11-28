@@ -1,9 +1,9 @@
-= Configuration
+== Configuration
 
 Ce court châpitre fera le tour des besoins en configuration que nous avons et comment nous pourrons fournir
 un service permettant de gérer les entrées et les consommer.
 
-== Contexte
+=== Contexte
 
 La configuration sera servie via un fichier java ".properties".
 Les différents services et traitement internes auront le propre section dans le fichier.
@@ -15,9 +15,9 @@ Quelques règles :
  physique.
 . Pas plus de QUATRE suffixes dans le nommage, après le nom de la section correspondant au service.
 
-== Les sections
+=== Les sections
 
-=== Rendering
+==== Rendering
 
 La section rendering fournira la taille de la fenêtre d'affichage ainsi que la résolution du buffer de rendu interne.
 Ces 2 entrées seront au format `[width]x[height]`
@@ -28,14 +28,14 @@ Voici les valeurs par défaut :
 * app.render.window.size = 640x400
 * app.render.buffer.size = 320x200
 
-=== Physic
+==== Physic
 
 La section physic permettra de définir la zone de jeu ansi que la gravité
 
 * app.physic.world.play.area.size = 1080x800
 * app.physic.world.gravity = (0,-0.981)
 
-=== Scene
+==== Scene
 
 La section Scene définit la liste des implementations de `Scene` pour le jeu ainsi que la scene à activer par défaut au
 démarrage du jeu.
@@ -43,7 +43,7 @@ démarrage du jeu.
 * `app.scene.list` = play:com.snapgames.demo.scenes.PlayScene,
 * `app.scene.default` = play
 
-=== Mode test et debug
+==== Mode test et debug
 
 Certaines fonctions ne doivent être activées que dans un contexte d'exécution lié aux tests ou au débogage.
 C'est ce que permettront de configurer les clés suivantes :
@@ -60,7 +60,7 @@ C'est ce que permettront de configurer les clés suivantes :
 
 Maintenant que nous avons fait le tour des clés de configuration, nous allons passer à l'implémentation de ce service.
 
-== Implementation de la configuration
+=== Implementation de la configuration
 
 Tout d'abord, nous allons installer cette configuration dans un nouveau package que nous allons appeler
 `com.snapgames.framework.utils`.
@@ -159,7 +159,7 @@ java -cp target/demo-classes MonProgrammeConfig1
 
 ----
 
-=== initialization depuis un fichier
+==== initialization depuis un fichier
 
 Passons au plus intéressant : chargeons un fichier `*.properties` et parcourons ses valeurs afin de le typer et le
 stocker dans la map.
