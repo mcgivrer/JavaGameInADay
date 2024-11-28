@@ -1,4 +1,5 @@
 = Ajoutons un peu de Physique
+:stem:latexmath
 
 Dans un jeu 2D, certes le gameplay est important, mais l'aspect simulation de la réalité l'est tout autant.
 
@@ -31,16 +32,16 @@ Voyons comment passer de ces belles lois à un peu de math, et à du code !
 
 == Un peu de théorie
 
-Dans un monde en deux dimensions, la vitesse ($\vec{v}$) d'un objet peut être exprimée en fonction de l'accélération (
-$\vec{a}$) et du temps ($t$) à l'aide de la formule suivante :
+Dans un monde en deux dimensions, la vitesse (stem:[\vec{v}]) d'un objet peut être exprimée en fonction de l'accélération (
+stem:[\vec{a}]) et du temps (stem:[t]) à l'aide de la formule suivante :
 
-$\vec{V} = \vec{V_0} + \vec{a} * t$
+stem:[\vec{V} = \vec{V_0} + \vec{a} * t]
 
 où :
 
-* ($\vec{V_0}$) est la vitesse initiale de l'objet,
-* ($\vec{a}$) est le vecteur d'accélération,
-* ($t$) est le temps écoulé.
+* (stem:[\vec{V_0}]) est la vitesse initiale de l'objet,
+* (stem:[\vec{a}$]) est le vecteur d'accélération,
+* (stem:[t]) est le temps écoulé.
 * Cette formule indique que la vitesse à un moment donné est égale à la vitesse initiale plus la variation de vitesse
  causée par l'accélération sur une période de temps. En deux dimensions, les vecteurs peuvent être décomposés en
  composantes (x) et (y) pour chaque variable.
@@ -48,41 +49,41 @@ où :
 Dans un monde en deux dimensions, l'accélération (\vec{a}) d'un objet peut être calculée à partir des forces appliquées
 en utilisant la deuxième loi de Newton, qui s'exprime par la formule suivante :
 
-$\vec{F}_{\text{résultante}} = m * \vec{a}$
+stem:[\vec{F}_{\text{résultante}} = m * \vec{a}]
 
 où :
 
-* ($\vec{F}_{\text{résultante}}$) est la force résultante agissant sur l'objet,
-* ($m$) est la masse de l'objet,
-* ($\vec{a}$) est l'accélération de l'objet.
+* (stem:[\vec{F}_{\text{résultante}}]) est la force résultante agissant sur l'objet,
+* (stem:[m]) est la masse de l'objet,
+* (stem:[\vec{a}]) est l'accélération de l'objet.
 
 Pour calculer l'accélération, vous pouvez suivre ces étapes :
 
 . Déterminer les forces appliquées : Identifiez toutes les forces agissant sur l'objet. Cela peut inclure des forces
  telles que la gravité, la friction, la tension, etc.
 . Calculer la force résultante : Additionnez toutes les forces vectoriellement. Si vous avez des
- forces ($\vec{F_1}$), ($
- \vec{F_2}$), etc., la force résultante est donnée par :
+ forces (stem:[\vec{F_1}]), (stem:[
+ \vec{F_2}]), etc., la force résultante est donnée par :
 
-$\vec{F}_{\text{résultante}} = \vec{F_1} + \vec{F_2} + … + \vec{F_n} $
+stem:[\vec{F}_{\text{résultante}} = \vec{F_1} + \vec{F_2} + … + \vec{F_n}]
 
 . Appliquer la deuxième loi de Newton : Une fois que vous avez la force résultante, vous pouvez calculer l'accélération
  en
  réarrangeant la formule :
 
-$ \vec{a} = \vec{F}_{\text{résultante}} / m$
+stem:[\vec{a} = \vec{F}_{\text{résultante}} / m]
 
-Cette formule vous donnera l'accélération ($\vec{a}$) de l'objet en fonction des forces appliquées et de sa masse ($m$).
+Cette formule vous donnera l'accélération (stem:[\vec{a}]) de l'objet en fonction des forces appliquées et de sa masse (stem:[m]).
 
 La position résultante pour l'objet en mouvement sera alors :
 
-$\vec{P} = \vec{P_0} + 0.5 * \vec{V} * t$
+stem:[\vec{P} = \vec{P_0} + 0.5 * \vec{V} * t]
 
 où :
 
-* $\vec{P_0}$ est la position précédente connue
-* $\vec{V}$ est la vitesse résultante
-* $t$ le temps écoulé depuis le précédent calcul.
+* stem:[\vec{P_0}] est la position précédente connue
+* stem:[\vec{V}] est la vitesse résultante
+* stem:[t] le temps écoulé depuis le précédent calcul.
 
 == Un peu de code Java
 
@@ -479,15 +480,24 @@ public class PhysicEngine {
 
     public void update(Entity e, elapsed time) {
         // Calculons la somme des forces appliquées pour obtenir l'accélération résultante
-        e.setAcceleration(e.getAcceleration().addAll(e.getForces()).divide(e.getMass()));
+        e.setAcceleration(e.getAcceleration()
+            .addAll(e.getForces())
+            .divide(e.getMass()));
 
         // La vélocité et le résultat l'effet de l'accélération en fonction du temps écoulé 
-        e.setVelocity(e.getVelocity().add(e.getAcceleration()
+        e.setVelocity(e.getVelocity()
+            .add(e.getAcceleration()
                 .multiply(time)
-                .multiply(e.getContact() ? e.getMaterial().getFriction() : 1.0);
+                .multiply(
+                    e.getContact()
+                        ? e.getMaterial().getFriction()
+                        : 1.0);
 
         // la position résultante est calculée en fonction de la vitesse et du temps écoulé.
-        e.setPosition(e.getPosition().add(e.getVelocity().multiply(0.5).multiply(time)));
+        e.setPosition(e.getPosition()
+            .add(e.getVelocity()
+            .multiply(0.5)
+            .multiply(time)));
 
         // on supprime toutes les forces appliquées en attendant le prochain cycle dans la boucle de jeu.
         e.getForces().clear();
@@ -664,6 +674,6 @@ _fig. 6 - Effets de zone d'influence sur les Entités_
 Les entités sur l'image ci-dessus subissent les forces comme suit :
 
 * l'entité *E1* est soumise au vent de la WorldArea "*wind*",
-* l'entité *E2* est quant à elle soumise à l'influence de l'object WOrldArea "Effets de zone d'influence sur les
+* l'entité *E2* est quant à elle soumise à l'influence de l'objet `WorldArea` "Effets de zone d'influence sur les
  Entités",
 * alors que l'objet *E3* est lui soumis à l'influence des 2 zones que sont "*water*" et "*wind*".
