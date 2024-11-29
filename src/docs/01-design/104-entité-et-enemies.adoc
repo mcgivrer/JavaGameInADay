@@ -1,9 +1,117 @@
 = Entité et énemies
 
-Nous avons maintenant la structure de base pour notre boucle de jeu, nous pouvons essayer de passer à l'étape suivante : passer à un plus grand nombre d'objets affichés à l'écran !
+Nous avons maintenant la structure de base pour notre boucle de jeu, nous pouvons essayer de passer à l’étape suivante : passer à un plus grand nombre d’objets affichés à l’écran !
 
-Mais pour cela, nous allons devoir faire un peu de factorisation de notre code, afin de le rendre plus facile à modifier, et plus facile à gérer.
+Pour cela, nous allons devoir faire un peu de factorisation de notre code, afin de le rendre plus facile à modifier, et plus facile à gérer.
 
-C'est le moment d'introduire le concept d'Entity.
+C’est le moment d’introduire le concept d’Entity.
 
-== 
+== Ajoutons un ennemi
+
+Notre premier objet visuel est un carré bleu. Nous allons ajouter un rond rouge pour lui tenir compagnie !
+
+Nous utiliserons un emplacement choisi aléatoirement sur l’espace de jeu comme position de départ.
+
+
+Notre ennemi sera en position `(ex,ey)` avec une vitesse `(edx,edy)` et ayant les caractéristiques physiques `eElastivity` et `eFriction`. La vitesse appliquée à chaque update sera gérée à travers la variable `eSPeed`.
+
+.Ajoutons un premier ennemi dans notre programme.
+[source,java]
+----
+public class MonProgrammeEnnemi1 extends TestGame implements KeyListener {
+    //...
+
+    // variables pour le player
+    private double x, y;
+    private double dx, dy;
+    private double elasticity = 0.75;
+    private double friction = 0.98;
+    private double speed = 0.0;
+    //<1>
+    // variable pour l'ennemi
+    private double ex, ey;
+    private double edx, edy;
+    private double eElasticity = 0.75;
+    private double eFriction = 0.98;
+    private double eSpeed = 0.0;
+
+    public void initialize() {
+
+        //...
+
+        //<2>
+        // Position de départ de l'ennemi rouge
+        ex = (int) (Math.random() * (renderingBuffer.getWidth() - 16));
+        ey = (int) (Math.random() * (renderingBuffer.getHeight() - 16));
+        eSpeed = 1.0;
+        eElasticity = 0.96;
+        eFriction = 0.99;
+
+    }
+    //...
+    private void input(){
+        //...
+        // simulation pour l'ennemi qui suit le player
+        if (x+8 != ex+5) {
+            edx = Math.signum(((x+8) - (ex+5)) * 0.5 * (1 - (eSpeed / ((x+8) - (ex+5)))));
+        }
+        if (y != ey) {
+            edy = Math.signum(((y+8) - (ey+5)) * 0.5 * (1 - (eSpeed / ((y+8) - (ey+5)))));
+        }
+    }
+    private void update() {
+        //...
+        // calcul de la position du player bleu en fonction de la vitesse courante.
+        //...
+
+        // calcul de la nouvelle position de l'ennemi rouge en fonction de la vitesse courante.
+        ex += edx;
+        ey += edy;
+
+        // application du rebond si collision avec le bord de la zone de jeu
+        if (ex < -5 || ex > renderingBuffer.getWidth() - 5) {
+            edx = -edx * eElasticity;
+        }
+        if (ey < -5 || ey > renderingBuffer.getHeight() - 5) {
+            edy = -edy * eElasticity;
+        }
+
+        // repositionnement dans la zone de jeu si nécessaire
+        ex = Math.min(Math.max(ex, -5), renderingBuffer.getWidth() - 5);
+        ey = Math.min(Math.max(ey, -5), renderingBuffer.getHeight() - 5);
+        // application du facteur de friction
+        edx *= eFriction;
+        edy *= eFriction;
+    }
+
+    private void render() {
+        Graphics2D g = renderingBuffer.createGraphics();
+        // clear rendering buffer to black
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight());
+        // draw player
+        g.setColor(Color.BLUE);
+        g.fillRect((int) x, (int) y, 16, 16);
+        g.setColor(Color.YELLOW);
+        g.drawLine((int) x+8, (int) y+8, (int) (x+8 + dx * 4), (int) (y+8 + dy * 4));
+        // draw Ennemi
+        g.setColor(Color.RED);
+        g.fill(new Ellipse2D.Double((int) ex, (int) ey, 10, 10));
+        g.setColor(Color.YELLOW);
+        g.drawLine((int) ex+5, (int) ey+5, (int) (ex+5 + edx * 4), (int) (ey+5 + edy * 4));
+        //...
+    }
+    //...
+}
+----
+
+Si nous lançons l'exécution nous découvrons un nouvel acteur, un petit point rouge qui track inlassablement le player bleu.
+
+Maintenant si nous souhaitons avoir 10 ennemis rouge qui suivent notr eplayer blue, nous allons nou confronter à une complexité de code bien plus élevé et une duplication de celui-ci ! En effet, nous allons avoir besoin d'autant de variable qu'il y a d'ennemi.
+
+CEla reste envisageable mais tout changement de comportement souhaité de l'un des ennemis apportera une difficulté accrue sur la modification de code.
+
+C'est là qu'intervient la notion d'entité.
+
+En effet, que ce soit notre player bleu ou notre ennemi rouge,
+
