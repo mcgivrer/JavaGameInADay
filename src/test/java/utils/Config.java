@@ -20,11 +20,20 @@ public class Config extends HashMap<String, Object> {
     public Config(GameInterface app) {
         super();
         this.app = app;
+        //demo1
         put("app.test", false);
         put("app.debug.level", 0);
         put("app.render.window.title", "Default Title");
+        // demo2
         put("app.render.window.size", new Dimension(640, 400));
         put("app.render.buffer.size", new Dimension(320, 200));
+        put("app.render.fps", 60);
+        // demo3
+        put("app.physic.entity.player.speed", 2);
+        put("app.physic.entity.player.elasticity", 2);
+        put("app.physic.entity.player.friction", 2);
+
+        // demo4
         put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, 640, 400));
         put("app.physic.world.gravity", new Point2D.Double(0, -0.981));
         put("app.scene.default", "");
@@ -72,23 +81,24 @@ public class Config extends HashMap<String, Object> {
                             String[] values = ((String) e.getValue()).split("x");
                             put("app.render.window.size", new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
                         }
+                        case "app.render.fps" -> {
+                            put("app.render.fps", Integer.parseInt(props.getProperty("app.render.fps")));
+                        }
+                        case "app.render.buffer.strategy" -> {
+                            put("app.render.buffer.strategy", Integer.parseInt(props.getProperty("app.render.buffer.strategy")));
+                        }
                         case "app.render.buffer.size" -> {
                             String[] values = ((String) e.getValue()).split("x");
                             put("app.render.buffer.size", new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
                         }
-                        case "app.physic.world.play.area.size" -> {
-                            String[] values = ((String) e.getValue()).split("x");
-                            put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, Double.parseDouble(values[0]), Double.parseDouble(values[1])));
+                        case "app.physic.entity.player.speed" -> {
+                            put("app.physic.entity.player.speed", Double.parseDouble(props.getProperty("app.physic.entity.player.speed")));
                         }
-                        case "app.physic.world.gravity" -> {
-                            String[] values = ((String) e.getValue()).substring(((String) e.getValue()).indexOf("(") + 1, ((String) e.getValue()).lastIndexOf(")")).split(",");
-                            put("app.physic.world.gravity", new Point2D.Double(Double.parseDouble(values[0]), Double.parseDouble(values[1])));
+                        case "app.physic.entity.player.elasticity" -> {
+                            put("app.physic.entity.player.elasticity", Double.parseDouble(props.getProperty("app.physic.entity.player.elasticity")));
                         }
-                        case "app.scene.default" -> {
-                            put("app.scene.default", (String) e.getValue());
-                        }
-                        case "app.scene.list" -> {
-                            put("app.scene.list", ((String) e.getValue()).split(","));
+                        case "app.physic.entity.player.friction" -> {
+                            put("app.physic.entity.player.friction", Double.parseDouble(props.getProperty("app.physic.entity.player.friction")));
                         }
                         default -> {
                             System.out.printf("~ Unknown value for %s=%s%n", e.getKey(), e.getValue());

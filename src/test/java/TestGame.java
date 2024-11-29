@@ -1,6 +1,8 @@
 import com.snapgames.framework.GameInterface;
 
-public class TestGame implements GameInterface {
+import javax.swing.*;
+
+public class TestGame extends JPanel implements GameInterface {
     private boolean exit = false;
     private boolean pause = false;
     private int debug = 0;
