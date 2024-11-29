@@ -652,7 +652,7 @@ public class Config extends HashMap<String, Object> {
 }
 ----
 
-Ajoutons un trace du vecteur vitesse applique a notre carre bleu afin de rendre plus visuel l'effet des parametre de frictions et d'elasticite.
+Ajoutons une trace du vecteur vitesse applique à notre carré bleu afin de rendre plus visuel l'effet des paramètres de frictions et d'elasticité.
 
 [source,java]
 ----
