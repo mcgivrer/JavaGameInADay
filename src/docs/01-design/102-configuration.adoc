@@ -1,12 +1,11 @@
 = Configuration
 
-Ce court châpitre fera le tour des besoins en configuration que nous avons et comment nous pourrons fournir
-un service permettant de gérer les entrées et les consommer.
+Avant de plonger dans le cœur de notre moteur de jeu, nous devons établir un système flexible pour gérer la configuration. En nous appuyant sur un fichier `*.properties`, bien connu des développeurs Java, nous allons lire des paramètres clés, les stocker dans une map et les rendre accessibles sous une forme typée. Ce système servira de socle pour adapter facilement les comportements de notre moteur tout au long du projet.
 
 == Contexte
 
 La configuration sera servie via un fichier java ".properties".
-Les différents services et traitement internes auront le propre section dans le fichier.
+Les différents services et traitement internes auront leur propre section dans ce fichier.
 
 Quelques règles :
 

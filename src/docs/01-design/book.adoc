@@ -1,18 +1,18 @@
 = Développer mon jeu avec Java
+:experimental:
 :author: Frédéric Delorme<frederic.delorme@gmail.com>
 :version: v1.0.3
 :creationdate: 2024-11-28
 :doctype: book
 :chapter-signifier: Chapitre
 :stem:
-
-== Table of content
-
-:toc:
+:description: Document d'explication de l'implémentation des bases d'un moteur de jeu 2D.
+:toc: auto
 
 :leveloffset: +1
 
-include::100-preface.md[]
+
+include::100-preface.adoc[]
 
 include::101-foundation-OOP-and-Java.adoc[]
 

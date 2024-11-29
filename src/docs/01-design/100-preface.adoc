@@ -1,0 +1,11 @@
+= Preface
+
+Les jeux vidéo m’ont toujours fasciné. Pas seulement pour les aventures qu’ils offrent ou les souvenirs qu’ils laissent, mais pour cette magie invisible qui transforme des lignes de code en mondes vivants. Je me suis souvent demandé : Comment ça marche ? Comment un simple écran noir peut devenir un terrain de jeu où tout semble possible ?
+
+Développeur depuis 25 ans et architecte logiciel depuis 15 ans, j’ai passé une bonne partie de ma carrière à résoudre des casse-têtes techniques dans l’industrie. Mais ma vraie passion, celle qui m’a poussé à explorer, à apprendre et à bidouiller, c’est le jeu vidéo. Ce livre est une sorte de mélange : un projet personnel où mes compétences professionnelles rencontrent mon amour pour le rétro-gaming.
+
+Mon but ? Vous emmener dans les coulisses d’un jeu vidéo, pour construire ensemble un moteur 2D avec Java. Pas besoin d’outils modernes ou de bibliothèques complexes, juste AWT et Swing, les bons vieux outils du JDK. C’est simple, accessible, et parfait pour comprendre les fondamentaux : une boucle de jeu (game-loop), des entités, des scènes, des comportements, des systèmes et même une gestion des ressources. Bref, tout ce qu’il faut pour donner vie à vos idées.
+
+Pourquoi Java ? Parce que c’est une boîte à outils polyvalente que je connais par cœur, mais aussi parce que ça prouve qu’on n’a pas besoin des dernières technologies pour s’amuser et apprendre. Ce projet est une invitation à retourner à l’essentiel, à jouer avec le code comme on jouait avec des LEGO quand on était gamins.
+
+Alors, que vous soyez curieux, passionné de rétro-gaming, ou simplement en quête d’un défi créatif, ce livre est fait pour vous. Prenez votre clavier, mettez-vous à l’aise, et embarquons ensemble dans cette aventure. Vous verrez, construire un jeu vidéo, c’est un peu comme jouer à un jeu… sauf que vous êtes le créateur.
