@@ -1,0 +1,9 @@
+= Entité et énemies
+
+Nous avons maintenant la structure de base pour notre boucle de jeu, nous pouvons essayer de passer à l'étape suivante : passer à un plus grand nombre d'objets affichés à l'écran !
+
+Mais pour cela, nous allons devoir faire un peu de factorisation de notre code, afin de le rendre plus facile à modifier, et plus facile à gérer.
+
+C'est le moment d'introduire le concept d'Entity.
+
+== 
