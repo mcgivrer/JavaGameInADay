@@ -8,7 +8,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
-public class MonProgrammeEnnemi1 extends TestGame implements KeyListener {
+public class MonProgrammeEntity1 extends TestGame implements KeyListener {
     private String configFilePath = "/demo3.properties";
     private Config config;
 
@@ -54,7 +54,7 @@ public class MonProgrammeEnnemi1 extends TestGame implements KeyListener {
     private double speed = 0.0;
     private double eSpeed = 0.0;
 
-    public MonProgrammeEnnemi1() {
+    public MonProgrammeEntity1() {
         System.out.printf("# Démarrage de %s%n", this.getClass().getSimpleName());
         config = new Config(this);
         config.load(configFilePath);
@@ -180,7 +180,7 @@ public class MonProgrammeEnnemi1 extends TestGame implements KeyListener {
             dy = +speed;
         }
 
-        // simulation pour l'ennemi qui suit le player
+        // Simulation pour l’ennemi qui suit le player
         if (x+8 != ex+5) {
             edx = Math.min(Math.signum(((x+8) - (ex+5)) * 0.5 * (1 - (eSpeed / ((x+8) - (ex+5))))),2.0);
         }
@@ -326,7 +326,7 @@ public class MonProgrammeEnnemi1 extends TestGame implements KeyListener {
      * @param args Command-line arguments passed to the application.
      */
     public static void main(String[] args) {
-        MonProgrammeEnnemi1 prog = new MonProgrammeEnnemi1();
+        MonProgrammeEntity1 prog = new MonProgrammeEntity1();
         prog.run(args);
     }
 

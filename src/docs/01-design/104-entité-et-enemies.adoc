@@ -8,12 +8,13 @@ C’est le moment d’introduire le concept d’Entity.
 
 == Ajoutons un ennemi
 
-Notre premier objet visuel est un carré bleu. Nous allons ajouter un rond rouge pour lui tenir compagnie !
+Notre premier objet visuel est un carré bleu.
+Nous allons ajouter un rond rouge pour lui tenir compagnie !
 
 Nous utiliserons un emplacement choisi aléatoirement sur l’espace de jeu comme position de départ.
 
-
-Notre ennemi sera en position `(ex,ey)` avec une vitesse `(edx,edy)` et ayant les caractéristiques physiques `eElastivity` et `eFriction`. La vitesse appliquée à chaque update sera gérée à travers la variable `eSPeed`.
+Notre ennemi sera en position `(ex,ey)` avec une vitesse `(edx,edy)` et ayant les caractéristiques physiques `eElastivity` et `eFriction`.
+La vitesse appliquée à chaque update sera gérée à travers la variable `eSPeed`.
 
 .Ajoutons un premier ennemi dans notre programme.
 [source,java]
@@ -28,7 +29,7 @@ public class MonProgrammeEnnemi1 extends TestGame implements KeyListener {
     private double friction = 0.98;
     private double speed = 0.0;
     //<1>
-    // variable pour l'ennemi
+    // variable pour l’ennemi
     private double ex, ey;
     private double edx, edy;
     private double eElasticity = 0.75;
@@ -40,7 +41,7 @@ public class MonProgrammeEnnemi1 extends TestGame implements KeyListener {
         //...
 
         //<2>
-        // Position de départ de l'ennemi rouge
+        // Position de départ de l’ennemi rouge
         ex = (int) (Math.random() * (renderingBuffer.getWidth() - 16));
         ey = (int) (Math.random() * (renderingBuffer.getHeight() - 16));
         eSpeed = 1.0;
@@ -51,12 +52,12 @@ public class MonProgrammeEnnemi1 extends TestGame implements KeyListener {
     //...
     private void input(){
         //...
-        // simulation pour l'ennemi qui suit le player
+        // Simulation pour l’ennemi qui suit le player
         if (x+8 != ex+5) {
-            edx = Math.signum(((x+8) - (ex+5)) * 0.5 * (1 - (eSpeed / ((x+8) - (ex+5)))));
+            edx = Math.min(Math.signum(((x+8) - (ex+5)) * 0.5 * (1 - (eSpeed / ((x+8) - (ex+5))))),2.0);
         }
         if (y != ey) {
-            edy = Math.signum(((y+8) - (ey+5)) * 0.5 * (1 - (eSpeed / ((y+8) - (ey+5)))));
+            edy = Math.min(Math.signum(((y+8) - (ey+5)) * 0.5 * (1 - (eSpeed / ((y+8) - (ey+5))))),2.0);
         }
     }
     private void update() {
@@ -64,7 +65,7 @@ public class MonProgrammeEnnemi1 extends TestGame implements KeyListener {
         // calcul de la position du player bleu en fonction de la vitesse courante.
         //...
 
-        // calcul de la nouvelle position de l'ennemi rouge en fonction de la vitesse courante.
+        // calcul de la nouvelle position de l’ennemi rouge en fonction de la vitesse courante.
         ex += edx;
         ey += edy;
 
@@ -105,13 +106,245 @@ public class MonProgrammeEnnemi1 extends TestGame implements KeyListener {
 }
 ----
 
-Si nous lançons l'exécution nous découvrons un nouvel acteur, un petit point rouge qui track inlassablement le player bleu.
+Si nous lançons l’exécution nous découvrons un nouvel acteur, un petit point rouge qui track inlassablement le player bleu.
 
-Maintenant si nous souhaitons avoir 10 ennemis rouge qui suivent notr eplayer blue, nous allons nou confronter à une complexité de code bien plus élevé et une duplication de celui-ci ! En effet, nous allons avoir besoin d'autant de variable qu'il y a d'ennemi.
+Maintenant si nous souhaitons avoir 10 ennemis rouges qui suivent notre objet player blue, nous allons nou confronter à une complexité de code bien plus élevé et une duplication de celui-ci !
+En effet, nous allons avoir besoin d’autant de variable qu’il y a d’ennemi.
 
-CEla reste envisageable mais tout changement de comportement souhaité de l'un des ennemis apportera une difficulté accrue sur la modification de code.
+Cela reste envisageable, mais tout changement de comportement souhaité de l’un des ennemis apportera une difficulté accrue sur la modification de code.
 
-C'est là qu'intervient la notion d'entité.
+C’est là qu’intervient la notion d’entité.
 
-En effet, que ce soit notre player bleu ou notre ennemi rouge,
+En effet, que ce soit notre player bleu ou notre ennemi rouge, ils obéissent tous deux au même règle de traitement.
+Nous pouvons donc envisager sérieusement de créer un objet spécialisé pour les entités animées à l’écran.
+
+== La classe Entity
+
+Il est maintenant temps de repenser notre code pour le rendre plus compact et surtout introduire un composant réutilisable pour nos 2 types d’entités, ennemi et player.
+
+Nous allons pour cela médiler une classe Entity qui contiendra toutes les variables nécessaire pour un objet à animer à l’écran et ainsi nous pourrons créer autant d’instance de cette objet pour chacun d’eux.
+
+[source,java]
+----
+public class Entity {
+    // <1>
+    // conteur interne d’entité
+    private static long index=0;
+    // identifiant unique de l’entité
+    private long id=index++;
+    // nom de l’entité défini par défaut.
+    private String name="entity_%04d".formatted(id);
+
+    // <2>
+    // position
+    private double x,y;
+    // vélocité
+    private double dx,dy;
+    // forme et dimension
+    private Shape shape;
+
+    // <3>
+    // propriétés de matériau
+    private double elasticity=1.0;
+    private double friction=1.0;
+
+    // <4>
+    // propriété pour le rendu
+    private Color color = Color.WHITE;
+    private Color fillColor=Color.BLUE;
+}
+----
+
+Notre classe comporte plusieurs groupes d’attributs :
+
+. Le groupe d’attribut permettant l’identification de notre instance d’ `Entity`, l’ `index`, un compteur interne permettant d’alimenter l’identifiant à la création de l’instance, `id` l’identifiant unique de l’entité dans le jeu et enfin, un nom  `name`, permettant de retrouver plus facilement une entité dans le jeu,
+. Un groupe permettant de définir `position`, vitesse (`vélocity`), forme et dimension (`shape`) de l’instance de la classe `Entity`,
+. Un troisième groupe définissant certains paramètres physiques de la matière composant l’Entity, l’élasticité (`elasticity`) et la `friction`.
+. Et le dernier groupe permet de définir les couleurs, `color` et `fillColor`, utilisées lors du rendu graphique de l’entité.
+
+Si nous souhaitons créer une nouvelle instance, nous aurons besoin d’un créateur, mais aussi, et nous utiliserons une nouveauté, une API fluent permettant de créer des entités en chainant les setters.
+
+.Les setters Fluent
+[source,java]
+----
+public class Entity {
+    //...
+    // <1> getter
+    public double getElasticity() {
+        return elasticity;
+    }
+    // <2> fluent setter
+    public Entity setElasticity(double elasticity) {
+        this.elasticity = elasticity;
+        return this;
+    }
+    //...
+}
+----
+
+.Le getter standard bien connu du développeur javaiste,
+.Le setter fluent, il définit la valeur de l’attribut, puis retourne l’entité modifiée. Cela permet de chainer les appels de setters lors de la création d’objet :
+
+Dans l’exemple ci-dessous, nous créons une instance nommée 'player' et définissons l’ensemble des valeurs de ses attributes avec des setters "fluent" :
+
+.Création d’une Entity player
+[source,java]
+----
+// Création du player bleu
+        Entity player = new Entity("player")
+                .setPosition(
+                        ((renderingBuffer.getWidth() - 16) * 0.5),
+                        ((renderingBuffer.getHeight() - 16) * 0.5))
+                .setElasticity((double) config.get("app.physic.entity.player.elasticity"))
+                .setFriction((double) config.get("app.physic.entity.player.friction"))
+                .setFillColor(Color.BLUE)
+                .setShape(new Rectangle2D.Double(0, 0, 16, 16));
+----
+
+Nous allons maintenant procéder à l’adaptation des traitements de mise-à-jour et de rendu.
+
+Ajout des nouvelles variables dans le programme principal :
+
+[source,java]
+----
+public class MonProgrammeEntity2 extends TestGame implements KeyListener {
+    //...
+    private Map<String, Entity> entities = new HashMap<>();
+}
+----
+
+Nous allons modifier maintenant le code de mise à jour de la position et de la vélocité de toutes les entités déclarées dans la demo :
+
+.Calcul de la position et de la vélocité de chaque entité
+[source,java]
+----
+public class MonProgrammeEntity2 extends TestGame implements KeyListener {
+    //...
+    private void update() {
+        // parcours de l’ensemble des entités
+        entities.values().stream().forEach(e -> {
+            // calcul de la position du player bleu en fonction de la vitesse courante.
+            e.setPosition(e.getX() + e.getDx(), e.getY() + e.getDy());
+            // application du rebond si collision avec le bord de la zone de jeu
+            if (e.getX() < -8 || e.getX() > renderingBuffer.getWidth() - 8) {
+                e.setVelocity(-e.getDx() * e.getElasticity(), e.getDy());
+            }
+            if (e.getY() < -8 || e.getY() > renderingBuffer.getHeight() - 8) {
+                e.setVelocity(e.getDx(), -e.getDy() * e.getElasticity());
+            }
+
+            // repositionnement dans la zone de jeu si nécessaire
+            e.setPosition(Math.min(Math.max(e.getX(), -8), renderingBuffer.getWidth() - 8),
+                    Math.min(Math.max(e.getY(), -8), renderingBuffer.getHeight() - 8));
+
+            // application du facteur de friction
+            e.setVelocity(e.getDx() * e.getFriction(), e.getDy() * e.getFriction());
+        });
+    }
+}
+----
+
+La méthode `render` doit-elle aussi être adaptée :
+
+.Dessin de toutes les entités.
+[source,java]
+----
+public class MonProgrammeEntity2 extends TestGame implements KeyListener {
+    //...
+private void render() {
+        Graphics2D g = renderingBuffer.createGraphics();
+        //...
+
+        // <1>
+        entities.values().forEach(e -> {
+            // <2>
+            g.translate((int) e.getX(), (int) e.getY());
+            // <3>
+            g.setColor(e.getFillColor());
+            g.fill(e.getShape());
+            g.setColor(e.getColor());
+            g.drawLine((int) (e.getShape().getBounds().width * 0.5), (int) (e.getShape().getBounds().height * 0.5),
+                    (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (+e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
+            // <4>
+            g.translate((int) -e.getX(), (int) -e.getY());
+        });
+        g.dispose();
+
+        // copy buffer to window.
+        //...
+    }
+}
+----
+
+. Nous parcourons l’ensemble des entités déclaré dans la map,
+. Nous déplaçons le curseur de dessin à la position de l’instance d' `Entity` en cours,
+. Nous procédons au dessin de la forme (`shape`) de l’entité à la position demandée, nous dessinons également le vecteur 2D de la vélocité à la même position,
+. Nous ramenons le curseur à la position de départ pour tracer l’entité suivante.
+
+L’ensemble du traitement ayant été modifié pour supporter nos nouveaux objets, nous modifions maintenant la création de nos objets :
+
+.Creation des nouvelles entités au démarrage
+[source,java]
+----
+public class MonProgrammeEntity2 extends TestGame implements KeyListener {
+    //...
+public void initialize() {
+        //...
+        // Création du player bleu
+        Entity player = new Entity("player")
+                .setPosition(
+                        ((renderingBuffer.getWidth() - 16) * 0.5),
+                        ((renderingBuffer.getHeight() - 16) * 0.5))
+                .setElasticity((double) config.get("app.physic.entity.player.elasticity"))
+                .setFriction((double) config.get("app.physic.entity.player.friction"))
+                .setFillColor(Color.BLUE)
+                .setShape(new Rectangle2D.Double(0, 0, 16, 16));
+        add(player);
+
+        // Création de l’ennemi rouge
+        Entity enemy1 = new Entity("enemy_1")
+                .setPosition((Math.random() * (renderingBuffer.getWidth() - 16)), (Math.random() * (renderingBuffer.getHeight() - 16)))
+                .setElasticity(0.96)
+                .setFriction(0.99)
+                .setFillColor(Color.RED)
+                .setShape(new Ellipse2D.Double(0, 0, 10, 10));
+        add(enemy1);
+    }
+}
+----
+
+Et enfin, nous devons modifier la méthode input pour retrouver l’objet nommé _"player"_ et lui appliquer les vitesses adhoc en fonction des touches de directions pressées :
+
+.Modification de la méthode input()
+[source,java]
+----
+public class MonProgrammeEntity2 extends TestGame implements KeyListener {
+    //...
+    private void input() {
+        // <1>
+        Entity player = entities.get("player");
+        double speed = (double) config.get("app.physic.entity.player.speed");
+        // <2>
+        if (keys[KeyEvent.VK_LEFT]) {
+            player.setVelocity(-speed, player.getDy());
+        }
+        if (keys[KeyEvent.VK_RIGHT]) {
+            player.setVelocity(speed, player.getDy());
+        }
+        if (keys[KeyEvent.VK_UP]) {
+            player.setVelocity(player.getDx(), -speed);
+        }
+        if (keys[KeyEvent.VK_DOWN]) {
+            player.setVelocity(player.getDx(), speed);
+        }
+    }
+}
+----
+
+. Récupération de l’entité "player"
+. Application des vitesses en fonction des touches UP, DOWN, LEFT et RIGHT pressées.
+
+Si nous exécutons le nouveau programme "MonProgrammeEntity2", nous verrons apparaitre les mêmes entités que précédemment.
+
+Une différence de taille, si nou souhaitons créer 10 entités ennemies, il nous suffit de créer autant d’entité que nécessaire :
 
