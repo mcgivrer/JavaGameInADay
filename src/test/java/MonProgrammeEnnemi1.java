@@ -182,10 +182,10 @@ public class MonProgrammeEnnemi1 extends TestGame implements KeyListener {
 
         // simulation pour l'ennemi qui suit le player
         if (x+8 != ex+5) {
-            edx = Math.signum(((x+8) - (ex+5)) * 0.5 * (1 - (eSpeed / ((x+8) - (ex+5)))));
+            edx = Math.min(Math.signum(((x+8) - (ex+5)) * 0.5 * (1 - (eSpeed / ((x+8) - (ex+5))))),2.0);
         }
         if (y != ey) {
-            edy = Math.signum(((y+8) - (ey+5)) * 0.5 * (1 - (eSpeed / ((y+8) - (ey+5)))));
+            edy = Math.min(Math.signum(((y+8) - (ey+5)) * 0.5 * (1 - (eSpeed / ((y+8) - (ey+5))))),2.0);
         }
 
     }
