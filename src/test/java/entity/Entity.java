@@ -1,6 +1,8 @@
 package entity;
 
 import java.awt.*;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Entity {
     // conteur interne d'entité
@@ -24,6 +26,8 @@ public class Entity {
     // propriété pour le rendu
     private Color color = Color.WHITE;
     private Color fillColor = Color.BLUE;
+
+    private Map<String, Object> attributes = new ConcurrentHashMap<>();
 
     public Entity(String name) {
         this.name = name;
@@ -122,4 +126,16 @@ public class Entity {
         this.shape = shape;
         return this;
     }
+
+
+    public <T> Entity setAttribute(String attrKeyName, T attrValue) {
+        this.attributes.put(attrKeyName, attrValue);
+        return this;
+    }
+
+    public <T> T getAttribute(String attrKeyName, T defaultAttrValue) {
+        return (T) this.attributes.getOrDefault(attrKeyName, defaultAttrValue);
+    }
+
+
 }

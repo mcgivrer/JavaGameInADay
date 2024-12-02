@@ -51,25 +51,31 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
         createWindow();
         createBuffer();
 
+        createScene();
+    }
+
+    private void createScene() {
         // Création du player bleu
         Entity player = new Entity("player")
-                .setPosition(
-                        ((renderingBuffer.getWidth() - 16) * 0.5),
-                        ((renderingBuffer.getHeight() - 16) * 0.5))
-                .setElasticity((double) config.get("app.physic.entity.player.elasticity"))
-                .setFriction((double) config.get("app.physic.entity.player.friction"))
-                .setFillColor(Color.BLUE)
-                .setShape(new Rectangle2D.Double(0, 0, 16, 16));
+            .setPosition(
+                ((renderingBuffer.getWidth() - 16) * 0.5),
+                ((renderingBuffer.getHeight() - 16) * 0.5))
+            .setElasticity((double) config.get("app.physic.entity.player.elasticity"))
+            .setFriction((double) config.get("app.physic.entity.player.friction"))
+            .setFillColor(Color.BLUE)
+            .setShape(new Rectangle2D.Double(0, 0, 16, 16))
+            .setAttribute("max.speed", 2.0);
         add(player);
 
         // Création de l’ennemi rouge
         for (int i = 0; i < 10; i++) {
             Entity enemy = new Entity("enemy_%d".formatted(i))
-                    .setPosition((Math.random() * (renderingBuffer.getWidth() - 16)), (Math.random() * (renderingBuffer.getHeight() - 16)))
-                    .setElasticity(Math.random())
-                    .setFriction(Math.random())
-                    .setFillColor(Color.RED)
-                    .setShape(new Ellipse2D.Double(0, 0, 10, 10));
+                .setPosition((Math.random() * (renderingBuffer.getWidth() - 16)), (Math.random() * (renderingBuffer.getHeight() - 16)))
+                .setElasticity(Math.random())
+                .setFriction(Math.random())
+                .setFillColor(Color.RED)
+                .setShape(new Ellipse2D.Double(0, 0, 10, 10))
+                .setAttribute("max.speed", (Math.random() * player.getAttribute("max.speed", 2.0) * 0.90));
             add(enemy);
         }
     }
@@ -112,8 +118,8 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
     private void createBuffer() {
         Dimension renderBufferSize = config.get("app.render.buffer.size");
         renderingBuffer = new BufferedImage(
-                renderBufferSize.width, renderBufferSize.height,
-                BufferedImage.TYPE_INT_ARGB);
+            renderBufferSize.width, renderBufferSize.height,
+            BufferedImage.TYPE_INT_ARGB);
     }
 
     public void loop() {
@@ -167,25 +173,35 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
         // on parcourt les entités en filtrant sur celles dont le nom commence par "enemy_"
 
         entities.values().stream()
-                .filter(e -> e.getName().startsWith("enemy_"))
-                .forEach(e -> {
-                    double eSpeed = (0.5 + Math.random() * 1.5);
-                    // Simulation pour l’ennemi qui suit le player
-                    if (player.getX() + player.getShape().getBounds().width * 0.5 != e.getX() + 5) {
-                        e.setVelocity(Math.min(Math.signum(((player.getX()
-                                + player.getShape().getBounds().width * 0.5)
-                                - (e.getX() + e.getShape().getBounds().width * 0.5)) * 0.5
-                                * (1 - (eSpeed / ((player.getX() + 8) - (e.getX() + e.getShape().getBounds().width * 0.5))))), 2.0), e.getDy());
-                    }
-                    if (player.getY() + player.getShape().getBounds().width * 0.5 != e.getY() + e.getShape().getBounds().width * 0.5) {
-                        e.setVelocity(
-                                e.getDx(), Math.min(
-                                        Math.signum(
-                                        ((player.getY() + player.getShape().getBounds().width * 0.5) - (e.getY() + e.getShape().getBounds().width * 0.5)) * 0.5
-                                            * (1 - (eSpeed / ((player.getY() + player.getShape().getBounds().width * 0.5) - (e.getY() + e.getShape().getBounds().width * 0.5))))),
-                                        2.0));
-                    }
-                });
+            .filter(e -> e.getName().startsWith("enemy_"))
+            .forEach(e -> {
+                // new speed will be only a random ratio of the current one (from 50% to 110%)
+                double eSpeed = (0.5 + Math.random() * 1.1);
+
+                // Simulation pour les ennemis qui suivent le player sur l'are X,
+                // but limited to 'max.speed' attribute's value
+                double centerPlayerX = player.getX() + player.getShape().getBounds().width * 0.5;
+                double centerEnemyX = e.getX() + e.getShape().getBounds().width * 0.5;
+                double directionX = Math.signum(centerPlayerX - centerEnemyX);
+                if (directionX != 0.0) {
+                    e.setVelocity(
+                        Math.min(directionX * eSpeed * e.getAttribute("max.speed", 2.0),
+                            e.getAttribute("max.speed", 2.0)),
+                        e.getDy());
+                }
+
+                // Simulation pour les ennemis qui suivent le player sur l'are Y,
+                // but limited to 'max.speed' attribute's value
+                double centerPlayerY = player.getY() + player.getShape().getBounds().width * 0.5;
+                double centerEnemyY = e.getY() + e.getShape().getBounds().width * 0.5;
+                double directionY = Math.signum(centerPlayerY - centerEnemyY);
+                if (directionY != 0.0) {
+                    e.setVelocity(
+                        e.getDx(),
+                        Math.min(directionY * eSpeed * e.getAttribute("max.speed", 2.0),
+                            e.getAttribute("max.speed", 2.0)));
+                }
+            });
     }
 
     /**
@@ -211,7 +227,7 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
 
             // repositionnement dans la zone de jeu si nécessaire
             e.setPosition(Math.min(Math.max(e.getX(), -8), renderingBuffer.getWidth() - 8),
-                    Math.min(Math.max(e.getY(), -8), renderingBuffer.getHeight() - 8));
+                Math.min(Math.max(e.getY(), -8), renderingBuffer.getHeight() - 8));
 
             // application du facteur de friction
             e.setVelocity(e.getDx() * e.getFriction(), e.getDy() * e.getFriction());
@@ -242,7 +258,7 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
             g.fill(e.getShape());
             g.setColor(e.getColor());
             g.drawLine((int) (e.getShape().getBounds().width * 0.5), (int) (e.getShape().getBounds().height * 0.5),
-                    (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (+e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
+                (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (+e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
             g.translate((int) -e.getX(), (int) -e.getY());
         });
 
@@ -252,8 +268,8 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
         BufferStrategy bs = window.getBufferStrategy();
         Graphics gw = bs.getDrawGraphics();
         gw.drawImage(renderingBuffer, 0, 0, window.getWidth(), window.getHeight(),
-                0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight()
-                , null);
+            0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight()
+            , null);
 
         gw.dispose();
         bs.show();
