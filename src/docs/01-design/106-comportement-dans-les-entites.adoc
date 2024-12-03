@@ -1,0 +1,2 @@
+= Comportement dans les entités
+
