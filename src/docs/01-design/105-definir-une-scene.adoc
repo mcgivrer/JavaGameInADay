@@ -1,0 +1,349 @@
+= Définir une Scène
+
+Les jeux sont par défaut définis par leur game play.
+
+Le jeu en lui-même a son propre gameplay, basé sur les entrées saisies par le joueur via le clavier, la souris ou un gamepad, et ainsi commandant à l'objet dirigé parle joueur les actions à réaliser.
+
+Le jeu ne se résume pas qu’à cette phase de jeu, il y a souvent un inventaire, l'affichage d’une carte, un écran d’options, permettant la sauvegarde et our le chargement de partie, la configuration de différents éléments du jeu comme l'affichage, le son, etc...
+
+Tous ces différents types d'affichage sont en fait chacun une Scene, décrivant un ensemble d'objets visuels et de contrôles.
+
+c'est ce que la classe Scene portera comme concept : la définition des éléments interagissant au sein d'un écran, ainsi que les contrôles nécessaires à assurer le gameplay de cet écran.
+
+.La scene fait partie d’un arbre à nœuds
+image::https://www.plantuml.com/plantuml/svg/NSzD2i8m48RXVKwHfIAzG91I17VYfbuWDaCxa1zefgA8TxTfsi6u6ryU-xLD93tIvApeh8vHdc3G3mpZyLQ_nKUizHeCB4KU91fbW-_JwRK3rTA8yq-sRGSU93m9l5d_kQJVvvqz8RrAb5lQa0aEQ61p3cW89XPDqxnxdmZMd6TPSlg7_8Lioyeyz_HgB4NUhgfwuwe7skwuswiBHX9vjwfbviai5mAJ1hoPdFq2[La scene fait partie d’un arbre à nœuds]
+
+Nous allons commencer par créer notre objet `Scene`, et nous agencerons les `Scene` et `Entity` a travers un bel arbre à `Node` plus tard.
+
+== La Scène
+
+Une scene est un receptacle qui contiendra tous les objets à animer pour assurer un gameplay.
+Il est nécessaire d’avoir la liste des objets à animer, un petit nom pour pouvoir retrouver une scene parmi d’autres (et oui, plusieurs gameplay implique plusieurs scènes).
+
+.Le diagramme de classe de la Scene
+image::https://www.plantuml.com/plantuml/png/TP11oi8m44RtEKMMAV_l1KAHWXHNhdg28HdAG3e9pLHGyUxMr4N0klpUuss-BWlCian1kG0vwy4XetuehG-QOK8xo4mybeqi98JPNY2r6__lt-nsNFtVrfewQmeVKVfFQXfxYY6W4uhSrZ5uRx1ik-76NYFvueZN60BTqK1AzWmJLjRD2B9hYDCYUs99_aVYAQUOlzHJgGxPhp-z0000[]
+
+Cela se traduit par la classe java suivante :
+
+.Notre classe Scene en java
+[source,java]
+----
+import java.util.concurrent.ConcurrentHashMap;
+
+public class Scene {
+    private String name="";
+    private Map<String,Entity> entities = new ConcurrentHashMap<>();
+
+    public Scene(String name){
+        this.name=name;
+    }
+    // <1>
+    public void add(Entity entity){
+        this.entities.put(e.getName(),entity);
+    }
+    // <2>
+    public Collection<Entity> getEntities(){
+        return entities.values();
+    }
+    // <3>
+    public void initialize(Game g){}
+    // <4>
+    public void initialize(Game g){}
+    // <5>
+    public void input(Game g){}
+    // <6>
+    public void update(Game g){}
+    // <7>
+    public void dispose(Game g){}
+}
+----
+
+. La méthode `add` permet d’ajouter une entité à la scene,
+. La méthode `getEntities` retournera une collection contenant toutes les entités de la scène.
+. `getEntity` retrieve an entity from the `Scene` map,
+. `initialization` est la méthode où l’on peut préparer les resources nécessaires à la scène, par exemple charger l'image qui sera afficher en fond d'écran, la police de caractère pour afficher de beaux textes, etc...
+. `create` crée les entités nécessaires pour la scène,
+. `input`  comme dans notre programme existant, nous implémenterons le traitement des évènements du clavier,
+. `update` sert à implementer le traitement spécifique de mise-à-jour de la Scene,
+. `dispose` permet de restituer toutes les éventuelles resources qui auront été chargées lors du traitement de l'`initialization`.
+
+Nous allons revoir notre programme existant afin d’implémenter notre première Scene en intégrant le code existant.
+
+== La scène de jeu
+
+Notre scène sera la classe `PlayScene` étendant la classe `Scene`.
+
+[source,java]
+----
+public class PlayScene extends Scene{
+
+    public PlayScene(String name){
+        super(name);
+    }
+
+    public create(Game app){
+        // Création du player bleu
+        Entity player = new Entity("player")
+            .setPosition(
+                ((renderingBuffer.getWidth() - 16) * 0.5),
+                ((renderingBuffer.getHeight() - 16) * 0.5))
+            .setElasticity((double) config.get("app.physic.entity.player.elasticity"))
+            .setFriction((double) config.get("app.physic.entity.player.friction"))
+            .setFillColor(Color.BLUE)
+            .setShape(new Rectangle2D.Double(0, 0, 16, 16))
+            .setAttribute("max.speed", 2.0);
+        add(player);
+
+        // Création de l’ennemi rouge
+        for (int i = 0; i < 10; i++) {
+            Entity enemy = new Entity("enemy_%d".formatted(i))
+                .setPosition((Math.random() * (renderingBuffer.getWidth() - 16)), (Math.random() * (renderingBuffer.getHeight() - 16)))
+                .setElasticity(Math.random())
+                .setFriction(Math.random())
+                .setFillColor(Color.RED)
+                .setShape(new Ellipse2D.Double(0, 0, 10, 10))
+                .setAttribute("max.speed", (Math.random() * player.getAttribute("max.speed", 2.0) * 0.90));
+            add(enemy);
+        }
+    }
+    //...
+}
+----
+
+Nous pouvons ajouter le traitement des touches de direction :
+
+.Implementation du traitement de la méthode input
+[source,java]
+----
+public class PlayScene extends Scene{
+    //...
+    public void input(Game app){
+                Entity player = entities.get("player");
+        double speed = (double) config.get("app.physic.entity.player.speed");
+
+        if (app.isKeyPressed(KeyEvent.VK_LEFT)) {
+            player.setVelocity(-speed, player.getDy());
+        }
+        if (app.isKeyPressed(KeyEvent.VK_RIGHT)) {
+            player.setVelocity(speed, player.getDy());
+        }
+        if (app.isKeyPressed(KeyEvent.VK_UP)) {
+            player.setVelocity(player.getDx(), -speed);
+        }
+        if (app.isKeyPressed(KeyEvent.VK_DOWN)) {
+            player.setVelocity(player.getDx(), speed);
+        }
+
+        // on parcourt les entités en filtrant sur celles dont le nom commence par "enemy_"
+        getEntities().filter(e -> e.getName().startsWith("enemy_"))
+        .forEach(e -> {
+            // new speed will be only a random ratio of the current one (from 50% to 110%)
+            double eSpeed = (0.5 + Math.random() * 1.1);
+
+            // Simulation pour les ennemis qui suivent le player sur l’are X,
+            // but limited to 'max.speed' attribute's value
+            double centerPlayerX = player.getX() + player.getShape().getBounds().width * 0.5;
+            double centerEnemyX = e.getX() + e.getShape().getBounds().width * 0.5;
+            double directionX = Math.signum(centerPlayerX - centerEnemyX);
+            if (directionX != 0.0) {
+                e.setVelocity(
+                    Math.min(directionX * eSpeed * e.getAttribute("max.speed", 2.0),
+                        e.getAttribute("max.speed", 2.0)),
+                    e.getDy());
+            }
+
+            // Simulation pour les ennemis qui suivent le player sur l’axe Y,
+            // but limited to 'max.speed' attribute's value
+            double centerPlayerY = player.getY() + player.getShape().getBounds().width * 0.5;
+            double centerEnemyY = e.getY() + e.getShape().getBounds().width * 0.5;
+            double directionY = Math.signum(centerPlayerY - centerEnemyY);
+            if (directionY != 0.0) {
+                e.setVelocity(
+                    e.getDx(),
+                    Math.min(directionY * eSpeed * e.getAttribute("max.speed", 2.0),
+                        e.getAttribute("max.speed", 2.0)));
+            }
+        });
+    }
+    //...
+}
+----
+
+Par contre, nous n’avons aucune raison de déplacer le traitement des entités, l’application des lois de la physique sera bien la même quelque que soit la `Scene`.
+
+== Modifions MonProgramme
+
+Il est temps de connecter notre nouvelle Scene avec le programme principal.
+Nous allons ajouter une liste de scenes ainsi qu'une scene courante.
+
+.Initialisation de la Scene dans le MonProgrammeScene1
+[source,java]
+----
+public class MonProgrammeScene1 extends TestGame implements Game {
+    //...
+    // <1>
+    private Mapw<String,Scene> scenes = new ConcurrentHashMap<>();
+    // <2>
+    private Scene currentScene;
+
+    public initialize(){
+        //...
+        createWindow();
+        createBuffer();
+        // <3>
+        addScene(new PlayScene("play"));
+        // <4>
+        createScene();
+    }
+    //...
+}
+----
+
+. Nous avons besoin d’une map pour stocker les différentes scenes de notre jeu,
+. Ensuite, nous déclarons un attribut qui servira à stocker l’instance de Scene en cours (la scène active quoi !),
+. Nous ajoutons la ou les scènes pour notre jeu (ici, une seule, la scène `PlayScene`),
+. Et nous appelons la création (l’activation) de la scène.
+
+Ensuite, nous allons changer la façon de créer la scène, en déléguant cela à la scene elle-même au sein de la méthode `createScene`.
+
+. Initialisation et création de la scène
+
+[source,java]
+----
+public class MonProgrammeScene1 extends TestCase implements KeyListener,Game {
+    //...
+    private void createScene() {
+        // <1>
+        currentScene.initialize(this);
+        // <2>
+        currentScene.create(this);
+    }
+    //...
+}
+----
+
+. Nous commençons par initialiser la scene courante,
+. Nous demandons la création de toutes les entités.
+
+Enfin, nous allons intégrer les traitements liées à la Scene dans la boucle principale.
+
+[source,java]
+----
+public class MonProgrammeScene1 extends TestCase implements KeyListener,Game {
+    //...
+    private void input() {
+        // <1>
+        currentScene.input(this);
+    }
+    //...
+    private void update() {
+        // calcul de la position du player bleu en fonction de la vitesse courante.
+        //...
+        // <2>
+        currentScene.update(this);
+    }
+    //...
+    private void render() {
+        //...
+        // draw entities
+        currentScene.getEntities().forEach(e -> {
+            //...
+        });
+        // <3>
+        currentScene.draw(this, g);
+        g.dispose();
+        // copy buffer to window.
+        //...
+    }
+    //...
+    private void dispose() {
+        // <4>
+        currentScene.dispose(this);
+        window.dispose();
+        //...
+    }
+    //...
+}
+----
+
+. Nous commençons par traiter les inputs de la scène,
+. Nous déléguons l’appel à la mise-à-jour de la scene,
+. Ensuite, si la scène le nécessite, nous pouvons la laisser dessiner ce qu’il faut,
+. Enfin, on peut lors de la cloture du jeu, procéder à la cloture de la scène.
+
+WARNING: Vous aurez remarqué que nous utilisons dans notre scene une référence à un objet `Game`.
+En effet, comme tous nos programmes de démonstration ont un nom changeant, nous avons dû trouver un moyen d'avoir un point commun pour nos futures instances de `Scene`.
+Nous avons recours ici à une nouvelle interface mimant l'ensemble des méthodes implementée dans nos porgrammes, l'interface `Game`.
+
+.L'interface Game utilisée dans les scènes
+[source,java]
+----
+public interface Game {
+    void requestExit();
+    void setDebug(int i);
+    int getDebug();
+    boolean isDebugGreaterThan(int debugLevel);
+    boolean isNotPaused();
+    void setPause(boolean p);
+    void setExit(boolean e);
+    boolean isExitRequested();
+    BufferedImage getRenderingBuffer();
+    Config getConfig();
+    boolean isKeyPressed(int keyCode);
+}
+----
+
+Je ne détaillerai pas les méthodes, elles sont déjà présentes dans la class `MonProgrammeScene1`.
+
+== Node ?
+
+Les entités et la scène sont en fait tous des éléments d’un gameplay.
+Nous allons les agencer dans une structure organisée, où les objets auront toutes une relation parent-enfant entre la scene et les objets.
+
+Cela s’inscrit dans l’utilisation d’un arbre à nœuds, nous allons pour cela implémenter une nouvelle classe dont hériteront Entity et Scene.
+
+[source,java]
+----
+public class Node<T> extends Rectangle2D.Double {
+    // <1>
+    private static long index = 0;
+    protected long id = index++;
+    protected String name = "node_" + (id);
+    // <2>
+    private Node<?> parent = null;
+    // <3>
+    private List<Node<?>> children = new ArrayList<>();
+    //...
+
+    // <4>
+    public void add(Node<?> c) {
+        c.parent = this;
+        this.children.add(c);
+    }
+    // <5>
+    public List<Node<?>> getChildren() {
+        return children;
+    }
+}
+----
+
+. Nous allons profiter de l’occasion pour déplacer certaines fonctionnalités communes à la classe `Scene` et à la classe `Entity`; l’id, le nom et le compteur interne,
+. Enfin comme c’est un arbre, il est nécessaire d’avoir une racine pour le départ,
+. Nous aurons besoin d’ajouter des elements dans l’arbre, la méthode `add` sera notre arme,
+. Enfin, nous aurons besoin de récupérer les enfants d’un nœud, comme les entités d’une scene par exemple.
+
+[source,java]
+----
+public class Entity extends Node<Entity>{
+    //...
+}
+
+public class AbstractScene extends Node<Scene> implements Scene {
+    //...
+}
+
+----
+
+Cela simplifie nos classes et les structures d’une façon intéressante.
+
+
