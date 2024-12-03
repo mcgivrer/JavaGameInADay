@@ -1,6 +1,9 @@
-package utils;
+package behaviors;
 
-import com.snapgames.framework.entity.Entity;
+
+import entity.Entity;
+
+import java.awt.*;
 
 public interface Behavior {
     default void init(Entity e) {
@@ -15,7 +18,7 @@ public interface Behavior {
     default void update(Entity e) {
     }
 
-    default void draw(Entity e) {
+    default void draw(Graphics2D g, Entity e) {
     }
 
     default void dispose(Entity e) {

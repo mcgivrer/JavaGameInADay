@@ -1,6 +1,10 @@
 package entity;
 
+import behaviors.Behavior;
+
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,6 +32,8 @@ public class Entity {
     private Color fillColor = Color.BLUE;
 
     private Map<String, Object> attributes = new ConcurrentHashMap<>();
+
+    private List<Behavior> behaviors = new ArrayList<>();
 
     public Entity(String name) {
         this.name = name;
@@ -137,5 +143,13 @@ public class Entity {
         return (T) this.attributes.getOrDefault(attrKeyName, defaultAttrValue);
     }
 
+    public List<Behavior> getBehaviors() {
+        return this.behaviors;
+    }
+
+    public Entity add(Behavior b) {
+        this.behaviors.add(b);
+        return this;
+    }
 
 }
