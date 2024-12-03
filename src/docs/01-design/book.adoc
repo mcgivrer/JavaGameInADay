@@ -14,11 +14,13 @@
 
 include::100-preface.adoc[]
 
-include::101-foundation-OOP-and-Java.adoc[]
+include::101-fondation-OOP-et-java.adoc[]
 
 include::102-configuration.adoc[]
 
 include::103-fenetre-et-boucle-de-jeu.adoc[]
+
+include::104-entité-et-enemies.adoc[]
 
 include::110-newton-s-physics.adoc[]
 
