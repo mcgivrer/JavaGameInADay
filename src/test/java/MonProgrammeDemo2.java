@@ -1,3 +1,4 @@
+import game.TestGame;
 import utils.Config;
 
 import javax.swing.*;
@@ -8,7 +9,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 /**
- * MonProgrammeDemo2 is a demonstration program that extends the TestGame
+ * MonProgrammeDemo2 is a demonstration program that extends the game.TestGame
  * framework and implements the KeyListener interface.
  * This class is responsible for initializing a graphical window,
  * handling user input via keyboard events, running the main game loop,

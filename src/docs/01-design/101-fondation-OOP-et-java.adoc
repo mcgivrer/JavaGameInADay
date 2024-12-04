@@ -176,9 +176,7 @@ Par exemple, nous pouvons traiter différents types de véhicules de manière un
 [source,java]
 ----
 Vehicle myCar = new Car();
-myCar.
-
-start(); // Appelle la méthode start() de Car
+myCar.start(); // Appelle la méthode start() de Car
 ----
 
 ==== Encapsulation de Comportements :
