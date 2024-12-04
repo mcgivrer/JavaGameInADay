@@ -2,20 +2,15 @@ package entity;
 
 import behaviors.Behavior;
 
+import utils.Node;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Entity {
-    // conteur interne d'entité
-    private static long index = 0;
-    // identifiant unique de l’entité
-    private long id = index++;
-    // nom de l’entité défini par défaut.
-    private String name = "entity_%04d".formatted(id);
-
+public class Entity extends Node<Entity> {
     // position
     private double x, y;
     // vélocité
@@ -36,28 +31,7 @@ public class Entity {
     private List<Behavior> behaviors = new ArrayList<>();
 
     public Entity(String name) {
-        this.name = name;
-    }
-
-    public static long getIndex() {
-        return index;
-    }
-
-    public static void setIndex(long index) {
-        Entity.index = index;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Entity setName(String name) {
-        this.name = name;
-        return this;
+        super(name);
     }
 
     public double getX() {

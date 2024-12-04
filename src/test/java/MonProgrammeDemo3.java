@@ -1,3 +1,4 @@
+import game.TestGame;
 import utils.Config;
 
 import javax.swing.*;
@@ -8,7 +9,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 /**
- * MonProgrammeDemo3 is a demo game application extending TestGame and implementing KeyListener.
+ * MonProgrammeDemo3 is a demo game application extending game.TestGame and implementing KeyListener.
  * It includes functionalities for initializing game configurations, handling keyboard inputs,
  * updating game states, rendering frames, and executing the game loop.
  */
