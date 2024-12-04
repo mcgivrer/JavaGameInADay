@@ -1,3 +1,4 @@
+import game.TestGame;
 import utils.Config;
 
 public class MonProgrammeWinAndLoop1 extends TestGame {

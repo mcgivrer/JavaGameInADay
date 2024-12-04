@@ -1,3 +1,4 @@
+import game.TestGame;
 import utils.Config;
 
 import javax.swing.*;
