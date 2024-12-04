@@ -1,32 +1,30 @@
-import entity.Entity;
 import game.Game;
 import game.TestGame;
+import scenes.PlayBehaviorScene;
+import scenes.Scene;
 import utils.Config;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game {
-    private String configFilePath = "/demo3.properties";
-    private Config config;
+    private String configFilePath = "/behavior1.properties";
 
     private boolean testMode = false;
     private int maxLoopCount = 1;
     private JFrame window;
     private BufferedImage renderingBuffer;
 
-    private boolean[] keys = new boolean[1024];
+    private final boolean[] keys = new boolean[1024];
 
-    private Map<String, Entity> entities = new HashMap<>();
-
+    private final Map<String, Scene> scenes = new HashMap<>();
+    private Scene currentScene;
 
     public MonProgrammeBehavior1() {
         System.out.printf("# Démarrage de %s%n", this.getClass().getSimpleName());
@@ -53,44 +51,21 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
         createWindow();
         createBuffer();
 
+        addScene(new PlayBehaviorScene("play"));
         createScene();
     }
 
-    private void createScene() {
-        // Création du player bleu
-        Entity player = new Entity("player")
-                .setPosition(
-                        ((renderingBuffer.getWidth() - 16) * 0.5),
-                        ((renderingBuffer.getHeight() - 16) * 0.5))
-                .setElasticity((double) config.get("app.physic.entity.player.elasticity"))
-                .setFriction((double) config.get("app.physic.entity.player.friction"))
-                .setFillColor(Color.BLUE)
-                .setShape(new Rectangle2D.Double(0, 0, 16, 16))
-                .setAttribute("max.speed", 2.0);
-        add(player);
-
-        // Création de l’ennemi rouge
-        for (int i = 0; i < 10; i++) {
-            Entity enemy = new Entity("enemy_%d".formatted(i))
-                    .setPosition((Math.random() * (renderingBuffer.getWidth() - 16)), (Math.random() * (renderingBuffer.getHeight() - 16)))
-                    .setElasticity(Math.random())
-                    .setFriction(Math.random())
-                    .setFillColor(Color.RED)
-                    .setShape(new Ellipse2D.Double(0, 0, 10, 10))
-                    .setAttribute("max.speed", (Math.random() * player.getAttribute("max.speed", 2.0) * 0.90));
-            add(enemy);
+    private void addScene(Scene s) {
+        if (this.scenes.isEmpty()) {
+            this.currentScene = s;
         }
+        this.scenes.put(s.getName(), s);
     }
 
-    private void add(Entity e) {
-        entities.put(e.getName(), e);
-
-        // Initialisation des comportements pour la nouvelle entité
-        e.getBehaviors().forEach(b -> b.init(e));
-
-        // Execution de la creation des comportements dans l'entité.
-        e.getBehaviors().forEach(b -> b.create(e));
-
+    private void createScene() {
+        currentScene.initialize(this);
+        currentScene.create(this);
+        currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.init(e)));
     }
 
     /**
@@ -163,56 +138,8 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
      * - Down arrow key increases the vertical speed.
      */
     private void input() {
-        Entity player = entities.get("player");
-        double speed = (double) config.get("app.physic.entity.player.speed");
-
-        if (keys[KeyEvent.VK_LEFT]) {
-            player.setVelocity(-speed, player.getDy());
-        }
-        if (keys[KeyEvent.VK_RIGHT]) {
-            player.setVelocity(speed, player.getDy());
-        }
-        if (keys[KeyEvent.VK_UP]) {
-            player.setVelocity(player.getDx(), -speed);
-        }
-        if (keys[KeyEvent.VK_DOWN]) {
-            player.setVelocity(player.getDx(), speed);
-        }
-
-        // on parcourt les entités en filtrant sur celles dont le nom commence par "enemy_"
-
-        entities.values().stream()
-                .filter(e -> e.getName().startsWith("enemy_"))
-                .forEach(e -> {
-                    // new speed will be only a random ratio of the current one (from 50% to 110%)
-                    double eSpeed = (0.5 + Math.random() * 1.1);
-
-                    // Simulation pour les ennemis qui suivent le player sur l'are X,
-                    // but limited to 'max.speed' attribute's value
-                    double centerPlayerX = player.getX() + player.getShape().getBounds().width * 0.5;
-                    double centerEnemyX = e.getX() + e.getShape().getBounds().width * 0.5;
-                    double directionX = Math.signum(centerPlayerX - centerEnemyX);
-                    if (directionX != 0.0) {
-                        e.setVelocity(
-                                Math.min(directionX * eSpeed * e.getAttribute("max.speed", 2.0),
-                                        e.getAttribute("max.speed", 2.0)),
-                                e.getDy());
-                    }
-
-                    // Simulation pour les ennemis qui suivent le player sur l'are Y,
-                    // but limited to 'max.speed' attribute's value
-                    double centerPlayerY = player.getY() + player.getShape().getBounds().width * 0.5;
-                    double centerEnemyY = e.getY() + e.getShape().getBounds().width * 0.5;
-                    double directionY = Math.signum(centerPlayerY - centerEnemyY);
-                    if (directionY != 0.0) {
-                        e.setVelocity(
-                                e.getDx(),
-                                Math.min(directionY * eSpeed * e.getAttribute("max.speed", 2.0),
-                                        e.getAttribute("max.speed", 2.0)));
-                    }
-                });
-
-        entities.values().stream().forEach(e -> e.getBehaviors().forEach(b -> b.input(e)));
+        currentScene.input(this);
+        currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.input(e)));
     }
 
     /**
@@ -226,7 +153,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
      */
     private void update() {
         // calcul de la position du player bleu en fonction de la vitesse courante.
-        entities.values().stream().forEach(e -> {
+        currentScene.getEntities().forEach(e -> {
             e.setPosition(e.getX() + e.getDx(), e.getY() + e.getDy());
             // application du rebond si collision avec le bord de la zone de jeu
             if (e.getX() < -8 || e.getX() > renderingBuffer.getWidth() - 8) {
@@ -242,10 +169,9 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
 
             // application du facteur de friction
             e.setVelocity(e.getDx() * e.getFriction(), e.getDy() * e.getFriction());
-
-            // Application des comportements de mise-à-jour sur cette entité.
             e.getBehaviors().forEach(b -> b.update(e));
         });
+        currentScene.update(this);
     }
 
     /**
@@ -266,7 +192,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
         g.fillRect(0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight());
 
         // draw entities
-        entities.values().forEach(e -> {
+        currentScene.getEntities().forEach(e -> {
             g.translate((int) e.getX(), (int) e.getY());
             g.setColor(e.getFillColor());
             g.fill(e.getShape());
@@ -274,9 +200,10 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
             g.drawLine((int) (e.getShape().getBounds().width * 0.5), (int) (e.getShape().getBounds().height * 0.5),
                     (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (+e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
             g.translate((int) -e.getX(), (int) -e.getY());
-
+            // Exécuter les comportements de dessin pour cette instance d'Entity.
             e.getBehaviors().forEach(b -> b.draw(g, e));
         });
+        currentScene.draw(this, g);
 
         g.dispose();
 
@@ -300,6 +227,9 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
      * - Prints a message to the console indicating that the current instance of the application has terminated.
      */
     private void dispose() {
+        currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.dispose(e)));
+
+        currentScene.dispose(this);
         window.dispose();
         System.out.printf("# %s est terminé.%n", this.getClass().getSimpleName());
     }
@@ -363,5 +293,15 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             this.requestExit();
         }
+    }
+
+
+    @Override
+    public boolean isKeyPressed(int keyCode) {
+        return keys[keyCode];
+    }
+
+    public BufferedImage getRenderingBuffer() {
+        return this.renderingBuffer;
     }
 }
