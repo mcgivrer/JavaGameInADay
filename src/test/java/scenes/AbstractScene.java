@@ -6,29 +6,30 @@ import utils.Node;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public abstract class AbstractScene extends Node<Scene> implements Scene {
 
-    private String name = "";
-    private Map<String, Entity> entities = new ConcurrentHashMap<>();
-
     public AbstractScene(String name) {
-        this.name = name;
+        super(name);
     }
 
     // <1>
     public void add(Entity entity) {
-        this.entities.put(entity.getName(), entity);
+        super.add(entity);
     }
 
     // <2>
     public Collection<Entity> getEntities() {
-        return entities.values();
+        return getChildren().stream()
+                .filter(Entity.class::isInstance) // Filtrer les objets de type Entity
+                .map(Entity.class::cast)         // Les convertir en Entity
+                .collect(Collectors.toList());
     }
 
     // <3>
     public Entity getEntity(String name) {
-        return entities.get(name);
+        return (Entity) getChildren().stream().filter(c -> c.getName().equals(name)).findFirst().get();
     }
 
 }
