@@ -48,6 +48,7 @@ public class PlayBehaviorScene extends AbstractScene {
                 });
         add(player);
 
+        double maxEnemySpeedRatio =  app.getConfig().get("app.physic.entity.enemy.max.speed.ratio");
         // Création de l’ennemi rouge
         for (int i = 0; i < 10; i++) {
             Entity enemy = new Entity("enemy_%d".formatted(i))
@@ -56,7 +57,7 @@ public class PlayBehaviorScene extends AbstractScene {
                     .setFriction(Math.random())
                     .setFillColor(Color.RED)
                     .setShape(new Ellipse2D.Double(0, 0, 10, 10))
-                    .setAttribute("max.speed", (Math.random() * player.getAttribute("max.speed", 2.0) * 0.90))
+                    .setAttribute("max.speed", (Math.random() * player.getAttribute("max.speed", 2.0) * maxEnemySpeedRatio))
                     // On ajoute le comportement de suivi de l'instance d'Entity "player"
                     .add(new Behavior() {
                         @Override

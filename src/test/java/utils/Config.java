@@ -100,6 +100,9 @@ public class Config extends HashMap<String, Object> {
                         case "app.physic.entity.player.friction" -> {
                             put("app.physic.entity.player.friction", Double.parseDouble(props.getProperty("app.physic.entity.player.friction")));
                         }
+                        case "app.physic.entity.enemy.max.speed.ratio" -> {
+                            put("app.physic.entity.enemy.max.speed.ratio", Double.parseDouble(props.getProperty("app.physic.entity.enemy.max.speed.ratio")));
+                        }
                         default -> {
                             System.out.printf("~ Unknown value for %s=%s%n", e.getKey(), e.getValue());
                         }
