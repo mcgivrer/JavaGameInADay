@@ -11,10 +11,23 @@ import java.awt.geom.Rectangle2D;
 
 public class PlayBehaviorScene extends AbstractScene {
 
+    /**
+     * Constructs an instance of PlayBehaviorScene with the specified name.
+     *
+     * @param name the name of the scene to be created
+     */
     public PlayBehaviorScene(String name) {
         super(name);
     }
 
+    /**
+     * Initializes the entities within the game scene including the player and enemies,
+     * and sets up their behaviors and attributes.
+     *
+     * @param app the Game instance providing context, configuration, and rendering buffer.
+     *            It is used to determine rendering dimensions and retrieve configuration
+     *            settings for entity attributes such as elasticity, friction, and speed.
+     */
     public void create(Game app) {
         // Création du player bleu
         Entity player = new Entity("player")

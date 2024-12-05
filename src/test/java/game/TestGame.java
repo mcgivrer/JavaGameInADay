@@ -6,6 +6,15 @@ import utils.Config;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * The {@code TestGame} class represents a basic framework for a game application,
+ * implementing both {@code GameInterface} and {@code Game}.
+ * It extends {@code JPanel} to provide a graphical surface for rendering.
+ *
+ * This class includes functionality for managing game states such as exit and pause,
+ * as well as debugging options. It also provides access to configuration settings
+ * and a rendering buffer for the graphical output.
+ */
 public class TestGame extends JPanel implements GameInterface, Game{
     private boolean exit = false;
     private boolean pause = false;
@@ -64,6 +73,13 @@ public class TestGame extends JPanel implements GameInterface, Game{
         return this.config;
     }
 
+    /**
+     * Checks if the specified key is currently pressed.
+     *
+     * @param keyCode the integer code of the key to check, typically one of the
+     *                constants defined in {@code java.awt.event.KeyEvent}.
+     * @return true if the key corresponding to the specified keyCode is pressed, false otherwise.
+     */
     @Override
     public boolean isKeyPressed(int keyCode) {
         return false;
