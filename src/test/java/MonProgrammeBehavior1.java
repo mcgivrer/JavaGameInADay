@@ -173,6 +173,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
         currentScene.initialize(this);
         currentScene.create(this);
         currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.init(e)));
+        currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.create(e)));
     }
 
     /**
@@ -363,7 +364,6 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
         System.out.printf("# %s est terminé.%n", this.getClass().getSimpleName());
     }
 
-
     /**
      * Runs the application.
      * <p>
@@ -423,7 +423,6 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
             this.requestExit();
         }
     }
-
 
     /**
      * Determines if the specified key is currently pressed.

@@ -1,6 +1,5 @@
 package game;
 
-import com.snapgames.framework.GameInterface;
 import utils.Config;
 
 import javax.swing.*;
@@ -15,7 +14,7 @@ import java.awt.image.BufferedImage;
  * as well as debugging options. It also provides access to configuration settings
  * and a rendering buffer for the graphical output.
  */
-public class TestGame extends JPanel implements GameInterface, Game{
+public class TestGame extends JPanel implements Game{
     private boolean exit = false;
     private boolean pause = false;
     private int debug = 0;

@@ -1,14 +1,14 @@
 package utils;
 
-import com.snapgames.framework.GameInterface;
 import game.Game;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 /**
@@ -25,7 +25,7 @@ public class Config extends HashMap<String, Object> {
      * such as starting, pausing, exiting, and managing the game's debug state.
      * It is initialized once and is immutable.
      */
-    private final game.Game app;
+    private final Game app;
 
     /**
      * Stores the configuration properties for the application.
