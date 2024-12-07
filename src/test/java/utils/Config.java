@@ -1,23 +1,54 @@
 package utils;
 
-import com.snapgames.framework.GameInterface;
+import game.Game;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
+/**
+ * Config class extends HashMap to store configuration parameters for an application
+ * defined by GameInterface. It supports loading configuration from a properties
+ * file and parsing command-line arguments to modify configuration settings.
+ * The class initializes with a set of default values for various application
+ * settings such as render options, physics parameters, and debug levels.
+ */
 public class Config extends HashMap<String, Object> {
-    private final com.snapgames.framework.GameInterface app;
+    /**
+     * Represents an instance of the game application conforming to the
+     * GameInterface. This variable provides methods to control game execution,
+     * such as starting, pausing, exiting, and managing the game's debug state.
+     * It is initialized once and is immutable.
+     */
+    private final Game app;
 
+    /**
+     * Stores the configuration properties for the application.
+     * This variable is used to load, parse, and access various configuration settings
+     * that are defined in the properties file. These settings include application
+     * specific parameters such as rendering options, debugging levels, and physical
+     * properties related to game entities.
+     * <p>
+     * The properties stored in this variable can be accessed and modified within
+     * the class to configure the behavior and initialization state of the application.
+     */
     private final Properties props = new Properties();
 
+    /**
+     * The file path to the configuration properties file used by the application.
+     * This path is utilized to locate and load the necessary configuration
+     * properties that dictate the application's behavior and setup. The default
+     * value points to the "config.properties" file located at the root of the
+     * application's classpath.
+     */
     private String configFilePath = "/config.properties";
 
-    public Config(GameInterface app) {
+    public Config(Game app) {
         super();
         this.app = app;
         //demo1
@@ -99,6 +130,9 @@ public class Config extends HashMap<String, Object> {
                         }
                         case "app.physic.entity.player.friction" -> {
                             put("app.physic.entity.player.friction", Double.parseDouble(props.getProperty("app.physic.entity.player.friction")));
+                        }
+                        case "app.physic.entity.enemy.max.speed.ratio" -> {
+                            put("app.physic.entity.enemy.max.speed.ratio", Double.parseDouble(props.getProperty("app.physic.entity.enemy.max.speed.ratio")));
                         }
                         default -> {
                             System.out.printf("~ Unknown value for %s=%s%n", e.getKey(), e.getValue());
