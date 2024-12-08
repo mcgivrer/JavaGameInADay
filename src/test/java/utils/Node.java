@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @param <T> the type of the node
  */
-public class Node<T> {
+public class Node<T> extends Rectangle2D.Double {
     /**
      * A static variable that serves as a global index counter for instances of the
      * Node class. This variable is incremented with each instantiation of a Node,
@@ -37,7 +37,7 @@ public class Node<T> {
      * Represents the parent node of the current node in a tree structure. This variable allows for
      * hierarchical relationships between nodes, enabling navigation and traversal of the tree
      * from child nodes back to their parent nodes.
-     *
+     * <p>
      * The parent node is initially set to null, indicating that the current node is the root
      * or has not yet been added to a tree structure. Once the node is attached to a parent,
      * this variable is updated to reference the respective parent node, facilitating tree
