@@ -4,6 +4,7 @@ import behaviors.Behavior;
 import game.Game;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
 /**
  * The Camera class represents a camera entity within a game or graphical application,
@@ -54,16 +55,8 @@ public class Camera extends Entity {
         return this;
     }
 
-    /**
-     * Updates the position of the camera based on the target's position, the defined tween factor,
-     * and the elapsed time, allowing for smooth transitions.
-     *
-     * @param elapsed the time elapsed since the last update call, influencing the amount of movement
-     */
-    public void update(double elapsed) {
-        this.x = this.x + (((target.x - this.x) - (this.getBounds2D().getWidth() - target.width) * 0.5) * tweenFactor * elapsed);
-        this.y = this.y + (((target.y - this.y) - (this.getBounds2D().getHeight() - target.height) * 0.5) * tweenFactor * elapsed);
-
+    public Rectangle2D getViewport() {
+        return this;
     }
 
     /**
@@ -76,4 +69,18 @@ public class Camera extends Entity {
         this.setRect(x, y, vp.width, vp.height);
         return this;
     }
+
+    /**
+     * Updates the position of the camera based on the target's position, the defined tween factor,
+     * and the elapsed time, allowing for smooth transitions.
+     *
+     * @param elapsed the time elapsed since the last update call, influencing the amount of movement
+     */
+    public void update(double elapsed) {
+        this.x = this.x + (((target.x - this.x) - (this.getBounds2D().getWidth() - target.width) * 0.5) * tweenFactor * elapsed);
+        this.y = this.y + (((target.y - this.y) - (this.getBounds2D().getHeight() - target.height) * 0.5) * tweenFactor * elapsed);
+
+    }
+
+
 }

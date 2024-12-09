@@ -1,2 +1,123 @@
 = Camera, Monde et Aire de jeu
 
+La caméra est le moyen le plus simple et bizarrement le plus imagé, pour suivre une autre entité à l'écran.
+
+En effet, comme au cinéma la caméra va suivre le héros dans ses actions, dans le jeu, elle suivra le personnage dirigé par le joueur, comme lors d'une scène d'action dans un film.
+
+Nous allons donc devoir implementer un nouvel objet qui se comportera comme une caméra de cinéma, à savoir qu'elle devra suivre une cible (`target`), qu'elle aura un cadre précis défini (`viewport`) et qu'elle suivra la cibla vec un certaine souplesse, définie par un facteur numérique (`tweenFactor`).
+
+Elle fera partie, comme les autres entités, de la scène.
+Plusieurs caméras pourront être définies et activées à la demande chacune leur tour.
+
+Ainsi pourra être fait un jeu "d'angles de vues" pour rendre une action plus dynamique quand cela est nécessaire : par exemple faire le focus l'espace de quelques secondes sur un élement important de la scène, ou sur un énnemi, un objet particulier.
+
+== L'objet Camera
+
+Avec tous les éléments décrits précédemment, nous pouvons maintenant imaginer notre object `Camera`.
+
+.Les attributs de notre Camera
+[source,java]
+----
+public class Camera extends Entity{
+    // <1>
+    private Entity target=null;
+    // <2>
+    private Rectangle2D viewport=new Rectangle2D.Double(0,0,320.0,200.0);
+    // <3>
+    private double tweenFactor=1.0;
+}
+----
+
+. **target** : On retrouve donc la cible pointée par la caméra,
+. **viewport** : le cadre de a caméra,
+. **tweenFactor** : le facteur de vitesse de suivi de la cible.
+
+Nous ajoutons un constructeur qui appelle le constructeur parent :
+
+.Le constructeur unique
+[source,java]
+----
+public class Camera extends Entity{
+    //...
+    public Camera(String name){
+        super(name);
+    }
+    //...
+}
+----
+
+Et nous ajouterons bien sûr les indispensables getters et setters respectant le concept de Fluent API.
+
+.Les getters et les Fluent API setters
+[source,java]
+----
+public class Camera extends Entity{
+    //...
+    public Entity getTarget() {
+        return target;
+    }
+
+    public Camera setTarget(Entity target) {
+        this.target = target;
+        return this;
+    }
+
+    public double getTweenFactor() {
+        return tweenFactor;
+    }
+
+    public Camera setTweenFactor(double tweenFactor) {
+        this.tweenFactor = tweenFactor;
+        return this;
+    }
+
+    public double getRotation() {
+        return rotation;
+    }
+
+    public Camera setRotation(double rotation) {
+        this.rotation = rotation;
+        return this;
+    }
+
+    public Rectangle2D getViewport() {
+        return this;
+    }
+
+    public Camera setViewport(Dimension vp) {
+        this.setRect(x, y, vp.width, vp.height);
+        return this;
+    }
+    //...
+}
+----
+
+Et enfin, il est important de mettre à jour la position de la caméra en fonction de la cible visée.
+Nous allons donc ajouter une méthode `update` "maison" :
+
+.Mise à jour de la position de la Camera en fonction de la position de la cible
+[source,java]
+----
+public class Camera extends Entity{
+    //...
+    public void update(double elapsed) {
+
+        this.x = this.x + (((target.x - this.x) - (this.getBounds2D().getWidth() - target.width) * 0.5) * tweenFactor * elapsed);
+
+        this.y = this.y + (((target.y - this.y) - (this.getBounds2D().getHeight() - target.height) * 0.5) * tweenFactor * elapsed);
+    }
+    //...
+}
+----
+
+On positionne le centre du `viewport` de la caméra à la position du centre de la cible (`target`), mais avec un ratio `tweenFactor` de la distance restante en fonction du temps passé depuis le précédent appel, ce qui donne un effet plus doux sur le déplacement.
+
+.Illustration de la caméra fixant une cible ayant un cadre et un facteur de suivi.
+image::https://docs.google.com/drawings/d/1RJLlUeiRI00_wCWQTIliH7ibnY-BR-ppp_xtJL0O6EM/pub?w=500&h=300[]
+
+Sur l'illustration ci-dessus, imaginer que le `tweenFactor` est un ressort avec amortisseur, reliant la cible et la caméra.
+
+Plus le `tweenfactor` est élevé (proche de 1) et moins il y a d'amortissement et de douceur.
+
+Plus le `tweenFactor` s'approche de 0.0 et moins la propension à la promptitude de la caméra à suivre la cible est forte. En clair et en décrypté : il aura donc un délai plus long à suivre la cible avec une valeur proche de zéro.
+
