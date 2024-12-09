@@ -49,7 +49,7 @@ public class Entity extends Node<Entity> {
     private Shape shape;
 
     // propriétés de matériau
-    private Material material;
+    private Material material = Material.DEFAULT;
 
     // propriété pour le rendu
     private Color color = Color.WHITE;

@@ -6,6 +6,7 @@ package physic;
  * modify these physical properties of the material.
  */
 public class Material {
+    public static final Material DEFAULT = new Material("default", 1.0, 1.0, 1.0);
     private String name;
     private double density;
     private double elasticity;
@@ -14,10 +15,10 @@ public class Material {
     /**
      * Constructs a new Material with specified physical properties.
      *
-     * @param name the name of the material
-     * @param density the density of the material
+     * @param name       the name of the material
+     * @param density    the density of the material
      * @param elasticity the elasticity of the material
-     * @param friction the friction coefficient of the material
+     * @param friction   the friction coefficient of the material
      */
     public Material(String name, double density, double elasticity, double friction) {
         this.name = name;

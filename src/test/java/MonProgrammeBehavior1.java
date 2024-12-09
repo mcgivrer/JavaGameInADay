@@ -392,7 +392,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
      * @param args Command-line arguments passed to the application.
      */
     public static void main(String[] args) {
-        MonProgrammeCamera1 prog = new MonProgrammeCamera1();
+        MonProgrammeBehavior1 prog = new MonProgrammeBehavior1();
         prog.run(args);
     }
 

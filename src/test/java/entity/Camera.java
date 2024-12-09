@@ -10,10 +10,10 @@ public class Camera extends Entity {
     private Entity target = null;
     private double tweenFactor = 1.0;
     private double rotation = 0.0;
-    private Dimension viewport = new Dimension(320, 200);
 
     public Camera(String name) {
         super(name);
+        setShape(new Rectangle(0, 0, 320, 200));
     }
 
 
@@ -44,12 +44,14 @@ public class Camera extends Entity {
         return this;
     }
 
-    public void update(Game app, double elapsed) {
-        setPosition(target.getX(), target.getY());
+    public void update(double elapsed) {
+        this.x = this.x + (((target.x - this.x) - (this.getBounds2D().getWidth() - target.width) * 0.5) * tweenFactor * elapsed);
+        this.y = this.y + (((target.y - this.y) - (this.getBounds2D().getHeight() - target.height) * 0.5) * tweenFactor * elapsed);
+
     }
 
     public Camera setViewport(Dimension vp) {
-        this.viewport = vp;
+        this.setRect(x, y, vp.width, vp.height);
         return this;
     }
 }

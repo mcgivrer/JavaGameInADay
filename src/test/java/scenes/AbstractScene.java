@@ -1,8 +1,11 @@
 package scenes;
 
 import entity.Entity;
+import physic.World;
 import utils.Node;
 
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -12,6 +15,7 @@ import java.util.stream.Collectors;
  * extend this class to leverage the basic entity management operations provided here.
  */
 public abstract class AbstractScene extends Node<Scene> implements Scene {
+    protected World world = new World(new Point2D.Double(0, -0.981), new Rectangle2D.Double(0, 0, 640, 200));
 
     /**
      * Constructs an instance of AbstractScene with the specified name.

@@ -1,3 +1,5 @@
+import entity.Camera;
+import entity.Entity;
 import game.Game;
 import game.TestGame;
 import scenes.PlayBehaviorScene;
@@ -13,6 +15,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * MonProgrammeBehavior1 is a class that extends TestGame and implements KeyListener and Game interfaces.
@@ -29,7 +32,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
      * of the application. It is typically loaded at the startup of the
      * `MonProgrammeBehavior1` class to configure application-specific properties.
      */
-    private String configFilePath = "/behavior1.properties";
+    private String configFilePath = "/camera1.properties";
 
     /**
      * Indicates whether the application is currently running in test mode.
@@ -284,7 +287,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
      */
     private void update() {
         // calcul de la position du player bleu en fonction de la vitesse courante.
-        currentScene.getEntities().forEach(e -> {
+        currentScene.getEntities().stream().filter(e -> !(e instanceof Camera)).forEach(e -> {
             e.setPosition(e.getX() + e.getDx(), e.getY() + e.getDy());
             // application du rebond si collision avec le bord de la zone de jeu
             if (e.getX() < -8 || e.getX() > renderingBuffer.getWidth() - 8) {
@@ -302,6 +305,9 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
             e.setVelocity(e.getDx() * e.getFriction(), e.getDy() * e.getFriction());
             e.getBehaviors().forEach(b -> b.update(e));
         });
+        Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
+        cam.ifPresent(entity -> ((Camera) entity).update(16.0));
+
         currentScene.update(this);
     }
 
@@ -322,18 +328,29 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight());
 
+        Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
+
         // draw entities
-        currentScene.getEntities().forEach(e -> {
-            g.translate((int) e.getX(), (int) e.getY());
-            g.setColor(e.getFillColor());
-            g.fill(e.getShape());
-            g.setColor(e.getColor());
-            g.drawLine((int) (e.getShape().getBounds().width * 0.5), (int) (e.getShape().getBounds().height * 0.5),
-                    (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (+e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
-            g.translate((int) -e.getX(), (int) -e.getY());
-            // Exécuter les comportements de dessin pour cette instance d'Entity.
-            e.getBehaviors().forEach(b -> b.draw(g, e));
-        });
+        currentScene.getEntities().stream()
+                .filter(e -> !(e instanceof Camera))
+                .forEach(e -> {
+                    if (cam.isPresent()) {
+                        Camera camera = (Camera) cam.get();
+                        g.translate((int) -camera.getX(), (int) -camera.getY());
+                    }
+
+                    drawEntity(e, g);
+
+                    if (cam.isPresent()) {
+                        Camera camera = (Camera) cam.get();
+                        g.setColor(Color.gray);
+                        g.draw(camera.getShape());
+                        g.translate((int) camera.getX(), (int) camera.getY());
+                    }
+
+                    // Exécuter les comportements de dessin pour cette instance d'Entity.
+                    e.getBehaviors().forEach(b -> b.draw(g, e));
+                });
         currentScene.draw(this, g);
 
         g.dispose();
@@ -348,6 +365,16 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         gw.dispose();
         bs.show();
 
+    }
+
+    private static void drawEntity(Entity e, Graphics2D g) {
+        g.translate((int) e.getX(), (int) e.getY());
+        g.setColor(e.getFillColor());
+        g.fill(e.getShape());
+        g.setColor(e.getColor());
+        g.drawLine((int) (e.getShape().getBounds().width * 0.5), (int) (e.getShape().getBounds().height * 0.5),
+                (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (+e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
+        g.translate((int) -e.getX(), (int) -e.getY());
     }
 
     /**
@@ -393,7 +420,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
      * @param args Command-line arguments passed to the application.
      */
     public static void main(String[] args) {
-        MonProgrammeBehavior1 prog = new MonProgrammeBehavior1();
+        MonProgrammeCamera1 prog = new MonProgrammeCamera1();
         prog.run(args);
     }
 
