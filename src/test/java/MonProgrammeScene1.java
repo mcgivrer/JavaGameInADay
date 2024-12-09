@@ -14,7 +14,22 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents the main scene of the program.
+ * This class extends the TestGame class and implements the KeyListener and Game interfaces.
+ * <p>
+ * The class is responsible for managing the game loop and handling keyboard input,
+ * creating and managing scenes, and rendering the current state of the game.
+ */
 public class MonProgrammeScene1 extends TestGame implements KeyListener, Game {
+    /**
+     * The file path for the configuration properties file.
+     *
+     * This string variable stores the path to a properties file
+     * that contains application configurations, typically in a format
+     * understood by java.util.Properties. It is used by the application
+     * to load and apply various settings during initialization.
+     */
     private String configFilePath = "/demo3.properties";
 
     private boolean testMode = false;

@@ -1,31 +1,122 @@
-import entity.Entity;
+import game.Game;
+import game.TestGame;
+import scenes.PlayBehaviorScene;
+import scenes.Scene;
 import utils.Config;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MonProgrammeBehavior1 extends TestGame implements KeyListener {
-    private String configFilePath = "/demo3.properties";
-    private Config config;
+/**
+ * MonProgrammeBehavior1 is a class that extends TestGame and implements KeyListener and Game interfaces.
+ *
+ * This class manages the initialization and execution of a game application, including configuration
+ * loading, scene management, main game loop execution, and handling of user inputs.
+ */
+public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game {
+    /**
+     * Represents the file path to the configuration file used by the application.
+     *
+     * This variable stores the relative path to the configuration file that
+     * contains various settings needed for the initialization and operation
+     * of the application. It is typically loaded at the startup of the
+     * `MonProgrammeBehavior1` class to configure application-specific properties.
+     */
+    private String configFilePath = "/behavior1.properties";
 
+    /**
+     * Indicates whether the application is currently running in test mode.
+     *
+     * When set to true, the application will operate under conditions
+     * suitable for testing, such as executing a predefined number of
+     * iterations or using mock data. This mode is typically used to facilitate
+     * automated tests or to simulate scenarios in a controlled environment.
+     * By default, testMode is set to false, meaning that the application
+     * will run in its normal operational mode.
+     */
     private boolean testMode = false;
+    /**
+     * Specifies the maximum number of iterations the main application loop can execute
+     * in test mode. This variable is used to limit the loop execution when the application
+     * is running in a controlled test environment.
+     *
+     * It helps in testing and debugging by providing a finite number of iterations,
+     * allowing for observation of the application's behavior over a specific number of loops.
+     *
+     * When the application is not in test mode, this variable may not affect the loop execution.
+     */
     private int maxLoopCount = 1;
+    /**
+     * Represents the main application window for the MonProgrammeBehavior1 class.
+     *
+     * This JFrame is used to display the graphical user interface of the application. It is
+     * created and initialized with specific settings such as the window title, size,
+     * and close operation based on the application's configuration.
+     *
+     * The window also serves as the primary interface for handling and processing user input,
+     * particularly through keyboard interactions. It integrates with the application's event
+     * listeners to manage user actions and render updates.
+     */
     private JFrame window;
+    /**
+     * The rendering buffer used for drawing operations.
+     * This BufferedImage is initialized based on the application
+     * configuration settings, specifically for rendering the
+     * current state of the application. It acts as an off-screen
+     * drawing area to provide smooth rendering updates.
+     */
     private BufferedImage renderingBuffer;
 
-    private boolean[] keys = new boolean[1024];
+    /**
+     * An array representing the state of keyboard keys for the application.
+     *
+     * Each index in the array corresponds to a specific key code, and
+     * the boolean value at that index indicates whether the key is
+     * currently pressed (true) or released (false).
+     *
+     * The array is used to handle and track keyboard input events. It is
+     * typically updated in response to key press and release events
+     * processed by the application.
+     */
+    private final boolean[] keys = new boolean[1024];
 
-    private Map<String, Entity> entities = new HashMap<>();
+    /**
+     * A collection of scenes managed by the MonProgrammeBehavior1 class.
+     *
+     * This map stores various scenes, keyed by their unique string identifiers.
+     * It allows easy retrieval and management of scenes within the application.
+     * The scenes can be added, retrieved, or modified as needed by the
+     * application's workflow, with each scene represented by a {@link Scene} object.
+     */
+    private final Map<String, Scene> scenes = new HashMap<>();
+    /**
+     * Represents the current scene being rendered and interacted with in the application.
+     *
+     * The scene object referred to by this variable is responsible for defining the
+     * graphical and interactive elements present in the current state of the application.
+     * It plays a crucial role in the graphical user interface, handling aspects such as
+     * visual rendering, user input, and interactions with other scenes or entities.
+     *
+     * The currentScene is subject to changes, typically updated to reflect new states in
+     * the application, either through user actions or program logic executed during the
+     * application's lifecycle.
+     */
+    private Scene currentScene;
 
-
+    /**
+     * Constructs a new instance of MonProgrammeBehavior1.
+     *
+     * This constructor performs the following actions:
+     * - Outputs a startup message indicating that the MonProgrammeBehavior1 class is starting.
+     * - Initializes the configuration for the application by creating a new Config object.
+     * - Loads the application configuration from a specified configuration file path.
+     */
     public MonProgrammeBehavior1() {
         System.out.printf("# Démarrage de %s%n", this.getClass().getSimpleName());
         config = new Config(this);
@@ -51,44 +142,38 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener {
         createWindow();
         createBuffer();
 
+        addScene(new PlayBehaviorScene("play"));
         createScene();
     }
 
-    private void createScene() {
-        // Création du player bleu
-        Entity player = new Entity("player")
-            .setPosition(
-                ((renderingBuffer.getWidth() - 16) * 0.5),
-                ((renderingBuffer.getHeight() - 16) * 0.5))
-            .setElasticity((double) config.get("app.physic.entity.player.elasticity"))
-            .setFriction((double) config.get("app.physic.entity.player.friction"))
-            .setFillColor(Color.BLUE)
-            .setShape(new Rectangle2D.Double(0, 0, 16, 16))
-            .setAttribute("max.speed", 2.0);
-        add(player);
-
-        // Création de l’ennemi rouge
-        for (int i = 0; i < 10; i++) {
-            Entity enemy = new Entity("enemy_%d".formatted(i))
-                .setPosition((Math.random() * (renderingBuffer.getWidth() - 16)), (Math.random() * (renderingBuffer.getHeight() - 16)))
-                .setElasticity(Math.random())
-                .setFriction(Math.random())
-                .setFillColor(Color.RED)
-                .setShape(new Ellipse2D.Double(0, 0, 10, 10))
-                .setAttribute("max.speed", (Math.random() * player.getAttribute("max.speed", 2.0) * 0.90));
-            add(enemy);
+    /**
+     * Adds a new scene to the collection of scenes. If the scenes collection is
+     * currently empty, the provided scene will also be set as the current scene.
+     *
+     * @param s the Scene object to be added to the collection. Its name will be
+     *          used as the key for storage within the collection.
+     */
+    private void addScene(Scene s) {
+        if (this.scenes.isEmpty()) {
+            this.currentScene = s;
         }
+        this.scenes.put(s.getName(), s);
     }
 
-    private void add(Entity e) {
-        entities.put(e.getName(), e);
-
-        // Initialisation des comportements pour la nouvelle entité
-        e.getBehaviors().forEach(b -> b.init(e));
-
-        // Execution de la creation des comportements dans l'entité.
-        e.getBehaviors().forEach(b -> b.create(e));
-
+    /**
+     * Initializes and creates the current scene and its entities.
+     *
+     * This method carries out the following actions:
+     * - Calls the initialize method of the current scene, passing the current object.
+     * - Invokes the create method to set up the scene specifics using the current object.
+     * - Iterates over the entities retrieved from the current scene and initializes
+     *   each behavior associated with those entities.
+     */
+    private void createScene() {
+        currentScene.initialize(this);
+        currentScene.create(this);
+        currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.init(e)));
+        currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.create(e)));
     }
 
     /**
@@ -125,10 +210,25 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener {
     private void createBuffer() {
         Dimension renderBufferSize = config.get("app.render.buffer.size");
         renderingBuffer = new BufferedImage(
-            renderBufferSize.width, renderBufferSize.height,
-            BufferedImage.TYPE_INT_ARGB);
+                renderBufferSize.width, renderBufferSize.height,
+                BufferedImage.TYPE_INT_ARGB);
     }
 
+    /**
+     * Executes the main application loop for the game.
+     *
+     * This method contains the core loop for running the game's logic. It performs
+     * the following steps repeatedly until an exit is requested or a test mode condition is met:
+     * 1. Handles input by capturing keyboard events.
+     * 2. Updates the game state, including object positions and velocities based on current inputs and physics.
+     * 3. Renders the current game state to the screen.
+     * 4. Records the number of game loops executed for testing or debugging purposes.
+     * 5. Waits for a calculated frame time to maintain a consistent frame rate as configured.
+     *
+     * The loop operates at a frame rate determined by the configuration setting "app.render.fps".
+     * In test mode, the loop will execute a pre-defined number of times specified by maxLoopCount.
+     * Outputs the total number of game loops executed upon termination.
+     */
     public void loop() {
         int loopCount = 0;
         int frameTime = 1000 / (int) (config.get("app.render.fps"));
@@ -142,6 +242,13 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener {
         System.out.printf("=> Game loops %d times%n", loopCount);
     }
 
+    /**
+     * Pauses the execution of the current thread for the specified amount of time.
+     *
+     * @param delayInMs the time to wait, in milliseconds. This value determines how long the
+     *                  thread will sleep. If interrupted during sleep, an error message will
+     *                  be printed to the standard error stream.
+     */
     private void waitTime(int delayInMs) {
         try {
             Thread.sleep(delayInMs);
@@ -161,56 +268,8 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener {
      * - Down arrow key increases the vertical speed.
      */
     private void input() {
-        Entity player = entities.get("player");
-        double speed = (double) config.get("app.physic.entity.player.speed");
-
-        if (keys[KeyEvent.VK_LEFT]) {
-            player.setVelocity(-speed, player.getDy());
-        }
-        if (keys[KeyEvent.VK_RIGHT]) {
-            player.setVelocity(speed, player.getDy());
-        }
-        if (keys[KeyEvent.VK_UP]) {
-            player.setVelocity(player.getDx(), -speed);
-        }
-        if (keys[KeyEvent.VK_DOWN]) {
-            player.setVelocity(player.getDx(), speed);
-        }
-
-        // on parcourt les entités en filtrant sur celles dont le nom commence par "enemy_"
-
-        entities.values().stream()
-            .filter(e -> e.getName().startsWith("enemy_"))
-            .forEach(e -> {
-                // new speed will be only a random ratio of the current one (from 50% to 110%)
-                double eSpeed = (0.5 + Math.random() * 1.1);
-
-                // Simulation pour les ennemis qui suivent le player sur l'are X,
-                // but limited to 'max.speed' attribute's value
-                double centerPlayerX = player.getX() + player.getShape().getBounds().width * 0.5;
-                double centerEnemyX = e.getX() + e.getShape().getBounds().width * 0.5;
-                double directionX = Math.signum(centerPlayerX - centerEnemyX);
-                if (directionX != 0.0) {
-                    e.setVelocity(
-                        Math.min(directionX * eSpeed * e.getAttribute("max.speed", 2.0),
-                            e.getAttribute("max.speed", 2.0)),
-                        e.getDy());
-                }
-
-                // Simulation pour les ennemis qui suivent le player sur l'are Y,
-                // but limited to 'max.speed' attribute's value
-                double centerPlayerY = player.getY() + player.getShape().getBounds().width * 0.5;
-                double centerEnemyY = e.getY() + e.getShape().getBounds().width * 0.5;
-                double directionY = Math.signum(centerPlayerY - centerEnemyY);
-                if (directionY != 0.0) {
-                    e.setVelocity(
-                        e.getDx(),
-                        Math.min(directionY * eSpeed * e.getAttribute("max.speed", 2.0),
-                            e.getAttribute("max.speed", 2.0)));
-                }
-            });
-
-        entities.values().stream().forEach(e -> e.getBehaviors().forEach(b -> b.input(e)));
+        currentScene.input(this);
+        currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.input(e)));
     }
 
     /**
@@ -224,7 +283,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener {
      */
     private void update() {
         // calcul de la position du player bleu en fonction de la vitesse courante.
-        entities.values().stream().forEach(e -> {
+        currentScene.getEntities().forEach(e -> {
             e.setPosition(e.getX() + e.getDx(), e.getY() + e.getDy());
             // application du rebond si collision avec le bord de la zone de jeu
             if (e.getX() < -8 || e.getX() > renderingBuffer.getWidth() - 8) {
@@ -236,14 +295,13 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener {
 
             // repositionnement dans la zone de jeu si nécessaire
             e.setPosition(Math.min(Math.max(e.getX(), -8), renderingBuffer.getWidth() - 8),
-                Math.min(Math.max(e.getY(), -8), renderingBuffer.getHeight() - 8));
+                    Math.min(Math.max(e.getY(), -8), renderingBuffer.getHeight() - 8));
 
             // application du facteur de friction
             e.setVelocity(e.getDx() * e.getFriction(), e.getDy() * e.getFriction());
-
-            // Application des comportements de mise-à-jour sur cette entité.
             e.getBehaviors().forEach(b -> b.update(e));
         });
+        currentScene.update(this);
     }
 
     /**
@@ -264,17 +322,18 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener {
         g.fillRect(0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight());
 
         // draw entities
-        entities.values().forEach(e -> {
+        currentScene.getEntities().forEach(e -> {
             g.translate((int) e.getX(), (int) e.getY());
             g.setColor(e.getFillColor());
             g.fill(e.getShape());
             g.setColor(e.getColor());
             g.drawLine((int) (e.getShape().getBounds().width * 0.5), (int) (e.getShape().getBounds().height * 0.5),
-                (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (+e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
+                    (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (+e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
             g.translate((int) -e.getX(), (int) -e.getY());
-
+            // Exécuter les comportements de dessin pour cette instance d'Entity.
             e.getBehaviors().forEach(b -> b.draw(g, e));
         });
+        currentScene.draw(this, g);
 
         g.dispose();
 
@@ -282,8 +341,8 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener {
         BufferStrategy bs = window.getBufferStrategy();
         Graphics gw = bs.getDrawGraphics();
         gw.drawImage(renderingBuffer, 0, 0, window.getWidth(), window.getHeight(),
-            0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight()
-            , null);
+                0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight()
+                , null);
 
         gw.dispose();
         bs.show();
@@ -298,10 +357,12 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener {
      * - Prints a message to the console indicating that the current instance of the application has terminated.
      */
     private void dispose() {
+        currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.dispose(e)));
+
+        currentScene.dispose(this);
         window.dispose();
         System.out.printf("# %s est terminé.%n", this.getClass().getSimpleName());
     }
-
 
     /**
      * Runs the application.
@@ -361,5 +422,25 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             this.requestExit();
         }
+    }
+
+    /**
+     * Determines if the specified key is currently pressed.
+     *
+     * @param keyCode the code of the key to check, corresponding to a standard key code.
+     * @return true if the key specified by keyCode is pressed, false otherwise.
+     */
+    @Override
+    public boolean isKeyPressed(int keyCode) {
+        return keys[keyCode];
+    }
+
+    /**
+     * Retrieves the current rendering buffer used for drawing operations.
+     *
+     * @return a BufferedImage object representing the rendering buffer.
+     */
+    public BufferedImage getRenderingBuffer() {
+        return this.renderingBuffer;
     }
 }
