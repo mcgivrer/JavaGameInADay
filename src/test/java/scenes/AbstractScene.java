@@ -15,6 +15,13 @@ import java.util.stream.Collectors;
  * extend this class to leverage the basic entity management operations provided here.
  */
 public abstract class AbstractScene extends Node<Scene> implements Scene {
+
+    /**
+     * Represents the physical environment within a scene, defined by gravity and a play area.
+     * This instance is primarily used to manage physics-related simulations, such as object movement
+     * influenced by gravity within the designated play space. The gravity is set to a downward vector,
+     * simulating real-world gravity, while the play area confines the movement and interactions of entities.
+     */
     protected World world = new World(new Point2D.Double(0, -0.981), new Rectangle2D.Double(0, 0, 640, 200));
 
     /**
@@ -62,4 +69,13 @@ public abstract class AbstractScene extends Node<Scene> implements Scene {
         return (Entity) getChildren().stream().filter(c -> c.getName().equals(name)).findFirst().get();
     }
 
+    /**
+     * Retrieves the World object associated with the current scene.
+     *
+     * @return the World instance representing the physical environment of the scene
+     * including its gravity and play area settings.
+     */
+    public World getWorld(){
+        return this.world;
+    }
 }

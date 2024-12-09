@@ -2,6 +2,7 @@ package scenes;
 
 import game.Game;
 import entity.Entity;
+import physic.World;
 
 import java.awt.*;
 import java.util.Collection;
@@ -117,6 +118,16 @@ public interface Scene {
      */
     // <7>
     default void dispose(Game g) {
+    }
+
+    /**
+     * Retrieves the world associated with this scene.
+     *
+     * @return the world object representing the environment of the scene,
+     *         or null if no world is configured.
+     */
+    default World getWorld() {
+        return null;
     }
 
 }

@@ -9,6 +9,11 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
+/**
+ * MonProgrammeEntity1 is a class that represents a game entity, handling configuration,
+ * rendering, and input events within a graphical application window.
+ * It extends TestGame and implements KeyListener to manage keyboard input for game control.
+ */
 public class MonProgrammeEntity1 extends TestGame implements KeyListener {
     private String configFilePath = "/demo3.properties";
     private Config config;

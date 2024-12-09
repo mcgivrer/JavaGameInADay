@@ -1,6 +1,7 @@
 package scenes;
 
 import behaviors.Behavior;
+import behaviors.EnemyBehavior;
 import entity.Camera;
 import entity.Entity;
 import game.Game;
@@ -21,6 +22,15 @@ public class PlayCameraScene extends AbstractScene {
         super(name);
     }
 
+    /**
+     * Initializes and sets up the game scene by creating the player and enemy entities,
+     * as well as configuring the camera.
+     *
+     * @param app The game application instance that provides access to rendering buffers,
+     *            configuration settings, and input states. This parameter is essential to
+     *            set up the scene with the necessary configurations and to handle player
+     *            inputs and behaviors.
+     */
     @Override
     public void create(Game app) {
         // Création du player bleu
@@ -55,54 +65,44 @@ public class PlayCameraScene extends AbstractScene {
                 });
         add(player);
 
+        // add enemies
+        generateEntities(app, "enemy_%d", 10, player, new EnemyBehavior(this));
+
+        // Add Camera to the scene.
+        Camera cam = new Camera("cam01")
+                .setViewport(new Dimension(app.getRenderingBuffer().getWidth(), app.getRenderingBuffer().getHeight()))
+                .setTarget(player)
+                .setTweenFactor(app.getConfig().get("app.render.camera.tween.factor", 0.002));
+        add(cam);
+    }
+
+    /**
+     * Generates a specified number of enemy entities with random attributes and behavior.
+     *
+     * @param app            The game application instance used to access rendering buffers
+     *                       and configuration settings needed to define entity properties.
+     * @param entityBaseName A base name used for naming each entity uniquely by appending
+     *                       an index.
+     * @param nbEntities     The number of entities to generate.
+     * @param entityTarget   Target entity that provides a reference for attribute calculations,
+     *                       such as speed.
+     * @param behavior       The behavior to be assigned to each entity, defining their actions
+     *                       or reactions within the game.
+     */
+    private void generateEntities(Game app, String entityBaseName, int nbEntities, Entity entityTarget, Behavior behavior) {
         double maxEnemySpeedRatio = app.getConfig().get("app.physic.entity.enemy.max.speed.ratio");
         // Création de l’ennemi rouge
-        for (int i = 0; i < 10; i++) {
-            Entity enemy = new Entity("enemy_%d".formatted(i))
+        for (int i = 0; i < nbEntities; i++) {
+            Entity enemy = new Entity(entityBaseName.formatted(i))
                     .setPosition((Math.random() * (app.getRenderingBuffer().getWidth() - 16)), (Math.random() * (app.getRenderingBuffer().getHeight() - 16)))
                     .setElasticity(Math.random())
                     .setFriction(Math.random())
                     .setFillColor(Color.RED)
                     .setShape(new Ellipse2D.Double(0, 0, 10, 10))
-                    .setAttribute("max.speed", (Math.random() * player.getAttribute("max.speed", 2.0) * maxEnemySpeedRatio))
-                    // On ajoute le comportement de suivi de l'instance d'Entity "player"
-                    .add(new Behavior() {
-                        @Override
-                        public void input(Entity enemy) {
-                            Entity player = getEntity("player");
-                            double eSpeed = (0.5 + Math.random() * 1.1);
-
-                            // Simulation pour les ennemis qui suivent le player sur l’are X,
-                            // but limited to 'max.speed' attribute's value
-                            double centerPlayerX = player.getX() + player.getShape().getBounds().width * 0.5;
-                            double centerEnemyX = enemy.getX() + enemy.getShape().getBounds().width * 0.5;
-                            double directionX = Math.signum(centerPlayerX - centerEnemyX);
-                            if (directionX != 0.0) {
-                                enemy.setVelocity(
-                                        Math.min(directionX * eSpeed * enemy.getAttribute("max.speed", 2.0),
-                                                enemy.getAttribute("max.speed", 2.0)),
-                                        enemy.getDy());
-                            }
-
-                            // Simulation pour les ennemis qui suivent le player sur l’axe Y,
-                            // but limited to 'max.speed' attribute's value
-                            double centerPlayerY = player.getY() + player.getShape().getBounds().width * 0.5;
-                            double centerEnemyY = enemy.getY() + enemy.getShape().getBounds().width * 0.5;
-                            double directionY = Math.signum(centerPlayerY - centerEnemyY);
-                            if (directionY != 0.0) {
-                                enemy.setVelocity(
-                                        enemy.getDx(),
-                                        Math.min(directionY * eSpeed * enemy.getAttribute("max.speed", 2.0),
-                                                enemy.getAttribute("max.speed", 2.0)));
-                            }
-                        }
-                    });
+                    .setAttribute("max.speed", (Math.random() * entityTarget.getAttribute("max.speed", 2.0) * maxEnemySpeedRatio))
+                    // On ajoute le comportement de suivi de l’instance d’Entity "player".
+                    .add(behavior);
             add(enemy);
         }
-        Camera cam = new Camera("cam01")
-                .setViewport(new Dimension(app.getRenderingBuffer().getWidth(),app.getRenderingBuffer().getHeight()))
-                .setTarget(player)
-                .setTweenFactor(0.05);
-        add(cam);
     }
 }

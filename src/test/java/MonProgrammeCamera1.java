@@ -113,13 +113,14 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
      */
     private Scene currentScene;
 
+
     /**
-     * Constructs a new instance of MonProgrammeBehavior1.
-     * <p>
-     * This constructor performs the following actions:
-     * - Outputs a startup message indicating that the MonProgrammeBehavior1 class is starting.
-     * - Initializes the configuration for the application by creating a new Config object.
-     * - Loads the application configuration from a specified configuration file path.
+     * Constructs an instance of the MonProgrammeCamera1 class.
+     *
+     * This constructor initializes the application by performing the following actions:
+     * 1. Outputs a startup message indicating the class name.
+     * 2. Creates a configuration object for the application.
+     * 3. Loads application settings from a configuration file specified by configFilePath.
      */
     public MonProgrammeCamera1() {
         System.out.printf("# Démarrage de %s%n", this.getClass().getSimpleName());
