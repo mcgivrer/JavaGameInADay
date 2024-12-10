@@ -510,6 +510,9 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             this.requestExit();
         }
+        if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
+            setDebug(getDebug() + 1 < 6 ? getDebug() + 1 : 0);
+        }
     }
 
     /**
