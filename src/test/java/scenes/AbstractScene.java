@@ -75,7 +75,17 @@ public abstract class AbstractScene extends Node<Scene> implements Scene {
      * @return the World instance representing the physical environment of the scene
      * including its gravity and play area settings.
      */
-    public World getWorld(){
+    public World getWorld() {
         return this.world;
+    }
+
+    /**
+     * Sets the World instance for the scene, defining its physical environment.
+     *
+     * @param world the World object to be associated with the scene,
+     *              encompassing the gravity and play area configurations.
+     */
+    public void setWorld(World world) {
+        this.world = world;
     }
 }

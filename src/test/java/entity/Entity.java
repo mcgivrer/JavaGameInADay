@@ -227,6 +227,8 @@ public class Entity extends Node<Entity> {
      */
     public Entity setShape(Shape shape) {
         this.shape = shape;
+        this.width = shape.getBounds().width;
+        this.height = shape.getBounds().height;
         return this;
     }
 

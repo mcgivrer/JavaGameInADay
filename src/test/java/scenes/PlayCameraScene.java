@@ -5,11 +5,12 @@ import behaviors.EnemyBehavior;
 import entity.Camera;
 import entity.Entity;
 import game.Game;
+import physic.World;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Dimension2D;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 public class PlayCameraScene extends AbstractScene {
@@ -33,6 +34,11 @@ public class PlayCameraScene extends AbstractScene {
      */
     @Override
     public void create(Game app) {
+        setWorld(
+                new World(
+                        new Point2D.Double(0, -0.981),
+                        new Rectangle2D.Double(0, 0, 30*16, 20*16)));
+
         // Création du player bleu
         Entity player = new Entity("player")
                 .setPosition(

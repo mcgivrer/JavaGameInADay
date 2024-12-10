@@ -1,4 +1,5 @@
 = Camera, Monde et Aire de jeu
+:source-highlighter: rouge
 
 La caméra est le moyen le plus simple et bizarrement le plus imagé, pour suivre une autre entité à l'écran.
 
@@ -119,5 +120,112 @@ Sur l'illustration ci-dessus, imaginer que le `tweenFactor` est un ressort avec 
 
 Plus le `tweenfactor` est élevé (proche de 1) et moins il y a d'amortissement et de douceur.
 
-Plus le `tweenFactor` s'approche de 0.0 et moins la propension à la promptitude de la caméra à suivre la cible est forte. En clair et en décrypté : il aura donc un délai plus long à suivre la cible avec une valeur proche de zéro.
+Plus le `tweenFactor` s'approche de 0.0 et moins la propension à la promptitude de la caméra à suivre la cible est forte.
+En clair et en décrypté : il aura donc un délai plus long à suivre la cible avec une valeur proche de zéro.
 
+=== Intégrons la camera dans la Scene.
+
+TODO
+
+[source,java]
+----
+
+----
+
+=== Modifions le process de mise-à-jour
+
+Comme la caméra est ajoutée comme toute autre entité à la scène, nous devons en début de chaque mise à jour, appliquer le mécanisme standard d'update à tous les objets qui ne sont pas une caméra.
+
+Ensuite, nous appellerons la méthode spciale de mise à jour de l'objet caméra pour se positionner en fonction de la nouvelle position de l'entité suivie par celle-ci.
+
+.Processus de mise-à-jour de la caméra considérée comme active.
+[source,java]
+----
+private void update() {
+// <1>
+    currentScene.getEntities().stream().filter(e -> !(e instanceof Camera)).forEach(e -> {
+        //...
+    });
+    // <2>
+   Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
+    cam.ifPresent(entity -> ((Camera) entity).update(16.0));
+
+    currentScene.update(this);
+}
+----
+
+. Nous filtrons tous les objets qui ne sont pas des caméras, afin d'appliquer le process standard,
+. le premier objet de type Camera que nous trouvons sera la camera active, et appelons sa mise à jour de position.
+
+NOTE: Ce procédé sera changer avec l'adaptation de la Scene, lorsque nous ajouterons d'autres attributs à celle-ci.
+
+=== Modifions le rendu graphique
+
+Une fois l'instance de la `Camera` repérée dans les objets de la `Scene`, nous allons utiliser la position de son cadre (`viewport`) pour déplacer le point de vue de rendu.
+
+.Rendu du point de vue de la Camera.
+[source,java]
+----
+private void render() {
+    Graphics2D g = renderingBuffer.createGraphics();
+    // clear rendering buffer to black
+    g.setColor(Color.BLACK);
+    g.fillRect(0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight());
+    // <1>
+    Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
+
+    // draw entities
+    currentScene.getEntities().stream()
+            .filter(e -> !(e instanceof Camera))
+            .forEach(e -> {
+                // <2>
+                if (cam.isPresent()) {
+                    Camera camera = (Camera) cam.get();
+                    g.translate((int) -camera.getX(), (int) -camera.getY());
+                }
+                // <3>
+                drawEntity(e, g);
+                // <4>
+                if (cam.isPresent()) {
+                    Camera camera = (Camera) cam.get();
+                    g.setColor(Color.gray);
+                    g.draw(camera.getShape());
+                    g.translate((int) camera.getX(), (int) camera.getY());
+                }
+
+                // Exécuter les comportements de dessin pour cette instance d'Entity.
+                e.getBehaviors().forEach(b -> b.draw(g, e));
+            });
+    currentScene.draw(this, g);
+    //...
+}
+
+----
+
+. Nous isolons la première instance de `Camera` dans la scene active,
+. Nous déplaçons le point de vue à la position du cadre de la camera (viewport),
+. Nous procédons au rendu de l'entité en cours,
+. Nous ramenons la position du point de vue à sa place initiale pour passer à l'entité suivante.
+
+Si nous exécutons maintenant notre programme de test de la caméra :
+
+[source,bash]
+----
+./runex.sh MonProgrammeCamera1
+----
+
+Nous obtiendrons un rendu similaire à ce que présenta la capture d'écran ci-dessous :
+
+.Capture la démo MonProgrammeCamera1
+image::illustrations/capture-camera-1.png[]
+
+== Allons un peu plus loin
+
+Dans cette capture d'écran le cadre gris délimite la zone actuelle jeu.
+
+Ajoutons un rectangle jaune délimitant le cadre du viewport.
+
+[source,java]
+----
+
+----
