@@ -415,7 +415,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         g.draw(world);
     }
 
-    private static void drawEntity(Entity e, Graphics2D g) {
+    private void drawEntity(Entity e, Graphics2D g) {
         g.translate((int) e.getX(), (int) e.getY());
         g.setColor(e.getFillColor());
         g.fill(e.getShape());
@@ -427,12 +427,14 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         g.translate((int) -e.getX(), (int) -e.getY());
     }
 
-    private static void drawDebugEntity(Graphics2D g, Entity e) {
-        g.setFont(g.getFont().deriveFont(9.0f));
-        e.setColor(Color.ORANGE);
-        g.drawString("pos:%.0f,%.0f".formatted(e.getX(), e.getY()), (int) e.getWidth(), 0);
-        g.drawString("siz:%.2f,%.2f".formatted(e.getWidth(), e.getHeight()), (int) e.getWidth(), 10);
-        g.drawString("vel:%.2f,%.2f".formatted(e.getDx(), e.getDy()), (int) e.getWidth(), 20);
+    private void drawDebugEntity(Graphics2D g, Entity e) {
+        if (isDebugGreaterThan(2)) {
+            g.setFont(g.getFont().deriveFont(9.0f));
+            e.setColor(Color.ORANGE);
+            g.drawString("pos:%.0f,%.0f".formatted(e.getX(), e.getY()), (int) e.getWidth(), 0);
+            g.drawString("siz:%.2f,%.2f".formatted(e.getWidth(), e.getHeight()), (int) e.getWidth(), 10);
+            g.drawString("vel:%.2f,%.2f".formatted(e.getDx(), e.getDy()), (int) e.getWidth(), 20);
+        }
     }
 
     /**
