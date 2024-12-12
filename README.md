@@ -4,7 +4,7 @@
 
 ## Context
 
-This is the readme file for "Java Game In A Week" tutorial projects (1.0.2)
+This is the readme file for "Java Game In A Week" tutorial projects (1.0.4)
 where building a simple 2D game framework step by step by adding features, with a moderate ramp-up on complexity.
 
 Hope this demo project will help you to on-board into the game development adventure with a common and accessible
@@ -43,13 +43,13 @@ build.sh r
 Or you can execute the command line :
 
 ```bash
-java -jar target/JavaGameInADay-1.0.2.jar
+java -jar target/JavaGameInAWeek-1.0.4.jar
 ```
 
 Or lastly for the Linux machine owner or in a Windows Git Bash terminal :
 
 ```bash
-target/build/JavaGameInADay-1.0.2.run
+target/build/JavaGameInAWeek-1.0.4.run
 ```
 
 Enjoy !
