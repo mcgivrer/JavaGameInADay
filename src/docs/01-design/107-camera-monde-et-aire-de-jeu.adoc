@@ -229,3 +229,9 @@ Ajoutons un rectangle jaune délimitant le cadre du viewport.
 ----
 
 ----
+
+== World, un nouveau monde
+
+gravite et aire de jeu
+
+TODO

@@ -40,7 +40,7 @@ stem:[\vec{V} = \vec{V_0} + \vec{a} * t]
 où :
 
 * (stem:[\vec{V_0}]) est la vitesse initiale de l'objet,
-* (stem:[\vec{a}$]) est le vecteur d'accélération,
+* (stem:[\vec{a}]) est le vecteur d'accélération,
 * (stem:[t]) est le temps écoulé.
 * Cette formule indique que la vitesse à un moment donné est égale à la vitesse initiale plus la variation de vitesse
  causée par l'accélération sur une période de temps. En deux dimensions, les vecteurs peuvent être décomposés en
