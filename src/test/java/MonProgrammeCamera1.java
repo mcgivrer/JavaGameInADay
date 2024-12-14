@@ -346,31 +346,22 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         g.fillRect(0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight());
 
         Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
-        Camera camera = cam.isPresent() ? (Camera) cam.get() : null;
 
-        if (camera != null) {
-            g.translate((int) -camera.getX(), (int) -camera.getY());
-        }
+        cam.ifPresent(entity -> g.translate((int) -entity.getX(), (int) -entity.getY()));
         drawWorldLimit(g, currentScene.getWorld(), 16, 16);
-        if (camera != null) {
-            if (isDebugGreaterThan(1)) {
-                drawDebugCamera(g, camera);
-            }
-            g.translate((int) camera.getX(), (int) camera.getY());
+        if (cam.isPresent() && isDebugGreaterThan(1)) {
+            drawDebugCamera(g, (Camera) cam.get());
         }
+        cam.ifPresent(entity -> g.translate((int) entity.getX(), (int) entity.getY()));
 
 
         // draw entities
         currentScene.getEntities().stream()
                 .filter(e -> !(e instanceof Camera))
                 .forEach(e -> {
-                    if (camera != null) {
-                        g.translate((int) -camera.getX(), (int) -camera.getY());
-                    }
+                    cam.ifPresent(entity -> g.translate((int) -entity.getX(), (int) -entity.getY()));
                     drawEntity(e, g);
-                    if (camera != null) {
-                        g.translate((int) camera.getX(), (int) camera.getY());
-                    }
+                    cam.ifPresent(entity -> g.translate((int) entity.getX(), (int) entity.getY()));
                     currentScene.draw(this, g);
 
                     // Exécuter les comportements de dessin pour cette instance d'Entity.
@@ -428,12 +419,17 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
     }
 
     private void drawDebugEntity(Graphics2D g, Entity e) {
-        if (isDebugGreaterThan(2)) {
+        if (isDebugGreaterThan(1)) {
+            g.setStroke(new BasicStroke(0.5f));
+            g.setColor(Color.ORANGE);
+            g.draw(e.getShape());
             g.setFont(g.getFont().deriveFont(9.0f));
-            e.setColor(Color.ORANGE);
-            g.drawString("pos:%.0f,%.0f".formatted(e.getX(), e.getY()), (int) e.getWidth(), 0);
-            g.drawString("siz:%.2f,%.2f".formatted(e.getWidth(), e.getHeight()), (int) e.getWidth(), 10);
-            g.drawString("vel:%.2f,%.2f".formatted(e.getDx(), e.getDy()), (int) e.getWidth(), 20);
+            g.drawString("#:%d:%s".formatted(e.getId(), e.getName()), (int) e.getWidth(), 0);
+            if (isDebugGreaterThan(2)) {
+                g.drawString("pos:%.0f,%.0f".formatted(e.getX(), e.getY()), (int) e.getWidth(), 10);
+                g.drawString("siz:%.2f,%.2f".formatted(e.getWidth(), e.getHeight()), (int) e.getWidth(), 20);
+                g.drawString("vel:%.2f,%.2f".formatted(e.getDx(), e.getDy()), (int) e.getWidth(), 30);
+            }
         }
     }
 

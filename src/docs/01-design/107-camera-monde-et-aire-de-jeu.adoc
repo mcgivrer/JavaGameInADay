@@ -227,8 +227,55 @@ Ajoutons un rectangle jaune délimitant le cadre du viewport.
 
 [source,java]
 ----
-
+private static void drawDebugCamera(Graphics2D g, Camera camera) {
+    g.setFont(g.getFont().deriveFont(9.0f));
+    g.setColor(Color.yellow);
+    Rectangle2D drawCamera = new Rectangle2D.Double(
+        camera.getBounds2D().getX() + 20,
+        camera.getBounds2D().getY() + 30,
+        camera.getBounds2D().getWidth() - 40,
+        camera.getBounds2D().getHeight() - 40);
+    g.draw(drawCamera);
+    g.drawString(
+            "#%d:%s".formatted(camera.getId(), camera.getName()),
+        (int) (camera.getBounds2D().getX() + 20
+            + camera.getBounds2D().getWidth() * 0.70),
+        (int) (camera.getBounds2D().getY()
+            + camera.getBounds2D().getHeight() - 14));
+}
 ----
+
+Et dans la méthode rendu principale:
+
+[source,java]
+----
+private void render() {
+    Graphics2D g = renderingBuffer.createGraphics();
+    //...
+    // <1>
+    Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
+    Camera camera = cam.isPresent() ? (Camera) cam.get() : null;
+    // <2>
+    if (cam.isPresent() != null) {
+        g.translate((int) -camera.getX(), (int) -camera.getY());
+    }
+    drawWorldLimit(g, currentScene.getWorld(), 16, 16);
+    if (cam.isPresent() != null) {
+        if (isDebugGreaterThan(1)) {
+            drawDebugCamera(g, camera);
+        }
+        g.translate((int) camera.getX(), (int) camera.getY());
+    }
+    // draw entities
+    currentScene.getEntities().stream()
+        .filter(e -> !(e instanceof Camera))
+        .forEach(e -> {
+            //...
+        });
+    //...
+}
+----
+
 
 == World, un nouveau monde
 
