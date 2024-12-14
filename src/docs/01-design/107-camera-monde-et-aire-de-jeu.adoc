@@ -225,6 +225,7 @@ Dans cette capture d'écran le cadre gris délimite la zone actuelle jeu.
 
 Ajoutons un rectangle jaune délimitant le cadre du viewport.
 
+.Ajout du dessin d'information visuel de débuggage de la caméra
 [source,java]
 ----
 private static void drawDebugCamera(Graphics2D g, Camera camera) {
@@ -245,8 +246,9 @@ private static void drawDebugCamera(Graphics2D g, Camera camera) {
 }
 ----
 
-Et dans la méthode rendu principale:
+Et dans la méthode `render` principale:
 
+.Modification de la méthode de rendu
 [source,java]
 ----
 private void render() {
@@ -276,6 +278,19 @@ private void render() {
 }
 ----
 
+Si nous relançons maintenant notre programme de test :
+
+[source,bash]
+----
+runex.sh MonProgrammeCamera1
+----
+
+Nous verrons s'afficher la fenêtre suivante, proposant un contenu approchant :
+
+.Affichage d'informartion visuel de débogage sur l'objet Camera nommé "cam01".
+image::illustrations/capture-camera-2.png[Affichage d'informartion visuel de debuggage sur l'objet Camera]
+
+Si nous pressons la combinaison de touche [CTRL]+[D] nous verrons changer le niveau d'information de débogage.
 
 == World, un nouveau monde
 

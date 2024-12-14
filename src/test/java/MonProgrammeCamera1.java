@@ -240,7 +240,9 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         int frameTime = 1000 / (int) (config.get("app.render.fps"));
         while (!isExitRequested() && ((testMode && loopCount < maxLoopCount) || !testMode)) {
             input();
-            update();
+            if (isNotPaused()) {
+                update();
+            }
             render();
             loopCount++;
             waitTime(frameTime);
@@ -508,6 +510,9 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         }
         if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
             setDebug(getDebug() + 1 < 6 ? getDebug() + 1 : 0);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_P && e.isControlDown()) {
+            setPause(isNotPaused());
         }
     }
 
