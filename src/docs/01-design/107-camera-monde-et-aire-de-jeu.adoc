@@ -1,5 +1,6 @@
 = Camera, Monde et Aire de jeu
 :source-highlighter: rouge
+:experimental:
 
 La caméra est le moyen le plus simple et bizarrement le plus imagé, pour suivre une autre entité à l'écran.
 
@@ -290,10 +291,26 @@ Nous verrons s'afficher la fenêtre suivante, proposant un contenu approchant :
 .Affichage d'informartion visuel de débogage sur l'objet Camera nommé "cam01".
 image::illustrations/capture-camera-2.png[Affichage d'informartion visuel de debuggage sur l'objet Camera]
 
-Si nous pressons la combinaison de touche [CTRL]+[D] nous verrons changer le niveau d'information de débogage.
+Si nous pressons la combinaison de touche kbd:[CTRL]+kbd:[D] nous verrons changer le niveau d'information de débogage.
 
 == World, un nouveau monde
 
-gravite et aire de jeu
+Maintenant que nous avons une belle caméra (la classe `Camera`), nous allons définir une nouvelle classe : l'objet `World` qui contiendra plusieurs attributs comme la zone de jeu (playarea) et un nouveau paramètre qui servira à gérer la gravité !
 
-TODO
+.La nouvelle classe World
+[source,java]
+----
+public class World extends Rectangle2D.Double {
+    private Point2D gravity = new Point2D.Double(0, 0);
+
+    public World(Point2D g, Rectangle2D pa) {
+        this.gravity = g;
+        this.setRect(pa);
+    }
+    //...
+}
+----
+
+Nous remarquerons que `World` étant l'objet https://docs.oracle.com/en/java/javase/23/docs/api/java.desktop/java/awt/geom/Rectangle2D.html[Rectangle2D] issu du JDK, cela nous permettra de bénéficier des fonctions existantes de détection d'intersection avec d'autres objets.
+
+

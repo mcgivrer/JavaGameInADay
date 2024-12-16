@@ -292,12 +292,16 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
     private void update() {
         // calcul de la position du player bleu en fonction de la vitesse courante.
         currentScene.getEntities().stream().filter(e -> !(e instanceof Camera)).forEach(e -> {
-            e.setPosition(e.getX() + e.getDx(), e.getY() + e.getDy());
+
+            World w = currentScene.getWorld();
+            e.setPosition(
+                    e.getX() + e.getDx() + w.getX(),
+                    e.getY() + e.getDy() + w.getY());
 
             // repositionnement dans la zone de jeu si nécessaire
             if (!currentScene.getWorld().contains(e)) {
-
                 applyBouncingFactor(currentScene, e);
+                // Gardons l'entité dans le monde du jeu.
                 e.setPosition(
                         Math.min(Math.max(e.getX(), currentScene.getWorld().getX()), currentScene.getWorld().getWidth() - e.getWidth()),
                         Math.min(Math.max(e.getY(), currentScene.getWorld().getY()), currentScene.getWorld().getHeight() - e.getHeight()));

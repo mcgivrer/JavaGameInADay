@@ -18,4 +18,15 @@ public class World extends Rectangle2D.Double {
     public Rectangle2D getPlayArea() {
         return this.getBounds2D();
     }
+
+    public World setGravity(Point2D g) {
+        this.gravity = g;
+        return this;
+    }
+
+    public World setPlayArea(Rectangle2D pa) {
+        this.setRect(pa);
+        return this;
+    }
+
 }
