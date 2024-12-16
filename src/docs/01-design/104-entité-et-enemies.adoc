@@ -206,7 +206,7 @@ Ajout des nouvelles variables dans le programme principal :
 
 [source,java]
 ----
-public class examples.MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class MonProgrammeEntity2 extends TestGame implements KeyListener {
     //...
     private Map<String, Entity> entities = new HashMap<>();
 }
@@ -217,7 +217,7 @@ Nous allons modifier maintenant le code de mise à jour de la position et de la 
 .Calcul de la position et de la vélocité de chaque entité
 [source,java]
 ----
-public class examples.MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class MonProgrammeEntity2 extends TestGame implements KeyListener {
     //...
     private void update() {
         // parcours de l’ensemble des entités
@@ -248,7 +248,7 @@ La méthode `render` doit-elle aussi être adaptée :
 .Dessin de toutes les entités.
 [source,java]
 ----
-public class examples.MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class MonProgrammeEntity2 extends TestGame implements KeyListener {
     //...
 private void render() {
         Graphics2D g = renderingBuffer.createGraphics();
@@ -276,7 +276,7 @@ private void render() {
 ----
 
 . Nous parcourons l’ensemble des entités déclaré dans la map,
-. Nous déplaçons le curseur de dessin à la position de l’instance d' `Entity` en cours,
+. Nous déplaçons le curseur de dessin à la position de l’instance d’ `Entity` en cours,
 . Nous procédons au dessin de la forme (`shape`) de l’entité à la position demandée, nous dessinons également le vecteur 2D de la vélocité à la même position,
 . Nous ramenons le curseur à la position de départ pour tracer l’entité suivante.
 
@@ -285,7 +285,7 @@ L’ensemble du traitement ayant été modifié pour supporter nos nouveaux obje
 .Creation des nouvelles entités au démarrage
 [source,java]
 ----
-public class examples.MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class MonProgrammeEntity2 extends TestGame implements KeyListener {
     //...
 public void initialize() {
         //...
@@ -317,7 +317,7 @@ Et enfin, nous devons modifier la méthode input pour retrouver l’objet nommé
 .Modification de la méthode input()
 [source,java]
 ----
-public class examples.MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class MonProgrammeEntity2 extends TestGame implements KeyListener {
     //...
     private void input() {
         // <1>
@@ -350,7 +350,7 @@ Une différence de taille, si nous souhaitons créer 10 entités ennemies, il no
 .Création de 10 ennemis avec délégation à la méthode _createScene()_
 [source,java]
 ----
-public class examples.MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class MonProgrammeEntity2 extends TestGame implements KeyListener {
     //...
         public void initialize() {
         testMode = config.get("app.test");
@@ -395,19 +395,19 @@ public class examples.MonProgrammeEntity2 extends TestGame implements KeyListene
 ----
 
 . On délègue à la création de notre scène à la nouvelle méthode `createScene()`,
-. La création de la scène consiste en l'ajout des Entity's à notre jeu,
-. On utilise une nouvelle fonctionnalité des Entity (voir ci-après) que sont les attributes d'entité, qui permet d'ajouter autant d'attribut avec une valeur que l'on veut, ce qui permettra de définir des valeurs temporaires, utilise dans les calculs et leurs limitations),
-. La vitesse de chaque ennemi est redéfinie en fonction de la difference de position entre l'ennemi et le player, et un facteur de correction aléatoire est appliqué afin de moduler cette vitesse entre 50% et 110% de lsa vitesse précédente, dans une limite définie ici à 90% dela vitesse du player, et dans tous les ne pouvant excéder 2 pixels/frame.
+. La création de la scène consiste en l’ajout des Entity's à notre jeu,
+. On utilise une nouvelle fonctionnalité des Entity (voir ci-après) que sont les attributes d’entité, qui permet d’ajouter autant d’attribut avec une valeur que l’on veut, ce qui permettra de définir des valeurs temporaires, utilise dans les calculs et leurs limitations),
+. La vitesse de chaque ennemi est redéfinie en fonction de la difference de position entre l’ennemi et le player, et un facteur de correction aléatoire est appliqué afin de moduler cette vitesse entre 50% et 110% de lsa vitesse précédente, dans une limite définie ici à 90% dela vitesse du player, et dans tous les ne pouvant excéder 2 pixels/frame.
 
-**Les attributs d'une entité**
+**Les attributs d’une entité**
 
-Les attributs pour une entité, sont stockés dans une Map supportant l'accès concurrent : `attributes`.
+Les attributs pour une entité, sont stockés dans une Map supportant l’accès concurrent : `attributes`.
 
-Le type d'un attribut n'est pas contrôlé à sa création est peut donc convenir à n'importe quel usage.
+Le type d’un attribut n'est pas contrôlé à sa création est peut donc convenir à n'importe quel usage.
 
 Un attribut sera ajouter via la méthode `Entity#setAttribute(attrKey:String, attrValue:Object)`
 
-Il peut être récupéré à l'aide de la méthode `Entity.getAttribute(attrKey:String, defaultAttrValue:Object)`.
+Il peut être récupéré à l’aide de la méthode `Entity.getAttribute(attrKey:String, defaultAttrValue:Object)`.
 
 Si la clé définie par `attrKey` n'existe pas dans la map des attributs, la valeur `defaultAttrValue` sera utilisée par défaut.
 
@@ -415,10 +415,10 @@ Revenons à nos énemies !
 
 Il nous faut ensuite adapter le programme pour la simulation de mouvement de tous ces nouveaux ennemis :
 
-.Animation de 10 ennemis en fonction de la position de l'objet "player"
+.Animation de 10 ennemis en fonction de la position de l’objet "player"
 [source,java]
 ----
-public class examples.MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class MonProgrammeEntity2 extends TestGame implements KeyListener {
     //...
     private void input() {
         //...
@@ -430,8 +430,8 @@ public class examples.MonProgrammeEntity2 extends TestGame implements KeyListene
                 // new speed will be only a random ratio of the current one (from 50% to 110%)
                 double eSpeed = (0.5 + Math.random() * 1.1);
 
-                // Simulation pour les ennemis qui suivent le player sur l'are X,
-                // but limited to 'max.speed' attribute's value
+                // Simulation pour les ennemis qui suivent le player sur l’are X,
+                // but limited to 'max.speed’ attribute's value
                 double centerPlayerX = player.getX() + player.getShape().getBounds().width * 0.5;
                 double centerEnemyX = e.getX() + e.getShape().getBounds().width * 0.5;
                 double directionX = Math.signum(centerPlayerX - centerEnemyX);
@@ -442,8 +442,8 @@ public class examples.MonProgrammeEntity2 extends TestGame implements KeyListene
                         e.getDy());
                 }
 
-                // Simulation pour les ennemis qui suivent le player sur l'are Y,
-                // but limited to 'max.speed' attribute's value
+                // Simulation pour les ennemis qui suivent le player sur l’are Y,
+                // but limited to 'max.speed’ attribute's value
                 double centerPlayerY = player.getY() + player.getShape().getBounds().width * 0.5;
                 double centerEnemyY = e.getY() + e.getShape().getBounds().width * 0.5;
                 double directionY = Math.signum(centerPlayerY - centerEnemyY);
@@ -461,14 +461,18 @@ public class examples.MonProgrammeEntity2 extends TestGame implements KeyListene
 
 ----
 
-. Nous parcourons l'ensemble des entités dont le nom commence par "enemy_",
-. Pour chaque entité, nous calculons la vitesse sur l'axe horizontal (X) pour assurer une poursuite du de l'entité "player",
-. Nous calculons ensuite la vitesse sur l'axe vertical (Y) pour assurer cette même poursuite.
+. Nous parcourons l’ensemble des entités dont le nom commence par "enemy_",
+. Pour chaque entité, nous calculons la vitesse sur l’axe horizontal (X) pour assurer une poursuite de l’entité "player",
+. Nous calculons ensuite la vitesse sur l’axe vertical (Y) pour assurer cette même poursuite.
 
-Nous obtenons alors une dizaine d'entités "enemy_*" qui vont tenter de rattraper le "player", en ayant une vitesse limitée par calcul.
+Nous obtenons une dizaine d’entités "enemy_*" qui vont tenter de rattraper le "player", en ayant une vitesse limitée par calcul.
 
 CAUTION: Si la vitesse maximum autorisée pour chaque entité n'est pas définie dans ses attributs par une valeur pour `max.speed`, elle sera limitée par code à 2 pixels / frame.
 
-Nous avons maintenant un objet `Entity` qui permet d'encapsuler toutes les variables nécessaires à la description d'entités animées dans notre scène.
+Nous avons maintenant un objet `Entity` qui permet d’encapsuler toutes les variables nécessaires à la description d’entités animées dans notre scène.
 
-TIP: Dans un chapitre ultérieur, nous découvrirons comment coder des comportements spécifiques et les appliquer à plusieurs entités, sans pour autant changer le code de l'une des étapes internes de la boucle de jeu, ce via la future interface `Behavior`.
+TIP: Dans un chapitre ultérieur, nous découvrirons comment coder des comportements spécifiques et les appliquer à plusieurs entités, sans pour autant changer le code de l’une des étapes internes de la boucle de jeu, ce via la future interface `Behavior`.
+
+== Conclusion
+
+WARNING: TODO rédiger la conclusion de ce chapitre avant d’exposer la suite.

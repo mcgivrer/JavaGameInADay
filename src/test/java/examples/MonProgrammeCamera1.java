@@ -4,7 +4,6 @@ import entity.Camera;
 import entity.Entity;
 import game.Game;
 import game.TestGame;
-import physic.World;
 import scenes.PlayCameraScene1;
 import scenes.Scene;
 import utils.Config;
@@ -145,7 +144,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
      */
     public void initialize() {
         testMode = config.get("app.test");
-        maxLoopCount = (int) config.get("app.test.loop.max.count");
+        maxLoopCount = config.get("app.test.loop.max.count");
         System.out.printf("# %s est initialisé%n", this.getClass().getSimpleName());
         createWindow();
         createBuffer();
@@ -204,7 +203,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         window.pack();
         window.setVisible(true);
         window.addKeyListener(this);
-        window.createBufferStrategy((int) config.get("app.render.buffer.strategy"));
+        window.createBufferStrategy(config.get("app.render.buffer.strategy"));
     }
 
     /**
@@ -428,7 +427,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         // draw velocity vector
         g.setColor(e.getColor());
         g.drawLine((int) (e.getShape().getBounds().width * 0.5), (int) (e.getShape().getBounds().height * 0.5),
-                (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (+e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
+                (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
         drawDebugEntity(g, e);
         g.translate((int) -e.getX(), (int) -e.getY());
     }

@@ -473,4 +473,6 @@ public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
 . Et enfin, nous échangeons l'objet `Rectangle2D` pour un objet `World` dans la signature de la méthode de gestion du rebond.
 
 
-Et voilà !
+== Conclusion
+
+Nous avons ajouté à notre moteur quelques éléments importants qui serviront de base à d'autre principes que nous allons développer dans les chapitres suivants, comme les systèmes de particules qui feront appel à l'utilisation des comportements spécifiques (`Behaviors`), ainsi qu'à la structure en arbred

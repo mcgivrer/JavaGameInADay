@@ -171,15 +171,15 @@ public class PlayScene extends Scene{
 
 Par contre, nous n’avons aucune raison de déplacer le traitement des entités, l’application des lois de la physique sera bien la même quelque que soit la `Scene`.
 
-== Modifions examples.MonProgramme
+== Modifions MonProgramme
 
 Il est temps de connecter notre nouvelle Scene avec le programme principal.
 Nous allons ajouter une liste de scenes ainsi qu'une scene courante.
 
-.Initialisation de la Scene dans le examples.MonProgrammeScene1
+.Initialisation de la Scene dans le MonProgrammeScene1
 [source,java]
 ----
-public class examples.MonProgrammeScene1 extends TestGame implements Game {
+public class MonProgrammeScene1 extends TestGame implements Game {
     //...
     // <1>
     private Mapw<String,Scene> scenes = new ConcurrentHashMap<>();
@@ -210,7 +210,7 @@ Ensuite, nous allons changer la façon de créer la scène, en déléguant cela 
 
 [source,java]
 ----
-public class examples.MonProgrammeScene1 extends TestCase implements KeyListener,Game {
+public class MonProgrammeScene1 extends TestCase implements KeyListener,Game {
     //...
     private void createScene() {
         // <1>
@@ -229,7 +229,7 @@ Enfin, nous allons intégrer les traitements liées à la Scene dans la boucle p
 
 [source,java]
 ----
-public class examples.MonProgrammeScene1 extends TestCase implements KeyListener,Game {
+public class MonProgrammeScene1 extends TestCase implements KeyListener,Game {
     //...
     private void input() {
         // <1>
@@ -374,3 +374,4 @@ Pour reprendre le diagramme de classes du début :
 .Node, Scene AbstractScene et Entity dans un arbre
 image::https://www.plantuml.com/plantuml/png/RO_DIWCn58NtUOeiMwGl46IeY3jnKryWJOxjXUH69dV0Kdnt9ycCJCHTSlZEpprciQDCCIX5B1W_h8C-EJ3ktqgvO7FMRydZyNsuA_sWoPkG-5AUR2FCIKQQlpExqYyi93UDBm7xnToqag0hsiYdSvRHEgbrlQ5AWwRu6H31afTDfVS2gNc4lDkRvnG2d53YjMNBt7QRbNlJj3BXIXxhr0Yv9fyxpSfiEK-29hVwdkpd_s_ugvRZVbDKOmw7OMar_Mclb4KTmNwAuGS0[Node,Scene AbstractScene et Entity dans un arbre]
 
+WARNING: TODO terminer le chapitre Node et l'affichage de la scene en mode arbre composé de nœuds.
