@@ -290,20 +290,22 @@ public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
      * - Applies a friction factor to the object's velocity.
      */
     private void update() {
-        // calcul de la position du player bleu en fonction de la vitesse courante.
         currentScene.getEntities().stream().filter(e -> !(e instanceof Camera)).forEach(e -> {
-            e.setPosition(e.getX() + e.getDx(), e.getY() + e.getDy());
+            // Calcul de la nouvelle position en tenant compte de l'objet World issue de la scène active.
+            World world = currentScene.getWorld();
+            e.setPosition(
+                    e.getX() + e.getDx() - (world.getGravity().getX()),
+                    e.getY() + e.getDy() - (world.getGravity().getY()));
 
             // repositionnement dans la zone de jeu si nécessaire
-            if (!currentScene.getWorld().contains(e)) {
-
-                applyBouncingFactor(currentScene, e);
+            if (!world.contains(e)) {
+                applyBouncingFactor(world, e);
                 e.setPosition(
-                        Math.min(Math.max(e.getX(), currentScene.getWorld().getX()), currentScene.getWorld().getWidth() - e.getWidth()),
-                        Math.min(Math.max(e.getY(), currentScene.getWorld().getY()), currentScene.getWorld().getHeight() - e.getHeight()));
+                        Math.min(Math.max(e.getX(), world.getX()), world.getWidth() - e.getWidth()),
+                        Math.min(Math.max(e.getY(), world.getY()), world.getHeight() - e.getHeight()));
             }
 
-            // application du facteur de friction
+            // Application du facteur de friction
             e.setVelocity(e.getDx() * e.getFriction(), e.getDy() * e.getFriction());
             e.getBehaviors().forEach(b -> b.update(e));
         });
@@ -313,14 +315,14 @@ public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
         currentScene.update(this);
     }
 
-    private void applyBouncingFactor(Scene currentScene, Entity e) {
+    private void applyBouncingFactor(World world, Entity e) {
         // application du rebond si collision avec le bord de la zone de jeu
-        if (e.getX() < currentScene.getWorld().getX()
-                || e.getX() + e.getWidth() > e.getWidth() + currentScene.getWorld().getWidth()) {
+        if (e.getX() < world.getX()
+                || e.getX() + e.getWidth() > e.getWidth() + world.getWidth()) {
             e.setVelocity(-e.getDx() * e.getElasticity(), e.getDy());
         }
-        if (e.getY() < currentScene.getWorld().getY()
-                || e.getY() + e.getHeight() > currentScene.getWorld().getHeight()) {
+        if (e.getY() < world.getY()
+                || e.getY() + e.getHeight() > world.getHeight()) {
             e.setVelocity(e.getDx(), -e.getDy() * e.getElasticity());
         }
     }
@@ -337,8 +339,10 @@ public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
      * - Shows the buffer strategy to display the rendered image.
      */
     private void render() {
+
+        World world = currentScene.getWorld();
         Graphics2D g = renderingBuffer.createGraphics();
-        // configure rendering pipeline
+        // Configure rendering pipeline
         g.setRenderingHints(
                 Map.of(
                         RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON,
@@ -353,7 +357,7 @@ public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
         if (camera != null) {
             g.translate((int) -camera.getX(), (int) -camera.getY());
         }
-        drawWorldLimit(g, currentScene.getWorld(), 16, 16);
+        drawWorldLimit(g, world, 16, 16);
         if (camera != null) {
             if (isDebugGreaterThan(1)) {
                 drawDebugCamera(g, camera);
@@ -369,7 +373,7 @@ public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
                     if (camera != null) {
                         g.translate((int) -camera.getX(), (int) -camera.getY());
                     }
-                    drawEntity(e, g);
+                    drawEntity(e, world, g);
                     if (camera != null) {
                         g.translate((int) camera.getX(), (int) camera.getY());
                     }
@@ -382,7 +386,12 @@ public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
 
         // copy buffer to window.
         BufferStrategy bs = window.getBufferStrategy();
-        Graphics gw = bs.getDrawGraphics();
+        Graphics2D gw = (Graphics2D) bs.getDrawGraphics();
+        // configure rendering pipeline
+        gw.setRenderingHints(
+                Map.of(
+                        RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON,
+                        RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON));
         gw.drawImage(renderingBuffer, 0, 0, window.getWidth(), window.getHeight(),
                 0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight()
                 , null);
@@ -417,7 +426,7 @@ public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
         g.draw(world);
     }
 
-    private void drawEntity(Entity e, Graphics2D g) {
+    private void drawEntity(Entity e, World world, Graphics2D g) {
         g.translate((int) e.getX(), (int) e.getY());
         g.setColor(e.getFillColor());
         g.fill(e.getShape());
@@ -425,21 +434,24 @@ public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
         g.setColor(e.getColor());
         g.drawLine((int) (e.getShape().getBounds().width * 0.5), (int) (e.getShape().getBounds().height * 0.5),
                 (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (+e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
-        drawDebugEntity(g, e);
+        drawDebugEntity(g, world, e);
         g.translate((int) -e.getX(), (int) -e.getY());
     }
 
-    private void drawDebugEntity(Graphics2D g, Entity e) {
+    private void drawDebugEntity(Graphics2D g, World world, Entity e) {
         if (isDebugGreaterThan(1)) {
             g.setStroke(new BasicStroke(0.5f));
             g.setColor(Color.ORANGE);
             g.draw(e.getShape());
-            g.setFont(g.getFont().deriveFont(9.0f));
-            g.drawString("#:%d:%s".formatted(e.getId(), e.getName()), (int) e.getWidth(), 0);
             if (isDebugGreaterThan(2)) {
-                g.drawString("pos:%.0f,%.0f".formatted(e.getX(), e.getY()), (int) e.getWidth(), 10);
-                g.drawString("siz:%.2f,%.2f".formatted(e.getWidth(), e.getHeight()), (int) e.getWidth(), 20);
-                g.drawString("vel:%.2f,%.2f".formatted(e.getDx(), e.getDy()), (int) e.getWidth(), 30);
+                g.setFont(g.getFont().deriveFont(9.0f));
+                g.drawString("#:%d:%s".formatted(e.getId(), e.getName()), (int) e.getWidth(), 0);
+                if (isDebugGreaterThan(3)) {
+                    g.drawString("p:%3.0f,%3.0f".formatted(e.getX(), e.getY()), (int) e.getWidth(), 10);
+                    g.drawString("s:%3.2f,%3.2f".formatted(e.getWidth(), e.getHeight()), (int) e.getWidth(), 20);
+                    g.drawString("av:%3.2f,%3.2f".formatted(e.getDx(), e.getDy()), (int) e.getWidth(), 30);
+                    g.drawString("g:%3.2f,%3.2f".formatted(world.getGravity().getX(), world.getGravity().getY()), (int) e.getWidth(), 40);
+                }
             }
         }
     }

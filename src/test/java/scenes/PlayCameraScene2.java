@@ -36,13 +36,13 @@ public class PlayCameraScene2 extends AbstractScene {
         setWorld(
                 new World(
                         new Point2D.Double(0, -0.981),
-                        new Double(0, 0, 30*16, 20*16)));
+                        new Double(0, 0, 30 * 16, 20 * 16)));
 
         // Création du player bleu
         Entity player = new Entity("player")
                 .setPosition(
-                        ((app.getRenderingBuffer().getWidth() - 16) * 0.5),
-                        ((app.getRenderingBuffer().getHeight() - 16) * 0.5))
+                        ((getWorld().getWidth() - 16) * 0.5),
+                        ((getWorld().getHeight() - 16) * 0.5))
                 .setElasticity((double) app.getConfig().get("app.physic.entity.player.elasticity"))
                 .setFriction((double) app.getConfig().get("app.physic.entity.player.friction"))
                 .setFillColor(Color.BLUE)
@@ -99,7 +99,7 @@ public class PlayCameraScene2 extends AbstractScene {
         // Création de l’ennemi rouge
         for (int i = 0; i < nbEntities; i++) {
             Entity enemy = new Entity(entityBaseName.formatted(i))
-                    .setPosition((Math.random() * (app.getRenderingBuffer().getWidth() - 16)), (Math.random() * (app.getRenderingBuffer().getHeight() - 16)))
+                    .setPosition((Math.random() * (getWorld().getWidth() - 16)), (Math.random() * (getWorld().getHeight() - 16)))
                     .setElasticity(Math.random())
                     .setFriction(Math.random())
                     .setFillColor(Color.RED)
