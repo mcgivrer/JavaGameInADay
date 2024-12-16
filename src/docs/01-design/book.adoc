@@ -5,12 +5,11 @@
 :creationdate: 2024-11-28
 :doctype: book
 :chapter-signifier: Chapitre
-:stem:
-:description: Document d'explication de l'implémentation des bases d'un moteur de jeu 2D.
+:stem:latexmath
+:description: Document d’explication de l’implémentation des bases d’un moteur de jeu 2D développé en java uniquement, sur la base du JDK 23.
 :toc: auto
 
 :leveloffset: +1
-
 
 include::100-preface.adoc[]
 
@@ -21,6 +20,12 @@ include::102-configuration.adoc[]
 include::103-fenetre-et-boucle-de-jeu.adoc[]
 
 include::104-entité-et-enemies.adoc[]
+
+include::105-definir-une-scene.adoc[]
+
+include::106-comportement-dans-les-entites.adoc[]
+
+include::107-camera-monde-et-aire-de-jeu.adoc[]
 
 include::110-newton-s-physics.adoc[]
 

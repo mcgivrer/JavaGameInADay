@@ -95,7 +95,7 @@ Si maintenant, nous souhaitons modéliser nos objets animés, nous devons créer
 
 Voici une première proposition :
 
-image:https://www.plantuml.com/plantuml/png/PSwn2W8n383XlKyH7y35iOZSukOck9SqUe4saIQASjoxsqCHn2tv-0aPp5FpMorXvIDLWggY0KioWxqu-nEc06kOUkUCCx1aUiIYSbcOytUKL2aUlV5xlQgniqg44w5hsonufwBOR_vWGgH2BVtLPsr85WzilltmBinXv4nGoKVDOI39_VaN[Entity UML model]
+image::https://www.plantuml.com/plantuml/png/PSwn2W8n383XlKyH7y35iOZSukOck9SqUe4saIQASjoxsqCHn2tv-0aPp5FpMorXvIDLWggY0KioWxqu-nEc06kOUkUCCx1aUiIYSbcOytUKL2aUlV5xlQgniqg44w5hsonufwBOR_vWGgH2BVtLPsr85WzilltmBinXv4nGoKVDOI39_VaN[Entity UML model]
 
 _fig. 2 - le modèle UML pour la class `Entity`_
 
@@ -216,7 +216,7 @@ public class PhysicEngine {
 
 Ce code peut être décrit sommairement via UML avec ce diagramme d’activités :
 
-image:http://www.plantuml.com/plantuml/png/VOwnoeGm48JxFCMM2lulOF7Z5NAjS71zY8Eta6p4h8LlVs9IU1nd4vZCV3lJ9RMBhi6Rkmtu-wVXjILslKmiQ6cTHwke7Ww2XfG3QdDEq4uSPaiJj1TbPQIgDZx6cL2q8Vg0VjKS_DRaccycsoqbwCqvU2nMESfryWaVtIwkKqDCN6xbtxDVrkLPaD5q-xC6_mO0[Calculs dans le moteur physique pour l’ensemble des entités d’une scene.]
+image::http://www.plantuml.com/plantuml/png/VOwnoeGm48JxFCMM2lulOF7Z5NAjS71zY8Eta6p4h8LlVs9IU1nd4vZCV3lJ9RMBhi6Rkmtu-wVXjILslKmiQ6cTHwke7Ww2XfG3QdDEq4uSPaiJj1TbPQIgDZx6cL2q8Vg0VjKS_DRaccycsoqbwCqvU2nMESfryWaVtIwkKqDCN6xbtxDVrkLPaD5q-xC6_mO0[Calculs dans le moteur physique pour l’ensemble des entités d’une scene.]
 
 _fig. 3 - Calculs dans le moteur physique pour l’ensemble des entités d’une scene._
 
@@ -230,7 +230,7 @@ regardons notre espace de jeu est limitée.
 
 Ce sera notre première limite à définir : garder les entités de notre scene dans l’espace du monde de notre jeu.
 
-image:https://docs.google.com/drawings/d/e/2PACX-1vS1mK0tLz4VBBNbMNIJxtHGTymADBu7emdwWDRA5RIwxEnJQ0DcOFqP4uCc7lFwj77qbLl3Ntm9tzbO/pub?w=549&h=362[Notre Entité soumise à un ensemble de forces et limitée dans l’espace]
+image::https://docs.google.com/drawings/d/e/2PACX-1vS1mK0tLz4VBBNbMNIJxtHGTymADBu7emdwWDRA5RIwxEnJQ0DcOFqP4uCc7lFwj77qbLl3Ntm9tzbO/pub?w=549&h=362[Notre Entité soumise à un ensemble de forces et limitée dans l’espace]
 
 _fig. 2 - Notre Entité soumise à un ensemble de forces et limitée dans l’espace_
 
@@ -306,7 +306,7 @@ Dans ce code, nous pouvons constater que nous profitons des capacités héritée
 comparaison afin de détecter si l’instance de notre `Entity` est contenue par l’objet `World`.
 Si ce n'est pas le cas, nous repositionnons l’instance `Entity` dans la limite de l’espace de jeu du monde.
 
-image:https://docs.google.com/drawings/d/e/2PACX-1vQjqb-Ky6hG_zGtFcszvp3bHUp3GyqN-DD6DeM17_c2wmNDRize_2nnOXs_3ckV-c0f0zVxhgviRGgi/pub?w=504&h=351[Les limite du monde imposées à une instance d’Entity]
+image::https://docs.google.com/drawings/d/e/2PACX-1vQjqb-Ky6hG_zGtFcszvp3bHUp3GyqN-DD6DeM17_c2wmNDRize_2nnOXs_3ckV-c0f0zVxhgviRGgi/pub?w=504&h=351[Les limite du monde imposées à une instance d’Entity]
 
 _fig. 4 - Les limite du monde imposées à une instance d’Entity_
 
@@ -516,7 +516,7 @@ Imaginons une Scene d’automne, où le vent souffle, et l’eau de la rivère e
 Nous allons matérialiser ces zones de vent et de courant dans la classe World à travers la definition de la nouvelle
 classe `WorldArea`.
 
-image:https://docs.google.com/drawings/d/e/2PACX-1vS30djuxifNQtcIpwzM10mNhWFVtmLuOmsx8TZiZpzFrLqVh-sRZ2U8onN4fLyEOXS12D1vvzeD_O-M/pub?w=429&h=289[Définissons une zone de vent et une zone de courant]
+image::https://docs.google.com/drawings/d/e/2PACX-1vS30djuxifNQtcIpwzM10mNhWFVtmLuOmsx8TZiZpzFrLqVh-sRZ2U8onN4fLyEOXS12D1vvzeD_O-M/pub?w=429&h=289[Définissons une zone de vent et une zone de courant]
 
 _fig. 5 - Définissons une zone de vent et une zone de courant_
 
@@ -660,7 +660,7 @@ public class PhysicEngine {
 Ainsi, lorsque qu'un objet `Entity` pénétrera dans une zone définie par un objet `WorldArea`, toutes les forces décrites
 dans celui-ci seront appliquée à l’entité contenue.
 
-image:https://docs.google.com/drawings/d/e/2PACX-1vTQCHLtU7yDIyKQJYRFcvWZJP-EMApQ0PZeKrxPK5I6iEoHyaD5f_ejpuy1Qv82Z6JzOGvJffnJGBOY/pub?w=429&h=289[Effets de zone d’influence sur les Entités]
+image::https://docs.google.com/drawings/d/e/2PACX-1vTQCHLtU7yDIyKQJYRFcvWZJP-EMApQ0PZeKrxPK5I6iEoHyaD5f_ejpuy1Qv82Z6JzOGvJffnJGBOY/pub?w=429&h=289[Effets de zone d’influence sur les Entités]
 
 _fig. 6 - Effets de zone d’influence sur les Entités_
 
