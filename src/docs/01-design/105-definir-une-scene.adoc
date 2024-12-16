@@ -171,15 +171,15 @@ public class PlayScene extends Scene{
 
 Par contre, nous n’avons aucune raison de déplacer le traitement des entités, l’application des lois de la physique sera bien la même quelque que soit la `Scene`.
 
-== Modifions MonProgramme
+== Modifions examples.MonProgramme
 
 Il est temps de connecter notre nouvelle Scene avec le programme principal.
 Nous allons ajouter une liste de scenes ainsi qu'une scene courante.
 
-.Initialisation de la Scene dans le MonProgrammeScene1
+.Initialisation de la Scene dans le examples.MonProgrammeScene1
 [source,java]
 ----
-public class MonProgrammeScene1 extends TestGame implements Game {
+public class examples.MonProgrammeScene1 extends TestGame implements Game {
     //...
     // <1>
     private Mapw<String,Scene> scenes = new ConcurrentHashMap<>();
@@ -210,7 +210,7 @@ Ensuite, nous allons changer la façon de créer la scène, en déléguant cela 
 
 [source,java]
 ----
-public class MonProgrammeScene1 extends TestCase implements KeyListener,Game {
+public class examples.MonProgrammeScene1 extends TestCase implements KeyListener,Game {
     //...
     private void createScene() {
         // <1>
@@ -229,7 +229,7 @@ Enfin, nous allons intégrer les traitements liées à la Scene dans la boucle p
 
 [source,java]
 ----
-public class MonProgrammeScene1 extends TestCase implements KeyListener,Game {
+public class examples.MonProgrammeScene1 extends TestCase implements KeyListener,Game {
     //...
     private void input() {
         // <1>

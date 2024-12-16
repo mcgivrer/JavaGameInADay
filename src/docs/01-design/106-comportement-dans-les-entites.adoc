@@ -54,7 +54,7 @@ Nous utiliserons cette interface pour déplacer certains traitements au plus pr�
 
 [source,java]
 ----
-public class MonProgrammeBehavior1 extends JPanel implements KeyListener,Game {
+public class examples.MonProgrammeBehavior1 extends JPanel implements KeyListener,Game {
     //...
     public void create(Game app) {
         // Création du player bleu
@@ -127,7 +127,7 @@ Pour chaque entité, des calculs sont effectués pour ajuster la position et la 
 .Le code modifié pour exécuter les Behavior's
 [source,java]
 ----
-public class MonProgrammeBehavior1 extends JPanel implements KeyListener,Game {
+public class examples.MonProgrammeBehavior1 extends JPanel implements KeyListener,Game {
     //...
     // <1>
     private void createScene() {
@@ -183,7 +183,7 @@ Nous allons faire de même avec le comportement des ennemis :
 .La méthode create dans la nouvelle scene PlayBehaviorScene adaptée
 [source,java]
 ----
-public class MonProgrammeBehavior1 extends JPanel implements KeyListener,Game {
+public class examples.MonProgrammeBehavior1 extends JPanel implements KeyListener,Game {
     //...
     public void create(Game app) {
         // Création du player bleu
@@ -239,12 +239,12 @@ public class MonProgrammeBehavior1 extends JPanel implements KeyListener,Game {
 
 Nous voilà fin prêt à lancer notre programme modifié :
 
-.la ligne de commande ultime qui permet de compiler et d’exécuter l’un de nos exemples, ici 'MonProgrammeBehavior1'
+.la ligne de commande ultime qui permet de compiler et d’exécuter l’un de nos exemples, ici 'examples.MonProgrammeBehavior1'
 
 .Exécution des codes d'exemples dans le répertoire _src/test_
 [source,bash]
 ----
-javac -d target/test-classes $(find src/test -name "*.java") && find src/test -name "*.properties" -exec cp --parents {} target/test-classes \; && java -cp target/test-classes MonProgrammeBehavior1
+javac -d target/test-classes $(find src/test -name "*.java") && find src/test -name "*.properties" -exec cp --parents {} target/test-classes \; && java -cp target/test-classes examples.MonProgrammeBehavior1
 ----
 
 
@@ -258,7 +258,7 @@ Ce qui sera exécuté par :
 
 [source,console]
 ----
-./runex.sh MonProgrammeBehavior1
+./runex.sh examples.MonProgrammeBehavior1
 ----
 
 Vous obtiendrez quelques chose de similaire à la copie d"cran ci-dessous (ici capturée sous linux Ubuntu 24.04) :

@@ -1,3 +1,5 @@
+package examples;
+
 import game.TestGame;
 import utils.Config;
 
@@ -5,16 +7,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 /**
- * MonProgrammeEntity1 is a class that represents a game entity, handling configuration,
- * rendering, and input events within a graphical application window.
- * It extends TestGame and implements KeyListener to manage keyboard input for game control.
+ * examples.MonProgrammeDemo3 is a demo game application extending game.TestGame and implementing KeyListener.
+ * It includes functionalities for initializing game configurations, handling keyboard inputs,
+ * updating game states, rendering frames, and executing the game loop.
  */
-public class MonProgrammeEntity1 extends TestGame implements KeyListener {
+public class MonProgrammeDemo3 extends TestGame implements KeyListener {
     private String configFilePath = "/demo3.properties";
     private Config config;
 
@@ -29,13 +30,10 @@ public class MonProgrammeEntity1 extends TestGame implements KeyListener {
      * The coordinate position used in the game for rendering or updating the location of an object.
      */
     private double x, y;
-
-    private double ex, ey;
     /**
      * Represents the velocity of an object.
      */
     private double dx, dy;
-    private double edx, edy;
     /**
      * Elasticity coefficient for an object in the simulation.
      * This value determines how "bouncy" an object is during collisions.
@@ -43,7 +41,6 @@ public class MonProgrammeEntity1 extends TestGame implements KeyListener {
      * while values closer to 0 represent low elasticity (less bounce).
      */
     private double elasticity = 0.75;
-    private double eElasticity = 0.75;
     /**
      * The friction coefficient used in the simulation. This value affects the rate at
      * which the moving object slows down due to friction. A higher value would mean less
@@ -51,16 +48,14 @@ public class MonProgrammeEntity1 extends TestGame implements KeyListener {
      * friction and faster deceleration.
      */
     private double friction = 0.98;
-    private double eFriction = 0.98;
     /**
      * Represents the current speed of an object in the game.
      * This variable is used to control the movement and dynamics
      * of the object within the game loop.
      */
     private double speed = 0.0;
-    private double eSpeed = 0.0;
 
-    public MonProgrammeEntity1() {
+    public MonProgrammeDemo3() {
         System.out.printf("# Démarrage de %s%n", this.getClass().getSimpleName());
         config = new Config(this);
         config.load(configFilePath);
@@ -85,21 +80,14 @@ public class MonProgrammeEntity1 extends TestGame implements KeyListener {
         createWindow();
         createBuffer();
 
-        // Position de départ du player bleu
+        // blue square position initialization.
         x = (int) ((renderingBuffer.getWidth() - 16) * 0.5);
         y = (int) ((renderingBuffer.getHeight() - 16) * 0.5);
+
         // load physic factors
         speed = (double) config.get("app.physic.entity.player.speed");
         elasticity = (double) config.get("app.physic.entity.player.elasticity");
         friction = (double) config.get("app.physic.entity.player.friction");
-
-
-        // Position de départ de l'ennemi rouge
-        ex = (int) (Math.random() * (renderingBuffer.getWidth() - 16));
-        ey = (int) (Math.random() * (renderingBuffer.getHeight() - 16));
-        eSpeed = 1.0;
-        eElasticity = 0.96;
-        eFriction = 0.99;
     }
 
     /**
@@ -185,15 +173,6 @@ public class MonProgrammeEntity1 extends TestGame implements KeyListener {
         if (keys[KeyEvent.VK_DOWN]) {
             dy = +speed;
         }
-
-        // Simulation pour l’ennemi qui suit le player
-        if (x+8 != ex+5) {
-            edx = Math.min(Math.signum(((x+8) - (ex+5)) * 0.5 * (1 - (eSpeed / ((x+8) - (ex+5))))),2.0);
-        }
-        if (y != ey) {
-            edy = Math.min(Math.signum(((y+8) - (ey+5)) * 0.5 * (1 - (eSpeed / ((y+8) - (ey+5))))),2.0);
-        }
-
     }
 
     /**
@@ -206,7 +185,7 @@ public class MonProgrammeEntity1 extends TestGame implements KeyListener {
      * - Applies a friction factor to the object's velocity.
      */
     private void update() {
-        // calcul de la position du player bleu en fonction de la vitesse courante.
+        // calcul de la position en fonction de la vitesse courante.
         x += dx;
         y += dy;
 
@@ -226,25 +205,6 @@ public class MonProgrammeEntity1 extends TestGame implements KeyListener {
         dx *= friction;
         dy *= friction;
 
-        // calcul de la nouvelle position de l'ennemi rouge en fonction de la vitesse courante.
-        ex += edx;
-        ey += edy;
-
-        // application du rebond si collision avec le bord de la zone de jeu
-        if (ex < -5 || ex > renderingBuffer.getWidth() - 5) {
-            edx = -edx * eElasticity;
-        }
-        if (ey < -5 || ey > renderingBuffer.getHeight() - 5) {
-            edy = -edy * eElasticity;
-        }
-
-        // repositionnement dans la zone de jeu si nécessaire
-        ex = Math.min(Math.max(ex, -5), renderingBuffer.getWidth() - 5);
-        ey = Math.min(Math.max(ey, -5), renderingBuffer.getHeight() - 5);
-
-        // application du facteur de friction
-        edx *= eFriction;
-        edy *= eFriction;
 
     }
 
@@ -265,18 +225,12 @@ public class MonProgrammeEntity1 extends TestGame implements KeyListener {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight());
 
-        // draw player
+        // draw something
+
         g.setColor(Color.BLUE);
         g.fillRect((int) x, (int) y, 16, 16);
         g.setColor(Color.YELLOW);
-        g.drawLine((int) x + 8, (int) y + 8, (int) (x + 8 + dx * 4), (int) (y + 8 + dy * 4));
-
-        // draw Ennemi
-        g.setColor(Color.RED);
-        g.fill(new Ellipse2D.Double((int) ex, (int) ey, 10, 10));
-        g.setColor(Color.YELLOW);
-        g.drawLine((int) ex + 5, (int) ey + 5, (int) (ex + 5 + edx * 4), (int) (ey + 5 + edy * 4));
-
+        g.drawLine((int) x+8, (int) y+8, (int) (x+8 + dx * 4), (int) (y+8 + dy * 4));
         g.dispose();
 
         // copy buffer to window.
@@ -326,13 +280,13 @@ public class MonProgrammeEntity1 extends TestGame implements KeyListener {
     /**
      * Entry point for the application.
      * <p>
-     * This method creates an instance of MonProgrammeDemo3 and invokes its run method
+     * This method creates an instance of examples.MonProgrammeDemo3 and invokes its run method
      * to start the application.
      *
      * @param args Command-line arguments passed to the application.
      */
     public static void main(String[] args) {
-        MonProgrammeEntity1 prog = new MonProgrammeEntity1();
+        MonProgrammeDemo3 prog = new MonProgrammeDemo3();
         prog.run(args);
     }
 

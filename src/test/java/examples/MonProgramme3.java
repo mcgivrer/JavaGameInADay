@@ -1,3 +1,5 @@
+package examples;
+
 import java.util.Properties;
 
 public class MonProgramme3 {
