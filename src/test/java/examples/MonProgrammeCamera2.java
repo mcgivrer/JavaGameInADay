@@ -5,7 +5,7 @@ import entity.Entity;
 import game.Game;
 import game.TestGame;
 import physic.World;
-import scenes.PlayCameraScene1;
+import scenes.PlayCameraScene2;
 import scenes.Scene;
 import utils.Config;
 
@@ -21,21 +21,21 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * MonProgrammeBehavior1 is a class that extends TestGame and implements KeyListener and Game interfaces.
+ * MonProgrammeBehavior2 is a class that extends TestGame and implements KeyListener and Game interfaces.
  * <p>
  * This class manages the initialization and execution of a game application, including configuration
  * loading, scene management, main game loop execution, and handling of user inputs.
  */
-public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
+public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
     /**
      * Represents the file path to the configuration file used by the application.
      * <p>
      * This variable stores the relative path to the configuration file that
      * contains various settings needed for the initialization and operation
      * of the application. It is typically loaded at the startup of the
-     * `MonProgrammeBehavior1` class to configure application-specific properties.
+     * `MonProgrammeBehavior2` class to configure application-specific properties.
      */
-    private String configFilePath = "/camera1.properties";
+    private String configFilePath = "/camera2.properties";
 
     /**
      * Indicates whether the application is currently running in test mode.
@@ -60,7 +60,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
      */
     private int maxLoopCount = 1;
     /**
-     * Represents the main application window for the MonProgrammeBehavior1 class.
+     * Represents the main application window for the MonProgrammeBehavior2 class.
      * <p>
      * This JFrame is used to display the graphical user interface of the application. It is
      * created and initialized with specific settings such as the window title, size,
@@ -94,7 +94,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
     private final boolean[] keys = new boolean[1024];
 
     /**
-     * A collection of scenes managed by the MonProgrammeBehavior1 class.
+     * A collection of scenes managed by the MonProgrammeBehavior2 class.
      * <p>
      * This map stores various scenes, keyed by their unique string identifiers.
      * It allows easy retrieval and management of scenes within the application.
@@ -125,7 +125,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
      * 2. Creates a configuration object for the application.
      * 3. Loads application settings from a configuration file specified by configFilePath.
      */
-    public MonProgrammeCamera1() {
+    public MonProgrammeCamera2() {
         System.out.printf("# Démarrage de %s%n", this.getClass().getSimpleName());
         config = new Config(this);
         config.load(configFilePath);
@@ -150,7 +150,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         createWindow();
         createBuffer();
 
-        addScene(new PlayCameraScene1("play"));
+        addScene(new PlayCameraScene2("play"));
         createScene();
     }
 
@@ -290,19 +290,17 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
      * - Applies a friction factor to the object's velocity.
      */
     private void update() {
-        Rectangle2D world = new Rectangle2D.Double(0, 0, 640, 400);
         // calcul de la position du player bleu en fonction de la vitesse courante.
         currentScene.getEntities().stream().filter(e -> !(e instanceof Camera)).forEach(e -> {
             e.setPosition(e.getX() + e.getDx(), e.getY() + e.getDy());
 
             // repositionnement dans la zone de jeu si nécessaire
-            if (!world.contains(e)) {
+            if (!currentScene.getWorld().contains(e)) {
 
-
-                applyBouncingFactor(world, e);
+                applyBouncingFactor(currentScene, e);
                 e.setPosition(
-                        Math.min(Math.max(e.getX(), world.getX()), world.getWidth() - e.getWidth()),
-                        Math.min(Math.max(e.getY(), world.getY()), world.getHeight() - e.getHeight()));
+                        Math.min(Math.max(e.getX(), currentScene.getWorld().getX()), currentScene.getWorld().getWidth() - e.getWidth()),
+                        Math.min(Math.max(e.getY(), currentScene.getWorld().getY()), currentScene.getWorld().getHeight() - e.getHeight()));
             }
 
             // application du facteur de friction
@@ -315,14 +313,14 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         currentScene.update(this);
     }
 
-    private void applyBouncingFactor(Rectangle2D world, Entity e) {
+    private void applyBouncingFactor(Scene currentScene, Entity e) {
         // application du rebond si collision avec le bord de la zone de jeu
-        if (e.getX() < world.getX()
-                || e.getX() + e.getWidth() > e.getWidth() + world.getWidth()) {
+        if (e.getX() < currentScene.getWorld().getX()
+                || e.getX() + e.getWidth() > e.getWidth() + currentScene.getWorld().getWidth()) {
             e.setVelocity(-e.getDx() * e.getElasticity(), e.getDy());
         }
-        if (e.getY() < world.getY()
-                || e.getY() + e.getHeight() > world.getHeight()) {
+        if (e.getY() < currentScene.getWorld().getY()
+                || e.getY() + e.getHeight() > currentScene.getWorld().getHeight()) {
             e.setVelocity(e.getDx(), -e.getDy() * e.getElasticity());
         }
     }
@@ -350,12 +348,12 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         g.fillRect(0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight());
 
         Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
-        Camera camera = (Camera) cam.orElse(null);
+        Camera camera = cam.isPresent() ? (Camera) cam.get() : null;
 
         if (camera != null) {
             g.translate((int) -camera.getX(), (int) -camera.getY());
         }
-        drawGameLimit(g, new Rectangle2D.Double(0, 0, 640, 400), 16, 16);
+        drawWorldLimit(g, currentScene.getWorld(), 16, 16);
         if (camera != null) {
             if (isDebugGreaterThan(1)) {
                 drawDebugCamera(g, camera);
@@ -406,7 +404,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
                 (int) (camera.getBounds2D().getY() + camera.getBounds2D().getHeight() - 14));
     }
 
-    private void drawGameLimit(Graphics2D g, Rectangle2D world, int tileWidth, int tileHeight) {
+    private void drawWorldLimit(Graphics2D g, World world, int tileWidth, int tileHeight) {
         // draw the world limit.
         g.setColor(Color.GRAY);
         for (int ix = 0; ix < world.getWidth(); ix += tileWidth) {
@@ -489,7 +487,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
      * @param args Command-line arguments passed to the application.
      */
     public static void main(String[] args) {
-        MonProgrammeCamera1 prog = new MonProgrammeCamera1();
+        MonProgrammeCamera2 prog = new MonProgrammeCamera2();
         prog.run(args);
     }
 

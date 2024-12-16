@@ -11,15 +11,14 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
-public class PlayCameraScene extends AbstractScene {
+public class PlayCameraScene2 extends AbstractScene {
     /**
      * Constructs an instance of AbstractScene with the specified name.
      *
      * @param name the name of the scene to be created
      */
-    public PlayCameraScene(String name) {
+    public PlayCameraScene2(String name) {
         super(name);
     }
 
@@ -37,7 +36,7 @@ public class PlayCameraScene extends AbstractScene {
         setWorld(
                 new World(
                         new Point2D.Double(0, -0.981),
-                        new Rectangle2D.Double(0, 0, 30*16, 20*16)));
+                        new Double(0, 0, 30*16, 20*16)));
 
         // Création du player bleu
         Entity player = new Entity("player")
@@ -47,7 +46,7 @@ public class PlayCameraScene extends AbstractScene {
                 .setElasticity((double) app.getConfig().get("app.physic.entity.player.elasticity"))
                 .setFriction((double) app.getConfig().get("app.physic.entity.player.friction"))
                 .setFillColor(Color.BLUE)
-                .setShape(new Rectangle2D.Double(0, 0, 16, 16))
+                .setShape(new Double(0, 0, 16, 16))
                 .setAttribute("max.speed", 2.0)
                 // On ajoute le nouveau comportement sur la gestion des entrées
                 .add(new Behavior() {
