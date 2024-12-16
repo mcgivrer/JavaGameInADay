@@ -178,10 +178,22 @@ public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
      * each behavior associated with those entities.
      */
     private void createScene() {
+
+        System.out.printf("=> Load scene '%s' (%s)%n", currentScene.getName(), currentScene.getClass());
         currentScene.initialize(this);
+        System.out.printf("- Scene '%s' (%s) initialized%n", currentScene.getName(), currentScene.getClass());
         currentScene.create(this);
+        System.out.printf("- Scene '%s' (%s) created %d entities%n", currentScene.getName(), currentScene.getClass(), currentScene.getEntities().size());
         currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.init(e)));
+        System.out.printf("- All %d entities' behaviors from Scene %s (%s) initialized%n",
+                currentScene.getEntities().size(),
+                currentScene.getName(),
+                currentScene.getClass());
         currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.create(e)));
+        System.out.printf("- All %d entities' behaviors from Scene %s (%s) created%n",
+                currentScene.getEntities().size(),
+                currentScene.getName(),
+                currentScene.getClass());
     }
 
     /**
@@ -464,11 +476,13 @@ public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
      * - Prints a message to the console indicating that the current instance of the application has terminated.
      */
     private void dispose() {
+        System.out.printf("# %s se termine:%n", this.getClass().getSimpleName());
         currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.dispose(e)));
-
+        System.out.printf("- all %s entities' behaviors are disposed.%n", currentScene.getEntities().size());
         currentScene.dispose(this);
+        System.out.printf("- Scene '%s' is disposed.%n", currentScene.getName());
         window.dispose();
-        System.out.printf("# %s est terminé.%n", this.getClass().getSimpleName());
+        System.out.printf("=> L'exécution de %s est terminée.%n", this.getClass().getSimpleName());
     }
 
     /**
