@@ -1,9 +1,11 @@
+package examples;
+
 import entity.Camera;
 import entity.Entity;
 import game.Game;
 import game.TestGame;
 import physic.World;
-import scenes.PlayCameraScene;
+import scenes.PlayCameraScene1;
 import scenes.Scene;
 import utils.Config;
 
@@ -148,7 +150,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         createWindow();
         createBuffer();
 
-        addScene(new PlayCameraScene("play"));
+        addScene(new PlayCameraScene1("play"));
         createScene();
     }
 
@@ -240,9 +242,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         int frameTime = 1000 / (int) (config.get("app.render.fps"));
         while (!isExitRequested() && ((testMode && loopCount < maxLoopCount) || !testMode)) {
             input();
-            if (isNotPaused()) {
-                update();
-            }
+            update();
             render();
             loopCount++;
             waitTime(frameTime);
@@ -290,6 +290,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
      * - Applies a friction factor to the object's velocity.
      */
     private void update() {
+        Rectangle2D world = new Rectangle2D.Double(0, 0, 640, 400);
         // calcul de la position du player bleu en fonction de la vitesse courante.
         currentScene.getEntities().stream().filter(e -> !(e instanceof Camera)).forEach(e -> {
 
@@ -303,8 +304,8 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
                 applyBouncingFactor(currentScene, e);
                 // Gardons l'entité dans le monde du jeu.
                 e.setPosition(
-                        Math.min(Math.max(e.getX(), currentScene.getWorld().getX()), currentScene.getWorld().getWidth() - e.getWidth()),
-                        Math.min(Math.max(e.getY(), currentScene.getWorld().getY()), currentScene.getWorld().getHeight() - e.getHeight()));
+                        Math.min(Math.max(e.getX(), world.getX()), world.getWidth() - e.getWidth()),
+                        Math.min(Math.max(e.getY(), world.getY()), world.getHeight() - e.getHeight()));
             }
 
             // application du facteur de friction
@@ -317,14 +318,14 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         currentScene.update(this);
     }
 
-    private void applyBouncingFactor(Scene currentScene, Entity e) {
+    private void applyBouncingFactor(Rectangle2D world, Entity e) {
         // application du rebond si collision avec le bord de la zone de jeu
-        if (e.getX() < currentScene.getWorld().getX()
-                || e.getX() + e.getWidth() > e.getWidth() + currentScene.getWorld().getWidth()) {
+        if (e.getX() < world.getX()
+                || e.getX() + e.getWidth() > e.getWidth() + world.getWidth()) {
             e.setVelocity(-e.getDx() * e.getElasticity(), e.getDy());
         }
-        if (e.getY() < currentScene.getWorld().getY()
-                || e.getY() + e.getHeight() > currentScene.getWorld().getHeight()) {
+        if (e.getY() < world.getY()
+                || e.getY() + e.getHeight() > world.getHeight()) {
             e.setVelocity(e.getDx(), -e.getDy() * e.getElasticity());
         }
     }
@@ -352,22 +353,31 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         g.fillRect(0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight());
 
         Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
+        Camera camera = (Camera) cam.orElse(null);
 
-        cam.ifPresent(entity -> g.translate((int) -entity.getX(), (int) -entity.getY()));
-        drawWorldLimit(g, currentScene.getWorld(), 16, 16);
-        if (cam.isPresent() && isDebugGreaterThan(1)) {
-            drawDebugCamera(g, (Camera) cam.get());
+        if (camera != null) {
+            g.translate((int) -camera.getX(), (int) -camera.getY());
         }
-        cam.ifPresent(entity -> g.translate((int) entity.getX(), (int) entity.getY()));
+        drawGameLimit(g, new Rectangle2D.Double(0, 0, 640, 400), 16, 16);
+        if (camera != null) {
+            if (isDebugGreaterThan(1)) {
+                drawDebugCamera(g, camera);
+            }
+            g.translate((int) camera.getX(), (int) camera.getY());
+        }
 
 
         // draw entities
         currentScene.getEntities().stream()
                 .filter(e -> !(e instanceof Camera))
                 .forEach(e -> {
-                    cam.ifPresent(entity -> g.translate((int) -entity.getX(), (int) -entity.getY()));
+                    if (camera != null) {
+                        g.translate((int) -camera.getX(), (int) -camera.getY());
+                    }
                     drawEntity(e, g);
-                    cam.ifPresent(entity -> g.translate((int) entity.getX(), (int) entity.getY()));
+                    if (camera != null) {
+                        g.translate((int) camera.getX(), (int) camera.getY());
+                    }
                     currentScene.draw(this, g);
 
                     // Exécuter les comportements de dessin pour cette instance d'Entity.
@@ -399,7 +409,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
                 (int) (camera.getBounds2D().getY() + camera.getBounds2D().getHeight() - 14));
     }
 
-    private void drawWorldLimit(Graphics2D g, World world, int tileWidth, int tileHeight) {
+    private void drawGameLimit(Graphics2D g, Rectangle2D world, int tileWidth, int tileHeight) {
         // draw the world limit.
         g.setColor(Color.GRAY);
         for (int ix = 0; ix < world.getWidth(); ix += tileWidth) {

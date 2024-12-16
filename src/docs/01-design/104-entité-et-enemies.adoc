@@ -206,7 +206,7 @@ Ajout des nouvelles variables dans le programme principal :
 
 [source,java]
 ----
-public class MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class examples.MonProgrammeEntity2 extends TestGame implements KeyListener {
     //...
     private Map<String, Entity> entities = new HashMap<>();
 }
@@ -217,7 +217,7 @@ Nous allons modifier maintenant le code de mise à jour de la position et de la 
 .Calcul de la position et de la vélocité de chaque entité
 [source,java]
 ----
-public class MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class examples.MonProgrammeEntity2 extends TestGame implements KeyListener {
     //...
     private void update() {
         // parcours de l’ensemble des entités
@@ -248,7 +248,7 @@ La méthode `render` doit-elle aussi être adaptée :
 .Dessin de toutes les entités.
 [source,java]
 ----
-public class MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class examples.MonProgrammeEntity2 extends TestGame implements KeyListener {
     //...
 private void render() {
         Graphics2D g = renderingBuffer.createGraphics();
@@ -285,7 +285,7 @@ L’ensemble du traitement ayant été modifié pour supporter nos nouveaux obje
 .Creation des nouvelles entités au démarrage
 [source,java]
 ----
-public class MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class examples.MonProgrammeEntity2 extends TestGame implements KeyListener {
     //...
 public void initialize() {
         //...
@@ -317,7 +317,7 @@ Et enfin, nous devons modifier la méthode input pour retrouver l’objet nommé
 .Modification de la méthode input()
 [source,java]
 ----
-public class MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class examples.MonProgrammeEntity2 extends TestGame implements KeyListener {
     //...
     private void input() {
         // <1>
@@ -343,14 +343,14 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
 . Récupération de l’entité "player"
 . Application des vitesses en fonction des touches UP, DOWN, LEFT et RIGHT pressées.
 
-Si nous exécutons le nouveau programme "MonProgrammeEntity2", nous verrons apparaitre les mêmes entités que précédemment.
+Si nous exécutons le nouveau programme "examples.MonProgrammeEntity2", nous verrons apparaitre les mêmes entités que précédemment.
 
 Une différence de taille, si nous souhaitons créer 10 entités ennemies, il nous suffit de créer autant d’entité que nécessaire :
 
 .Création de 10 ennemis avec délégation à la méthode _createScene()_
 [source,java]
 ----
-public class MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class examples.MonProgrammeEntity2 extends TestGame implements KeyListener {
     //...
         public void initialize() {
         testMode = config.get("app.test");
@@ -418,7 +418,7 @@ Il nous faut ensuite adapter le programme pour la simulation de mouvement de tou
 .Animation de 10 ennemis en fonction de la position de l'objet "player"
 [source,java]
 ----
-public class MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class examples.MonProgrammeEntity2 extends TestGame implements KeyListener {
     //...
     private void input() {
         //...

@@ -121,7 +121,7 @@ Et que vous lanciez l'exécution de notre nouvel exemple :
 [source,bash]
 ----
 javac -d target/demo-classes src/main/java/com/snapgames/framework/GameInterface.java src/test/java/*.java src/test/java/**/*.java
-java -cp target/demo-classes MonProgrammeWinAndLoop1
+java -cp target/demo-classes examples.MonProgrammeWinAndLoop1
 ----
 
 Vous obtenez sur la console la sortie suivante :
@@ -440,7 +440,7 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
-public class MonProgrammeDemo2 extends TestGame implements KeyListener {
+public class examples.MonProgrammeDemo2 extends TestGame implements KeyListener {
     private String configFilePath = "/demo2.properties";
     //...
     private int dx, dy;
@@ -491,7 +491,7 @@ Passons les couples de variables `(x,y)` et `(dx,dy)` en double plutôt qu'en in
 
 [source,java]
 ----
-public class MonProgrammeDemo3 extends TestGame implements KeyListener {
+public class examples.MonProgrammeDemo3 extends TestGame implements KeyListener {
     //...
     private double x, y;
     private double dx, dy;
@@ -503,7 +503,7 @@ Et modifions un peu le code de la méthode update :
 
 [source,java]
 ----
-public class MonProgrammeDemo3 extends TestGame implements KeyListener {
+public class examples.MonProgrammeDemo3 extends TestGame implements KeyListener {
     //...
     private void update() {
         // <1>
@@ -575,7 +575,7 @@ Ajoutons ce nouveau paramètre dans notre jeu et rendons le configurable via not
 
 [source,java]
 ----
-public class MonProgrammeDemo3 extends TestGame implements KeyListener {
+public class examples.MonProgrammeDemo3 extends TestGame implements KeyListener {
     //...
     private double elasticity = 1.0;
     private double friction = 1.0;

@@ -13,14 +13,14 @@ Pour une exécution standard, utilisez la ligne de commande suivante :
 
 [source,java]
 ----
-java -jar target/JavaGameInADay-1.0.2.jar
+java -jar target/JavaGameInADay-1.0.4.jar
 ----
 
 Ou, pour les utilisateurs de machines Linux ou dans un terminal Windows Git Bash :
 
 [source,java]
 ----
-target/build/JavaGameInADay-1.0.2.run
+target/build/JavaGameInADay-1.0.4.run
 ----
 
 == Configuration
@@ -29,7 +29,7 @@ La configuration du jeu est fournie via un fichier de propriétés passé en lig
 
 [source,java]
 ----
-target/build/JavaGameInADay-1.0.2.run -config=./my-config.properties
+target/build/JavaGameInADay-1.0.4.run -config=./my-config.properties
 ----
 
 Le fichier `./my-config-properties` doit se trouver au même endroit que le fichier `JavaGameInADay-1.0.2.run`.
@@ -45,7 +45,7 @@ Ce fichier de configuration contient plusieurs sections de clés. Découvrons-le
 | `app.debug.level`
 | Définit le niveau de détail des sorties de débogage dans la console. Valeurs de 0 (Aucune sortie) à 5 (sortie maximale).
 
-*ATTENTION* : Le niveau 5 est très verbeux et peut ralentir le jeu.
+*ATTENTION* : Le niveau 5 est très verbeux et peut ralentir l'exécution.
 | 0 (Aucune sortie)
 
 | `app.test`

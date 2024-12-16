@@ -1,3 +1,5 @@
+package examples;
+
 import game.TestGame;
 import utils.Config;
 
@@ -9,7 +11,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 /**
- * MonProgrammeDemo2 is a demonstration program that extends the game.TestGame
+ * examples.MonProgrammeDemo2 is a demonstration program that extends the game.TestGame
  * framework and implements the KeyListener interface.
  * This class is responsible for initializing a graphical window,
  * handling user input via keyboard events, running the main game loop,
@@ -30,7 +32,7 @@ public class MonProgrammeDemo2 extends TestGame implements KeyListener {
     private int dx, dy;
 
     /**
-     * Constructor for the MonProgrammeDemo2 class.
+     * Constructor for the examples.MonProgrammeDemo2 class.
      *
      * This constructor initializes the application by printing a startup message,
      * creating a new Config object with the current instance, and loading the configuration
@@ -43,7 +45,7 @@ public class MonProgrammeDemo2 extends TestGame implements KeyListener {
     }
 
     /**
-     * Initializes the MonProgrammeDemo2 application.
+     * Initializes the examples.MonProgrammeDemo2 application.
      * <p>
      * This method performs the initial setup required to run the program,
      * including loading configuration settings, creating the window and
@@ -235,7 +237,7 @@ public class MonProgrammeDemo2 extends TestGame implements KeyListener {
 
 
     /**
-     * Runs the main execution of the MonProgrammeDemo2 application.
+     * Runs the main execution of the examples.MonProgrammeDemo2 application.
      *
      * This method starts by displaying the application window title from the configuration,
      * then it proceeds with the initialization, main loop execution, and cleanup disposal.
@@ -251,9 +253,9 @@ public class MonProgrammeDemo2 extends TestGame implements KeyListener {
 
 
     /**
-     * The entry point of the MonProgrammeDemo2 application.
+     * The entry point of the examples.MonProgrammeDemo2 application.
      *
-     * This method initializes an instance of the MonProgrammeDemo2 class
+     * This method initializes an instance of the examples.MonProgrammeDemo2 class
      * and invokes its run method.
      *
      * @param args command-line arguments passed to the application.
