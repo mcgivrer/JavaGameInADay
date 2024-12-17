@@ -1,5 +1,4 @@
 = Développer mon jeu avec Java
-:experimental:
 :author: Frédéric Delorme
 :email: frederic.delorme@gmail.com
 :version: v1.0.3
@@ -7,11 +6,11 @@
 :doctype: book
 :chapter-signifier: Chapitre
 :stem: latexmath
+:experimental:
 :description: Document d’explication de l’implémentation des bases d’un moteur de jeu 2D développé en java uniquement, sur la base du JDK 23.
 :keywords: java, platform, 2D, game, development, gameloop
 :icons:
 :toc: auto
-
 :leveloffset: +1
 
 include::100-preface.adoc[]
@@ -29,6 +28,10 @@ include::105-definir-une-scene.adoc[]
 include::106-comportement-dans-les-entites.adoc[]
 
 include::107-camera-monde-et-aire-de-jeu.adoc[]
+
+include::108-delegation-boucle-de-jeu.adoc[]
+
+include::109-collision-et-reponse.adoc[]
 
 include::110-newton-s-physics.adoc[]
 
