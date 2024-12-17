@@ -1,5 +1,5 @@
 = Ajoutons un peu de Physique
-:stem:latexmath
+:stem: latexmath
 
 Dans un jeu 2D, certes le gameplay est important, mais l’aspect simulation de la réalité l’est tout autant.
 (((physique,mouvement)))

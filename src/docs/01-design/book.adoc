@@ -6,7 +6,7 @@
 :creationdate: 2024-11-28
 :doctype: book
 :chapter-signifier: Chapitre
-:stem:latexmath
+:stem: latexmath
 :description: Document d’explication de l’implémentation des bases d’un moteur de jeu 2D développé en java uniquement, sur la base du JDK 23.
 :keywords: java, platform, 2D, game, development, gameloop
 :icons:
