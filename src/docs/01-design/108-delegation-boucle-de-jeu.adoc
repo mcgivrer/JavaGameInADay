@@ -112,3 +112,7 @@ Passons a une implementation correspondante a ce que nous avions precedemment, m
 image::illustrations/capture-gameloop-delegation-1.png[]
 
 //https://www.plantuml.com/plantuml/png/TSqz3i8m30NWtQSmMoFH2tH0NH0B6oUmMWiY9QwLE0Etf-4dg4ENAFRxh3TcesGb1ZZOWoEZ1l82OLaKBnJvMZ-Qbebpzd87H7pliUzF3GnVq96gQwGcZGrUj5YN9nPsk6EApcJyGKTpsxApcBVdpvZ3RNohH_zqfo6np9nQ0y8wmxW-9OON
+
+== Implementons notre StandardGameLoop
+
+TODO
