@@ -1,16 +1,18 @@
 package utils.gameloop;
 
 import examples.MonProgrammeGameLoop1;
+import game.Game;
 import scenes.Scene;
 
 import java.io.Serializable;
 
-public class StandardGameLoop implements Serializable {
+public class StandardGameLoop implements GameLoop {
     private final MonProgrammeGameLoop1 game;
 
     public StandardGameLoop(MonProgrammeGameLoop1 monProgrammeGameLoop1) {
         this.game = monProgrammeGameLoop1;
     }
+
 
     /**
      * Executes the game loop for the game.
@@ -27,18 +29,27 @@ public class StandardGameLoop implements Serializable {
      * In test mode, the loop will execute a pre-defined number of times specified by maxLoopCount.
      * Outputs the total number of game loops executed upon termination.
      */
-    public void loop() {
+    @Override
+    public void process(Game game) {
         Scene scene = game.getCurrentScene();
         int loopCount = 0;
         int frameTime = 1000 / (int) (game.getConfig().get("app.render.fps"));
+        long elapsed = 0;
+        long startLoop = System.currentTimeMillis();
+        long endLoop = startLoop;
         while (!game.isExitRequested()
                 && ((game.isTestMode()
                 && loopCount < game.getMaxLoopCount()) || !game.isTestMode())) {
-            game.input(scene);
-            game.update(scene);
-            game.render(scene);
+            elapsed = endLoop - startLoop;
+            startLoop = endLoop;
+            input(scene);
+            if (game.isNotPaused()) {
+                update(scene, elapsed);
+            }
+            render(scene);
             loopCount++;
             waitTime(frameTime);
+            endLoop = System.currentTimeMillis();
         }
         System.out.printf("=> Game loops %d times%n", loopCount);
     }
@@ -56,5 +67,30 @@ public class StandardGameLoop implements Serializable {
         } catch (InterruptedException e) {
             System.err.println("Unable to wait 16 ms !");
         }
+    }
+
+    @Override
+    public void input(Scene scene) {
+        game.input(scene);
+    }
+
+    @Override
+    public void update(Scene scene, double elapsed) {
+        game.update(scene);
+    }
+
+    @Override
+    public void render(Scene scene) {
+        game.render(scene);
+    }
+
+    @Override
+    public void setExit(boolean exitRequest) {
+        game.setExit(exitRequest);
+    }
+
+    @Override
+    public void setPause(boolean pauseRequest) {
+        game.setPause(pauseRequest);
     }
 }
