@@ -241,7 +241,7 @@ public class MonProgrammeGameLoop1 extends TestGame implements KeyListener, Game
     public void loop() {
 
         StandardGameLoop standardGameLoop = new StandardGameLoop(this);
-        standardGameLoop.loop();
+        standardGameLoop.process(this);
     }
 
     /**
