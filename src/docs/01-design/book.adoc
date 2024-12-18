@@ -12,6 +12,8 @@
 :icons:
 :toc: auto
 :leveloffset: +1
+:title-logo-image: illustrations/snapgames-edition-logo.png
+
 
 include::100-preface.adoc[]
 

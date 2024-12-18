@@ -185,8 +185,8 @@ Par exemple, nous pouvons traiter différents types de véhicules de manière un
 
 [source,java]
 ----
-public class Vehicule {
-    public Vehicule(){}
+public class VehiculeTest {
+    public VehiculeTest(){}
 
     public static void main(String[]arg){
         Vehicle myCar = new Car();
@@ -232,6 +232,11 @@ Cela est utile pour tester des comportements sans dépendre des implémentations
 Dans notre exemple, toute classe qui implémente Vehicle doit savoir comment démarrer, arrêter et accélérer.
 
 En résumé, une interface comme `Vehicle` est un outil puissant pour structurer et organiser le code, en favorisant la réutilisation et la maintenabilité, tout en garantissant que les classes comme `Car` fournissent les comportements nécessaires.
+
+
+image::illustrations/uml-diagram-car.png[]
+
+
 
 === Qu'est-ce que l'Héritage de Classe ?
 
