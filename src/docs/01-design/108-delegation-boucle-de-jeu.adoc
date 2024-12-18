@@ -13,7 +13,7 @@ Elles avaient aussi toutes deux choses en commun : la basse fréquence de leur 
 Seuls les gestionnaires d’entrées/sorties plus ou moins performant, donnaient lieu à des qualités d’affichages allant du gris-vert, de la nuance de gris sur 16 niveaux, jusqu’à la palette de 256 couleurs pour les plus avancés.
 
 .L'écran cathodique.
-image::illustrations/ecran-cathodique.png[L'écran cathodique,width="300",height="300",float="right"]
+image::illustrations/ecran-cathodique.png[L'écran cathodique,width="300",height="300",float="left"]
 
 Cela a imposé une façon de faire qui est devenue une norme, forcée par les limitations et la conception d’alors : la GameLoop.
 
@@ -33,7 +33,7 @@ L’une émet des électrons, la deuxième, présente en plusieurs parties, perm
 Une fois dirigé à l’aide de plaques de déviation, ira frapper la substance photo fluorescente présente en couche sur la partie intérieure de l’ampoule servant d’affichage (figure 2).
 
 .Éclaté technique de l'écran cathodique
-image::illustrations/ecran-cathodiaue-eclate.png[Eclaté technique de l'écran cathodique,width="450",height="400",float="left",margin="1em"]
+image::illustrations/ecran-cathodique-eclate.png[Eclaté technique de l'écran cathodique,width="450",height="400",float="right",margin="1em"]
 
 . Bobines de déflexion
 . Faisceau d’électrons
