@@ -21,7 +21,7 @@ Entrons un peu plus dans les détails, car c’est de là que vient la structure
 
 L’écran cathodique, aussi appelé CRT (cf. figure 1), est l’ancienne technologie d’affichage de la télévision (TV) et de l’ordinateur.
 
-Cette technologie est basée sur la création d’un faisceau d'électrons concentré, qui est dirigé vers une surface phosphorescente, le tout au sein d’un environnement sous vide, dans une grosse ampoule en verre résistant à la pression négative.
+Cette technologie est basée sur la création d’un faisceau d’électrons concentré, qui est dirigé vers une surface phosphorescente, le tout au sein d’un environnement sous vide, dans une grosse ampoule en verre résistant à la pression négative.
 
 === Pardon, vous dites ?
 
@@ -32,7 +32,7 @@ Oui cette grosse ampoule, comme les ampoules que nous utilisions pour nous écla
 L’une émet des électrons, la deuxième, présente en plusieurs parties, permet de transformer le flux d’électron en un fin faisceau.
 Une fois dirigé à l’aide de plaques de déviation, ira frapper la substance photo fluorescente présente en couche sur la partie intérieure de l’ampoule servant d’affichage (figure 2).
 
-.Éclaté technique de l'écran cathodique
+.Éclaté technique de l’écran cathodique
 image::illustrations/ecran-cathodique-eclate.png[Eclaté technique de l'écran cathodique,width="450",height="400",float="right",margin="1em"]
 
 . Bobines de déflexion
@@ -105,16 +105,16 @@ public interface GameLoop{
 }
 ----
 
-. `process` est le point d'entrée d'exécution de la boucle de jeu, c'est elle qui est chargée d'appeler les autres méthodes de traitement de la boucle,
-. `input` délègue le traitement des entrées utilisateur (joueur),
-. `update` lance la mise a jour de la scene active,
+. `process` est le point d’entrée d’exécution de la boucle de jeu, c'est elle qui est chargée d’appeler les autres méthodes de traitement de la boucle,
+. `input` délègue le traitement des entrées utilisateurs (joueurs),
+. `update` lance la mise-à-jour de la scene active,
 . `render` procède au rendu de la scene active,
-. `setExit` permet de définir une demande de sortie de l'exécution de la boucle,
-. `setPause` demandera la mise en pause de l'exécution de la methode `update`.
+. `setExit` permet de définir une demande de sortie de l’exécution de la boucle,
+. `setPause` demandera la mise en pause de l’exécution de la methode `update`.
 
-Voila ce aui attendu par notre nouvelle interface de traitement de la boucle de jeu.
+Voilà ce aui attendu par notre nouvelle interface de traitement de la boucle de jeu.
 
-L'intégration de cette interface dans notre programme de démonstration MonProgrammeGameLoop1 se fait en modifiant principalement la méthode `loop` présente dans la classe.
+L’intégration de cette interface dans notre programme de démonstration MonProgrammeGameLoop1 se fait en modifiant principalement la méthode `loop` présente dans la classe.
 
 .Intégration de GameLoop de MonProgrammeGameLoop1
 [source,java]
@@ -131,10 +131,10 @@ public class MonProgrammeGameLoop1 extends TestGame implements KeyListener, Game
 }
 ----
 
-. Nous instancions l'implémentation désirée de l’interface `GameLoop`, ici, la class `StandardGameLoop` dont nous verrons le code juste après,
+. Nous instancions l’implémentation désirée de l’interface `GameLoop`, ici, la class `StandardGameLoop` dont nous verrons le code juste après,
 . L’exécution de la boucle est déléguée à la classe instanciée via la méthode `GameLoop.loop()`
 
-Si nous regardons dans le détail le diagramme d'appel ci-dessous, nous voyons que la boucle est réellement exécutée dans l'instance de GameLoop, appelant en contre-parti les traitements nécessaire dans la classe parente (ici symbolisée par `Game`.
+Si nous regardons dans le détail le diagramme d’appel ci-dessous, nous voyons que la boucle est réellement exécutée dans l’instance de GameLoop, appelant en contre-parti les traitements nécessaires dans la classe parente (ici symbolisée par `Game`.
 
 .Delegation de la Boucle de jeu à l’interface spécialisée `GameLoop`
 image::illustrations/capture-gameloop-delegation-1.png[]
@@ -142,7 +142,7 @@ image::illustrations/capture-gameloop-delegation-1.png[]
 //https://www.plantuml.com/plantuml/png/TSqz3i8m30NWtQSmMoFH2tH0NH0B6oUmMWiY9QwLE0Etf-4dg4ENAFRxh3TcesGb1ZZOWoEZ1l82OLaKBnJvMZ-Qbebpzd87H7pliUzF3GnVq96gQwGcZGrUj5YN9nPsk6EApcJyGKTpsxApcBVdpvZ3RNohH_zqfo6np9nQ0y8wmxW-9OON
 
 
-Passons a une implementation correspondante a ce que nous avions précédemment, mais en utilisant cette fameuse interface.
+Passons à une implementation correspondante à ce que nous avions précédemment, mais en utilisant cette fameuse interface.
 
 == Implementation de StandardGameLoop
 
@@ -223,14 +223,14 @@ public class StandardGameLoop implements GameLoop {
 }
 ----
 
-. Initialisation de l’implémentation de la boucle de jeu (`StandardGameLoop`)en lui passant l'instance parente du jeu (`Game`),
-. C'est dans la méthode  `process(Game game)` est le cœur de la boucle, ici l'implémentation est basée sur le respect d’un temps de "frame",
+. Initialisation de l’implémentation de la boucle de jeu (`StandardGameLoop`)en lui passant l’instance parente du jeu (`Game`),
+. C’est dans la méthode  `process(Game game)` est le cœur de la boucle, ici l’implémentation est basée sur le respect d’un temps de "frame",
 . La méthode `wait` donne le 'la' pour déterminer le temps de refresh de la boucle,
 . La gestion des entrées (`input`) est déléguée à l’instance du jeu,
 . La mise-à-jour (`update`)de la scene et de ses entités est déléguée à l’instance du jeu,
 . Le rendu visuel de l’ensemble des composants de la scene (`render`) est également déléguée à l’instance du jeu.
 
-Les autres méthodes `setXxx()` font le pont entre l’instance du jeu et l'implémentation de la `GameLoop` afin de gérer les demandes de sortie du jeu ou de mettre l'execution de la boucle en mode pause.
+Les autres méthodes `setXxx()` font le pont entre l’instance du jeu et l’implémentation de la `GameLoop` afin de gérer les demandes de sortie du jeu ou de mettre l’exécution de la boucle en mode pause.
 Dans ce dernier cas, seule la mise-à-jour (`update`) est mise en pause.
 
 == Conclusion
