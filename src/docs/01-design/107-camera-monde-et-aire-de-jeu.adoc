@@ -115,7 +115,8 @@ public class Camera extends Entity{
 On positionne le centre du `viewport` de la caméra à la position du centre de la cible (`target`), mais avec un ratio `tweenFactor` de la distance restante en fonction du temps passé depuis le précédent appel, ce qui donne un effet plus doux sur le déplacement.
 
 .Illustration de la caméra fixant une cible ayant un cadre et un facteur de suivi.
-image::https://docs.google.com/drawings/d/1RJLlUeiRI00_wCWQTIliH7ibnY-BR-ppp_xtJL0O6EM/pub?w=500&h=300[]
+image::illustrations/game101_camera.png[Illustration de la caméra fixant une cible ayant un cadre et un facteur de suivi]
+//https://docs.google.com/drawings/d/1RJLlUeiRI00_wCWQTIliH7ibnY-BR-ppp_xtJL0O6EM/pub?w=500&h=300
 
 Sur l'illustration ci-dessus, imaginer que le `tweenFactor` est un ressort avec amortisseur, reliant la cible et la caméra.
 

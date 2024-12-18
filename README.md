@@ -24,6 +24,9 @@ JavaGameOnADay
      |_ 02-user-manual  => Help you execute and configure the resulting demo
 ```
 
+> NOTE : to generate AsciiDoctor documentation, please use the asciidoctor docker container. see all details at https://github.com/asciidoctor/docker-asciidoctor/blob/main/README.adoc.
+
+
 ## Build
 
 To build the project, execute the following command line :
