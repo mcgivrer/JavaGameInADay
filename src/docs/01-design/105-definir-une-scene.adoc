@@ -21,7 +21,7 @@ Une scene est un receptacle qui contiendra tous les objets à animer pour assure
 Il est nécessaire d’avoir la liste des objets à animer, un petit nom pour pouvoir retrouver une scene parmi d’autres (et oui, plusieurs gameplay implique plusieurs scènes).
 
 .Le diagramme de classe de la Scene
-image::https://www.plantuml.com/plantuml/png/TP11oi8m44RtEKMMAV_l1KAHWXHNhdg28HdAG3e9pLHGyUxMr4N0klpUuss-BWlCian1kG0vwy4XetuehG-QOK8xo4mybeqi98JPNY2r6__lt-nsNFtVrfewQmeVKVfFQXfxYY6W4uhSrZ5uRx1ik-76NYFvueZN60BTqK1AzWmJLjRD2B9hYDCYUs99_aVYAQUOlzHJgGxPhp-z0000[]
+image::illustrations/uml-diagram-scene-class.png[Le diagramme de classe de la Scene]
 
 Cela se traduit par la classe java suivante :
 
@@ -369,9 +369,14 @@ L'AbstractScene doit implementer quelques surcouches à la classe `Node` :
 
 Cela simplifie nos classes et aussi contribue à les structurer d’une façon intéressante.
 
-Pour reprendre le diagramme de classes du début :
+Pour reprendre le diagramme de classes du début :
 
-.Node, Scene AbstractScene et Entity dans un arbre
-image::https://www.plantuml.com/plantuml/png/RO_DIWCn58NtUOeiMwGl46IeY3jnKryWJOxjXUH69dV0Kdnt9ycCJCHTSlZEpprciQDCCIX5B1W_h8C-EJ3ktqgvO7FMRydZyNsuA_sWoPkG-5AUR2FCIKQQlpExqYyi93UDBm7xnToqag0hsiYdSvRHEgbrlQ5AWwRu6H31afTDfVS2gNc4lDkRvnG2d53YjMNBt7QRbNlJj3BXIXxhr0Yv9fyxpSfiEK-29hVwdkpd_s_ugvRZVbDKOmw7OMar_Mclb4KTmNwAuGS0[Node,Scene AbstractScene et Entity dans un arbre]
+.Node, Scene, AbstractScene et Entity dans un arbre
+image::illustrations/uml-diagram-abstract-scene-entity-node.png[Node,Scene AbstractScene et Entity dans un arbre]
 
-WARNING: TODO terminer le chapitre Node et l'affichage de la scene en mode arbre composé de nœuds.
+WARNING: TODO terminer le chapitre Node et l’affichage de la scene en mode arbre composé de nœuds.
+
+
+== Conclusion
+
+TODO

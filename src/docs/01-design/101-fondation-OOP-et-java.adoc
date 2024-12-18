@@ -185,11 +185,18 @@ Par exemple, nous pouvons traiter différents types de véhicules de manière un
 
 [source,java]
 ----
-Vehicle myCar = new Car();
-myCar.start(); // Appelle la méthode start() de Car
+public class Vehicule {
+    public Vehicule(){}
+
+    public static void main(String[]arg){
+        Vehicle myCar = new Car();
+        // Appelle la méthode start() de la classe Car
+        myCar.start();
+    }
+}
 ----
 
-==== Encapsulation de Comportements :
+==== Encapsulation de Comportements
 
 Les interfaces définissent des comportements attendus sans se soucier de leur réalisation.
 Cela favorise la séparation des préoccupations.
@@ -233,7 +240,7 @@ La sous-classe hérite des attributs et des méthodes de la superclasse, ce qui 
 
 ==== Exemple avec Vehicle et Car
 
-===== Définition de la Superclasse :
+===== Définition de la Superclasse
 
 Nous commençons par définir une classe Vehicle qui contient des attributs et des méthodes communs à tous les types de véhicules.
 
@@ -253,7 +260,7 @@ public class Vehicle {
 }
 ----
 
-===== Création de la Sous-classe :
+===== Création de la Sous-classe
 
 Ensuite, nous créons la classe `Car` qui hérite de la classe `Vehicle`.
 Cela signifie que `Car` a accès aux attributs
@@ -294,11 +301,12 @@ public class Truck extends Vehicule {
 
 Voici une illustration de l'héritage :
 
-image::https://www.plantuml.com/plantuml/png/ZT112W8X5CRnlQTmMNG3LmDpXABzIpyQcQV6Kok8kNjO4qYqQ2FyF_0dEEH2KcfWPPboraTCtbR6GscziucJcB6TBGFDCFiYFfvRlcvkjkQQl7jtkdHv4j3ywKMj_aYYSI-8xkkja1ouqybQC8GAEcD53bBj_1zpcm3EniVo4sqZ9t9TrjWFYneGNVkV9m0[]
+.Diagramme UML illustrant l'héritage entre les classes `Vehicule`, `Car` et `Truck`
+image::illustrations/uml-diagram-cars.png[Diagramme UML illustrant l'héritage entre les classes `Vehicule`, `Car` et `Truck`]
 
-_fig. 1 - Diagramme UML illustrant l'héritage entre les classes `Vehicule`, `Car` et `Truck`_
+//https://www.plantuml.com/plantuml/png/ZT112W8X5CRnlQTmMNG3LmDpXABzIpyQcQV6Kok8kNjO4qYqQ2FyF_0dEEH2KcfWPPboraTCtbR6GscziucJcB6TBGFDCFiYFfvRlcvkjkQQl7jtkdHv4j3ywKMj_aYYSI-8xkkja1ouqybQC8GAEcD53bBj_1zpcm3EniVo4sqZ9t9TrjWFYneGNVkV9m0
 
-==== Utilisation de l'Héritage :
+==== Utilisation de l'Héritage
 
 Dans la classe Main, nous pouvons créer un objet Car et utiliser à la fois les méthodes de Car et celles héritées de Vehicle.
 
@@ -320,15 +328,15 @@ public class Main {
 
 ==== Avantages de l'Héritage
 
-. *Réutilisation du Code :*
-L'héritage permet de réutiliser le code de la superclasse dans la sous-classe.
+. *Réutilisation du Code :*
+L’héritage permet de réutiliser le code de la superclasse dans la sous-classe.
 Dans notre exemple, Car n'a pas besoin de redéfinir les méthodes start() et stop(), car elles sont déjà définies dans Vehicle.
-. *Organisation Hierarchique :*
-L'héritage crée une structure hiérarchique qui aide à organiser les classes.
-Cela facilite la compréhension des relations entre différents types d'objets.
-. *Extension de Fonctionnalités :*
+. *Organisation Hiérarchique :*
+L’héritage crée une structure hiérarchique qui aide à organiser les classes.
+Cela facilite la compréhension des relations entre différents types d’objets.
+. *Extension de Fonctionnalités :*
 La sous-classe peut ajouter des méthodes et des attributs spécifiques tout en conservant les comportements de la superclasse.
-Par exemple, Car a une méthode accelerate() qui n'est pas présente dans Vehicle.
+Par exemple, Car a une méthode accelerate() qui n’est pas présente dans Vehicle.
 . *Polymorphisme :*
 L'héritage permet également le polymorphisme.
 Par exemple, nous pouvons traiter un objet Car comme un objet Vehicle, ce qui permet d'utiliser des méthodes communes sans connaître le type exact de l'objet.
@@ -554,10 +562,20 @@ Quelques exemples
 
 . Un Diagramme de Classe
 
+.Diagramme UML de classe
 image::illustrations/uml-diagram-car.png[Diagramme de la classe Car modélisant un voiture]
 
 . Un Diagramme d'Activité
 
+.Diagramme UML d'activités
 image::illustrations/uml-diagram-activity-car.png[Diagramme d'activité d'une Voiture]
 
-[^1]: POO signifie Programmation Orientée Objet
+
+Pour en découvrir, je vous invite à visiter la page de wikipedia relative à l' https://fr.wikipedia.org/wiki/UML_(informatique)[Unified Modeling Language (UML) : https://fr.wikipedia.org/wiki/UML_(informatique)].
+
+== Conclusion
+
+Nous avons fait un tour, certes rapidement, de ce que propose le langage Java et la modélisation UML.
+Nous utiliserons donc le langage Java, et l’UML pour expliquer un peu les approches de conception du code proposé.
+
+Il est grand temps de se lancer dans l’aventure avec nos premiers programmes d’exploration.
