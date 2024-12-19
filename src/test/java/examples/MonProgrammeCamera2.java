@@ -151,7 +151,7 @@ public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
         createWindow();
         createBuffer();
 
-        addScene(new PlayBehaviorScene("play"));
+        addScene(new PlayCameraScene2("play"));
         switchScene("play");
     }
 
