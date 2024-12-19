@@ -152,7 +152,7 @@ public class MonProgrammeGameLoop1 extends TestGame implements KeyListener, Game
         createBuffer();
 
         addScene(new PlayCameraScene2("play"));
-        createScene();
+        switchScene("play");
     }
 
     /**
@@ -163,10 +163,28 @@ public class MonProgrammeGameLoop1 extends TestGame implements KeyListener, Game
      *          used as the key for storage within the collection.
      */
     private void addScene(Scene s) {
-        if (this.scenes.isEmpty()) {
-            this.currentScene = s;
-        }
         this.scenes.put(s.getName(), s);
+    }
+
+
+    /**
+     * Initializes and creates the current scene and its entities.
+     * <p>
+     * This method carries out the following actions:
+     * - Calls the initialize method of the current scene, passing the current object.
+     * - Invokes the create method to set up the scene specifics using the current object.
+     * - Iterates over the entities retrieved from the current scene and initializes
+     * each behavior associated with those entities.
+     *
+     * @param name the name of the Scene instance to be activated.
+     */
+    public void switchScene(String name) {
+        if (Optional.ofNullable(currentScene).isPresent()) {
+            currentScene.dispose(this);
+        }
+        currentScene = scenes.get(name);
+        // Initialise et créé la Scene courante.
+        createScene();
     }
 
     /**
