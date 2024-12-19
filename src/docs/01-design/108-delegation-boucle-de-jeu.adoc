@@ -237,7 +237,7 @@ Dans ce dernier cas, seule la mise-à-jour (`update`) est mise en pause.
 
 Nous avons ici délégué le traitement de la boucle à une classe dite spécialisée, ce qui permettra plus tard de proposer d’autre implémentation permettant par exemple de privilégier le traitement des updates vis-a-vis du rendu, permettant ainsi d’éviter l’apparition de problèmes de collision, de calcul physique, etc.
 
-.Exemple de boucle de jeu alternative
+.Exemple de boucle de jeu alternative basée sur le principe l'"update over rendering".
 image::illustrations/game-loop-fixed-update.jpg[.Exemple de boucle de jeu alternative,align=center]
 
 Dans le prochain chapitre, nous allons passer à la détection des collisions entre entités, et au traitement de celles-ci.
