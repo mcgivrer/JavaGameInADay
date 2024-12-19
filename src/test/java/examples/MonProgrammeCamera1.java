@@ -4,6 +4,7 @@ import entity.Camera;
 import entity.Entity;
 import game.Game;
 import game.TestGame;
+import scenes.PlayBehaviorScene;
 import scenes.PlayCameraScene1;
 import scenes.Scene;
 import utils.Config;
@@ -150,7 +151,7 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
         createBuffer();
 
         addScene(new PlayCameraScene1("play"));
-        createScene();
+        switchScene("play");
     }
 
     /**
@@ -161,11 +162,9 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
      *          used as the key for storage within the collection.
      */
     private void addScene(Scene s) {
-        if (this.scenes.isEmpty()) {
-            this.currentScene = s;
-        }
         this.scenes.put(s.getName(), s);
     }
+
 
     /**
      * Initializes and creates the current scene and its entities.
@@ -175,8 +174,15 @@ public class MonProgrammeCamera1 extends TestGame implements KeyListener, Game {
      * - Invokes the create method to set up the scene specifics using the current object.
      * - Iterates over the entities retrieved from the current scene and initializes
      * each behavior associated with those entities.
+     *
+     * @param name the name of the Scene instance to be activated.
      */
-    private void createScene() {
+    public void switchScene(String name) {
+        if (Optional.ofNullable(currentScene).isPresent()) {
+            currentScene.dispose(this);
+        }
+        currentScene = scenes.get(name);
+        // Initialise et créé la Scene courante.
         currentScene.initialize(this);
         currentScene.create(this);
         currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.init(e)));

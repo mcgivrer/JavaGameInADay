@@ -14,6 +14,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Represents the main scene of the program.
@@ -25,7 +26,7 @@ import java.util.Map;
 public class MonProgrammeScene1 extends TestGame implements KeyListener, Game {
     /**
      * The file path for the configuration properties file.
-     *
+     * <p>
      * This string variable stores the path to a properties file
      * that contains application configurations, typically in a format
      * understood by java.util.Properties. It is used by the application
@@ -69,17 +70,29 @@ public class MonProgrammeScene1 extends TestGame implements KeyListener, Game {
         createBuffer();
 
         addScene(new PlayScene("play"));
-        createScene();
+        switchScene("play");
     }
 
+    /**
+     * Add Scene instance to the existing collection.
+     *
+     * @param s the Scene instance to be added.
+     */
     private void addScene(Scene s) {
-        if (this.scenes.isEmpty()) {
-            this.currentScene = s;
-        }
         this.scenes.put(s.getName(), s);
     }
 
-    private void createScene() {
+    /**
+     * Activate the name scene by initializing it (Scene resources) and create it (Scene entities).
+     *
+     * @param name the name of the Scene to be activated.
+     */
+    public void switchScene(String name) {
+        if (Optional.ofNullable(currentScene).isPresent()) {
+            currentScene.dispose(this);
+        }
+        currentScene = scenes.get(name);
+        // Initialise et créé la Scene courante.
         currentScene.initialize(this);
         currentScene.create(this);
     }
