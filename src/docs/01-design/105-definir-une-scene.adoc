@@ -382,9 +382,12 @@ Pour reprendre le diagramme de classes du début :
 
 .Node, Scene, AbstractScene et Entity dans un arbre
 image::illustrations/uml-diagram-abstract-scene-entity-node.png[Node,Scene AbstractScene et Entity dans un arbre]
+Pour reprendre le diagramme de classes du début :
+
+.Node, Scene, AbstractScene et Entity dans un arbre
+image::illustrations/uml-diagram-abstract-scene-entity-node.png[Node,Scene AbstractScene et Entity dans un arbre]
 
 WARNING: TODO terminer le chapitre Node et l’affichage de la scene en mode arbre composé de nœuds.
-
 
 == Conclusion
 
@@ -394,9 +397,6 @@ La scene est maintenant organisée pour contenir, sous forme d'arbre, l'ensemble
 Il est possible d'activer une autre scene, simplement en appelant la méthode `switchScene(String)` qui prend en charge sont initialization, la création de ses entités,  mais aussi auparavant vérifie si une autre est déjà activée, et procède à sa désactivation.
 
 Dans le prochain chapitre, nous allons nous intéresser aux comportements et à l'interface `Behavior`.
-
-
-
 
 
 
