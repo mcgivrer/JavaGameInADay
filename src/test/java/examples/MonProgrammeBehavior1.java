@@ -14,17 +14,18 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * examples.MonProgrammeBehavior1 is a class that extends TestGame and implements KeyListener and Game interfaces.
- *
+ * <p>
  * This class manages the initialization and execution of a game application, including configuration
  * loading, scene management, main game loop execution, and handling of user inputs.
  */
 public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game {
     /**
      * Represents the file path to the configuration file used by the application.
-     *
+     * <p>
      * This variable stores the relative path to the configuration file that
      * contains various settings needed for the initialization and operation
      * of the application. It is typically loaded at the startup of the
@@ -34,7 +35,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
 
     /**
      * Indicates whether the application is currently running in test mode.
-     *
+     * <p>
      * When set to true, the application will operate under conditions
      * suitable for testing, such as executing a predefined number of
      * iterations or using mock data. This mode is typically used to facilitate
@@ -47,20 +48,20 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
      * Specifies the maximum number of iterations the main application loop can execute
      * in test mode. This variable is used to limit the loop execution when the application
      * is running in a controlled test environment.
-     *
+     * <p>
      * It helps in testing and debugging by providing a finite number of iterations,
      * allowing for observation of the application's behavior over a specific number of loops.
-     *
+     * <p>
      * When the application is not in test mode, this variable may not affect the loop execution.
      */
     private int maxLoopCount = 1;
     /**
      * Represents the main application window for the examples.MonProgrammeBehavior1 class.
-     *
+     * <p>
      * This JFrame is used to display the graphical user interface of the application. It is
      * created and initialized with specific settings such as the window title, size,
      * and close operation based on the application's configuration.
-     *
+     * <p>
      * The window also serves as the primary interface for handling and processing user input,
      * particularly through keyboard interactions. It integrates with the application's event
      * listeners to manage user actions and render updates.
@@ -77,11 +78,11 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
 
     /**
      * An array representing the state of keyboard keys for the application.
-     *
+     * <p>
      * Each index in the array corresponds to a specific key code, and
      * the boolean value at that index indicates whether the key is
      * currently pressed (true) or released (false).
-     *
+     * <p>
      * The array is used to handle and track keyboard input events. It is
      * typically updated in response to key press and release events
      * processed by the application.
@@ -90,7 +91,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
 
     /**
      * A collection of scenes managed by the examples.MonProgrammeBehavior1 class.
-     *
+     * <p>
      * This map stores various scenes, keyed by their unique string identifiers.
      * It allows easy retrieval and management of scenes within the application.
      * The scenes can be added, retrieved, or modified as needed by the
@@ -99,12 +100,12 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
     private final Map<String, Scene> scenes = new HashMap<>();
     /**
      * Represents the current scene being rendered and interacted with in the application.
-     *
+     * <p>
      * The scene object referred to by this variable is responsible for defining the
      * graphical and interactive elements present in the current state of the application.
      * It plays a crucial role in the graphical user interface, handling aspects such as
      * visual rendering, user input, and interactions with other scenes or entities.
-     *
+     * <p>
      * The currentScene is subject to changes, typically updated to reflect new states in
      * the application, either through user actions or program logic executed during the
      * application's lifecycle.
@@ -113,7 +114,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
 
     /**
      * Constructs a new instance of examples.MonProgrammeBehavior1.
-     *
+     * <p>
      * This constructor performs the following actions:
      * - Outputs a startup message indicating that the examples.MonProgrammeBehavior1 class is starting.
      * - Initializes the configuration for the application by creating a new Config object.
@@ -145,7 +146,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
         createBuffer();
 
         addScene(new PlayBehaviorScene("play"));
-        createScene();
+        switchScene("play");
     }
 
     /**
@@ -156,22 +157,27 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
      *          used as the key for storage within the collection.
      */
     private void addScene(Scene s) {
-        if (this.scenes.isEmpty()) {
-            this.currentScene = s;
-        }
         this.scenes.put(s.getName(), s);
     }
 
+
     /**
      * Initializes and creates the current scene and its entities.
-     *
+     * <p>
      * This method carries out the following actions:
      * - Calls the initialize method of the current scene, passing the current object.
      * - Invokes the create method to set up the scene specifics using the current object.
      * - Iterates over the entities retrieved from the current scene and initializes
-     *   each behavior associated with those entities.
+     * each behavior associated with those entities.
+     *
+     * @param name the name of the Scene instance to be activated.
      */
-    private void createScene() {
+    public void switchScene(String name) {
+        if (Optional.ofNullable(currentScene).isPresent()) {
+            currentScene.dispose(this);
+        }
+        currentScene = scenes.get(name);
+        // Initialise et créé la Scene courante.
         currentScene.initialize(this);
         currentScene.create(this);
         currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.init(e)));
@@ -218,7 +224,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
 
     /**
      * Executes the main application loop for the game.
-     *
+     * <p>
      * This method contains the core loop for running the game's logic. It performs
      * the following steps repeatedly until an exit is requested or a test mode condition is met:
      * 1. Handles input by capturing keyboard events.
@@ -226,7 +232,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
      * 3. Renders the current game state to the screen.
      * 4. Records the number of game loops executed for testing or debugging purposes.
      * 5. Waits for a calculated frame time to maintain a consistent frame rate as configured.
-     *
+     * <p>
      * The loop operates at a frame rate determined by the configuration setting "app.render.fps".
      * In test mode, the loop will execute a pre-defined number of times specified by maxLoopCount.
      * Outputs the total number of game loops executed upon termination.
