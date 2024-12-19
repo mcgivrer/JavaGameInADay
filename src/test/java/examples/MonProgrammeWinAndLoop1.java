@@ -1,3 +1,5 @@
+package examples;
+
 import game.TestGame;
 import utils.Config;
 

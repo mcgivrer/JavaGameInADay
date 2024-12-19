@@ -1,12 +1,16 @@
+package examples;
+
 import game.TestGame;
 import utils.Config;
 
-public class MonProgrammeConfig1 extends TestGame {
+public class MonProgrammeConfig2 extends TestGame {
+    private String configFilePath = "/config2.properties";
     private Config config;
 
-    public MonProgrammeConfig1() {
+    public MonProgrammeConfig2() {
         System.out.printf("# Démarrage de %s%n", this.getClass().getSimpleName());
         config = new Config(this);
+        config.load(configFilePath);
     }
 
     public void run(String[] args) {
@@ -15,7 +19,7 @@ public class MonProgrammeConfig1 extends TestGame {
 
 
     public static void main(String[] args) {
-        MonProgrammeConfig1 prog = new MonProgrammeConfig1();
+        MonProgrammeConfig2 prog = new MonProgrammeConfig2();
         prog.run(args);
     }
 }

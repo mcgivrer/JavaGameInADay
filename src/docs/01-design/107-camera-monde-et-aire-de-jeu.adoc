@@ -1,0 +1,478 @@
+= Camera, Monde et Aire de jeu
+:source-highlighter: rouge
+:experimental:
+
+La caméra est le moyen le plus simple et bizarrement le plus imagé, pour suivre une autre entité à l'écran.
+
+En effet, comme au cinéma la caméra va suivre le héros dans ses actions, dans le jeu, elle suivra le personnage dirigé par le joueur, comme lors d'une scène d'action dans un film.
+
+Nous allons donc devoir implementer un nouvel objet qui se comportera comme une caméra de cinéma, à savoir qu'elle devra suivre une cible (`target`), qu'elle aura un cadre précis défini (`viewport`) et qu'elle suivra la cibla vec un certaine souplesse, définie par un facteur numérique (`tweenFactor`).
+
+Elle fera partie, comme les autres entités, de la scène.
+Plusieurs caméras pourront être définies et activées à la demande chacune leur tour.
+
+Ainsi pourra être fait un jeu "d'angles de vues" pour rendre une action plus dynamique quand cela est nécessaire : par exemple faire le focus l'espace de quelques secondes sur un élement important de la scène, ou sur un énnemi, un objet particulier.
+
+== L'objet Camera
+
+Avec tous les éléments décrits précédemment, nous pouvons maintenant imaginer notre object `Camera`.
+
+.Les attributs de notre Camera
+[source,java]
+----
+public class Camera extends Entity{
+    // <1>
+    private Entity target=null;
+    // <2>
+    private Rectangle2D viewport=new Rectangle2D.Double(0,0,320.0,200.0);
+    // <3>
+    private double tweenFactor=1.0;
+}
+----
+
+. **target** : On retrouve donc la cible pointée par la caméra,
+. **viewport** : le cadre de a caméra,
+. **tweenFactor** : le facteur de vitesse de suivi de la cible.
+
+Nous ajoutons un constructeur qui appelle le constructeur parent :
+
+.Le constructeur unique
+[source,java]
+----
+public class Camera extends Entity{
+    //...
+    public Camera(String name){
+        super(name);
+    }
+    //...
+}
+----
+
+Et nous ajouterons bien sûr les indispensables getters et setters respectant le concept de Fluent API.
+
+.Les getters et les Fluent API setters
+[source,java]
+----
+public class Camera extends Entity{
+    //...
+    public Entity getTarget() {
+        return target;
+    }
+
+    public Camera setTarget(Entity target) {
+        this.target = target;
+        return this;
+    }
+
+    public double getTweenFactor() {
+        return tweenFactor;
+    }
+
+    public Camera setTweenFactor(double tweenFactor) {
+        this.tweenFactor = tweenFactor;
+        return this;
+    }
+
+    public double getRotation() {
+        return rotation;
+    }
+
+    public Camera setRotation(double rotation) {
+        this.rotation = rotation;
+        return this;
+    }
+
+    public Rectangle2D getViewport() {
+        return this;
+    }
+
+    public Camera setViewport(Dimension vp) {
+        this.setRect(x, y, vp.width, vp.height);
+        return this;
+    }
+    //...
+}
+----
+
+Et enfin, il est important de mettre à jour la position de la caméra en fonction de la cible visée.
+Nous allons donc ajouter une méthode `update` "maison" :
+
+.Mise à jour de la position de la Camera en fonction de la position de la cible
+[source,java]
+----
+public class Camera extends Entity{
+    //...
+    public void update(double elapsed) {
+
+        this.x = this.x + (((target.x - this.x) - (this.getBounds2D().getWidth() - target.width) * 0.5) * tweenFactor * elapsed);
+
+        this.y = this.y + (((target.y - this.y) - (this.getBounds2D().getHeight() - target.height) * 0.5) * tweenFactor * elapsed);
+    }
+    //...
+}
+----
+
+On positionne le centre du `viewport` de la caméra à la position du centre de la cible (`target`), mais avec un ratio `tweenFactor` de la distance restante en fonction du temps passé depuis le précédent appel, ce qui donne un effet plus doux sur le déplacement.
+
+.Illustration de la caméra fixant une cible ayant un cadre et un facteur de suivi.
+image::https://docs.google.com/drawings/d/1RJLlUeiRI00_wCWQTIliH7ibnY-BR-ppp_xtJL0O6EM/pub?w=500&h=300[]
+
+Sur l'illustration ci-dessus, imaginer que le `tweenFactor` est un ressort avec amortisseur, reliant la cible et la caméra.
+
+Plus le `tweenfactor` est élevé (proche de 1) et moins il y a d'amortissement et de douceur.
+
+Plus le `tweenFactor` s'approche de 0.0 et moins la propension à la promptitude de la caméra à suivre la cible est forte.
+En clair et en décrypté : il aura donc un délai plus long à suivre la cible avec une valeur proche de zéro.
+
+=== Intégrons la camera dans la Scene.
+
+TODO
+
+[source,java]
+----
+
+----
+
+=== Modifions le process de mise-à-jour
+
+Comme la caméra est ajoutée comme toute autre entité à la scène, nous devons en début de chaque mise à jour, appliquer le mécanisme standard d'update à tous les objets qui ne sont pas une caméra.
+
+Ensuite, nous appellerons la méthode spciale de mise à jour de l'objet caméra pour se positionner en fonction de la nouvelle position de l'entité suivie par celle-ci.
+
+.Processus de mise-à-jour de la caméra considérée comme active.
+[source,java]
+----
+private void update() {
+// <1>
+    currentScene.getEntities().stream().filter(e -> !(e instanceof Camera)).forEach(e -> {
+        //...
+    });
+    // <2>
+   Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
+    cam.ifPresent(entity -> ((Camera) entity).update(16.0));
+
+    currentScene.update(this);
+}
+----
+
+. Nous filtrons tous les objets qui ne sont pas des caméras, afin d'appliquer le process standard,
+. le premier objet de type Camera que nous trouvons sera la camera active, et appelons sa mise à jour de position.
+
+NOTE: Ce procédé sera changer avec l'adaptation de la Scene, lorsque nous ajouterons d'autres attributs à celle-ci.
+
+=== Modifions le rendu graphique
+
+Une fois l'instance de la `Camera` repérée dans les objets de la `Scene`, nous allons utiliser la position de son cadre (`viewport`) pour déplacer le point de vue de rendu.
+
+.Rendu du point de vue de la Camera.
+[source,java]
+----
+private void render() {
+    Graphics2D g = renderingBuffer.createGraphics();
+    // clear rendering buffer to black
+    g.setColor(Color.BLACK);
+    g.fillRect(0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight());
+    // <1>
+    Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
+
+    // draw entities
+    currentScene.getEntities().stream()
+            .filter(e -> !(e instanceof Camera))
+            .forEach(e -> {
+                // <2>
+                if (cam.isPresent()) {
+                    Camera camera = (Camera) cam.get();
+                    g.translate((int) -camera.getX(), (int) -camera.getY());
+                }
+                // <3>
+                drawEntity(e, g);
+                // <4>
+                if (cam.isPresent()) {
+                    Camera camera = (Camera) cam.get();
+                    g.setColor(Color.gray);
+                    g.draw(camera.getShape());
+                    g.translate((int) camera.getX(), (int) camera.getY());
+                }
+
+                // Exécuter les comportements de dessin pour cette instance d'Entity.
+                e.getBehaviors().forEach(b -> b.draw(g, e));
+            });
+    currentScene.draw(this, g);
+    //...
+}
+
+----
+
+. Nous isolons la première instance de `Camera` dans la scene active,
+. Nous déplaçons le point de vue à la position du cadre de la camera (viewport),
+. Nous procédons au rendu de l'entité en cours,
+. Nous ramenons la position du point de vue à sa place initiale pour passer à l'entité suivante.
+
+Si nous exécutons maintenant notre programme de test de la caméra :
+
+[source,bash]
+----
+./runex.sh MonProgrammeCamera1
+----
+
+Nous obtiendrons un rendu similaire à ce que présenta la capture d'écran ci-dessous :
+
+.Capture la démo MonProgrammeCamera1
+image::illustrations/capture-camera-1.png[]
+
+== Allons un peu plus loin
+
+Dans cette capture d'écran le cadre gris délimite la zone actuelle jeu.
+
+Ajoutons un rectangle jaune délimitant le cadre du viewport.
+
+.Ajout du dessin d'information visuel de débuggage de la caméra
+[source,java]
+----
+private static void drawDebugCamera(Graphics2D g, Camera camera) {
+    g.setFont(g.getFont().deriveFont(9.0f));
+    g.setColor(Color.yellow);
+    Rectangle2D drawCamera = new Rectangle2D.Double(
+        camera.getBounds2D().getX() + 20,
+        camera.getBounds2D().getY() + 30,
+        camera.getBounds2D().getWidth() - 40,
+        camera.getBounds2D().getHeight() - 40);
+    g.draw(drawCamera);
+    g.drawString(
+            "#%d:%s".formatted(camera.getId(), camera.getName()),
+        (int) (camera.getBounds2D().getX() + 20
+            + camera.getBounds2D().getWidth() * 0.70),
+        (int) (camera.getBounds2D().getY()
+            + camera.getBounds2D().getHeight() - 14));
+}
+----
+
+Et dans la méthode `render` principale:
+
+.Modification de la méthode de rendu
+[source,java]
+----
+private void render() {
+    Graphics2D g = renderingBuffer.createGraphics();
+    //...
+    // <1>
+    Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
+    Camera camera = cam.isPresent() ? (Camera) cam.get() : null;
+    // <2>
+    if (cam.isPresent() != null) {
+        g.translate((int) -camera.getX(), (int) -camera.getY());
+    }
+    drawWorldLimit(g, currentScene.getWorld(), 16, 16);
+    if (cam.isPresent() != null) {
+        if (isDebugGreaterThan(1)) {
+            drawDebugCamera(g, camera);
+        }
+        g.translate((int) camera.getX(), (int) camera.getY());
+    }
+    // draw entities
+    currentScene.getEntities().stream()
+        .filter(e -> !(e instanceof Camera))
+        .forEach(e -> {
+            //...
+        });
+    //...
+}
+----
+
+Si nous relançons maintenant notre programme de test :
+
+[source,bash]
+----
+runex.sh MonProgrammeCamera1
+----
+
+Nous verrons s'afficher la fenêtre suivante, proposant un contenu approchant :
+
+.Affichage d'information visuel de débogage sur l'objet Camera nommé "cam01".
+image::illustrations/capture-camera-2.png[Affichage d'informartion visuel de debuggage sur l'objet Camera]
+
+Si nous pressons la combinaison de touche kbd:[CTRL]+kbd:[D], nous verrons changer le niveau d'information de débogage affichée à côté de chaque entité.
+
+== World, un nouveau monde
+
+Ajoutons un nouvel objet à notre set de jeu, le monde !
+Afin de mieux gérer le context pour l'ensemble des entités évoluant dans notre jeu, nous allons ajouter une classe quip nous permettra de définir certains traits communs.
+
+La classe `World` servira à définir :
+
+. Les dimensions de l'espace de jeux dans un `Rectangle2D`,
+. La gravité (`gravity`), nouvelle venue dans notre moteur de jeux, servira à appliquer une force définie à l'ensemble des entités contenues dans l'espace de jeu correspondante à la gravité de notre environnement.
+Par défaut à zéro, elle pourra être définie à __9,81m/s^2^__, soit l'accélération liée à https://fr.wikipedia.org/wiki/Pesanteur[la gravité terrestre,role=external,window=_blank,title=Voir la page sur la pesanteur sur wikipedia].
+
+Ainsi, dans le schéma ci-dessous, nous pouvons voir plusieurs entités (carrés jaunes) évoluant dans la même zone de jeu (cadre vert), contraintes dans l'espace défini par celle-ci, et subissant la gravité (flèche bleue orientée vers le bas).
+
+TIP: TODO Ajouter un schema montrant quelques entités évoluant dans une zone de jeux et en subissant les contraintes
+
+Commençons par créer un nouvel exemple en se basant sur le programme précédent :
+
+Copions la classe précédente `MonProgrammeCamera1` vers une nouvelle classe `MonProgrammeCamera2`.
+
+Ensuite, nous allons créer la classe World :
+
+.La classe World définissant notre monde.
+[source,java]
+----
+import java.awt.geom.Rectangle2D;
+public class World extends Rectangle2D.Double{
+    private Point2D gravity;
+
+    public World(){
+        gravity = new Point2D.Double(0.0,0.0);
+        this.setRect(new Rectangle2D.Double(0,0,640,400));
+    }
+    public World(Rectangle2D playArea, Point2D g){
+        this.gravity=g;
+        this.setRect(playArea);
+    }
+    public World setGravity(Point2D g){
+        this.gravity=g;
+        return this;
+    }
+    public World setPlayArea(Rectangle2D pa){
+        this.setRect(pa);
+        return this;
+    }
+}
+----
+
+Nous devons adapter notre Scene pour qu'elle définisse un objet World:
+
+.Notre Scene `PlayCameraScene2` adapté à l'objet `World`
+[source,java]
+----
+public class PlayCameraScene2 extends AbstractScene {
+
+    public PlayCameraScene2(String name) {
+        super(name);
+    }
+
+    @Override
+    public void create(Game app) {
+        // <1>
+        setWorld(
+                new World(
+                        new Point2D.Double(0, -0.981),
+                        new Double(0, 0, 30*16, 20*16)));
+        //...
+    }
+    //...
+
+}
+----
+
+En utilisant l'interface `setWorld(World)` définie par `AbstractScene`, nous pouvons déclarer une instance de la classe `World` qui définie le monde de notre jeu pour l'ensemble des entités de la `Scene`.
+
+Ici, nous définissons un monde délimitant une zone de jeu de **480** points en largeur et **320** points en hauteur, ainsi qu'une gravité définie via une instance de https://docs.oracle.com/en/java/javase/23/docs/api/java.desktop/java/awt/geom/Point2D.html[`Point2D`] de __(0.0,-0.981)__, soit la gravité terrestre de **9,81m/s^2^**.
+
+NOTE: Nous utilisons ici un object de type Point2D, fourni par le JDK afin de définir un pseudo vecteur.
+Nous aurons dans un prochain chapitre l'opportunité d'implémenter notre propre classe Vector2D permettant les opérations sur les vecteurs en 2 dimensions quand nous travailler sur une simulation physique un peu plus poussée.
+
+Nous allons aussi modifier les méthodes render et update de notre programme de demonstration pour qu'elles prennent en compte notre nouvelle classe.
+
+=== Render
+
+.Modifions la méthode de rendu en intégrant l'attribut `World` de notre `PlayCameraScene2`
+[source,java]
+----
+public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
+    //...
+    private void render() {
+        Graphics2D g = renderingBuffer.createGraphics();
+        // ...
+        if (camera != null) {
+            g.translate((int) -camera.getX(), (int) -camera.getY());
+        }
+
+        // <1>
+        drawWorldLimit(g, currentScene.getWorld(), 16, 16);
+
+        if (camera != null) {
+            if (isDebugGreaterThan(1)) {
+                drawDebugCamera(g, camera);
+            }
+            g.translate((int) camera.getX(), (int) camera.getY());
+        }
+        //...
+    }
+    //...
+    // <2>
+    private void drawWorldLimit(Graphics2D g, World world, int tileWidth, int tileHeight) {
+        // draw the world limit.
+        g.setColor(Color.GRAY);
+        for (int ix = 0; ix < world.getWidth(); ix += tileWidth) {
+            for (int iy = 0; iy < world.getHeight(); iy += tileHeight) {
+                g.drawRect(ix, iy,
+                        tileWidth, tileHeight);
+            }
+        }
+        g.setColor(Color.DARK_GRAY);
+        g.draw(world);
+    }
+    //...
+}
+----
+
+. Dans la méthode `render`, nous passons maintenant l'objet World issue de la scene :  `currentScene.getWorld()`
+. La méthode `drawWorldLimit` prendra maintenant un objet World comme attribut afin de dessiner une représentation de cet objet.
+
+=== Update
+
+Ajoutons également la mise à jour des positions de nos entités présentes dans la scène active en prenant en compte notre nouvel objet `World`:
+
+[source,java]
+----
+public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
+    //...
+    private void update() {
+        currentScene.getEntities().stream().filter(e -> !(e instanceof Camera)).forEach(e -> {
+            // <1>
+            World world = currentScene.getWorld();
+            // <2>
+            e.setPosition(
+                    e.getX() + e.getDx() - (world.getGravity().getX()),
+                    e.getY() + e.getDy() - (world.getGravity().getY()));
+
+            // <3>
+            if (!world.contains(e)) {
+                applyBouncingFactor(world, e);
+                // <4>
+                e.setPosition(
+                        Math.min(Math.max(e.getX(), world.getX()), world.getWidth() - e.getWidth()),
+                        Math.min(Math.max(e.getY(), world.getY()), world.getHeight() - e.getHeight()));
+            }
+            //...
+        });
+        // ...
+    }
+    // <5>
+    private void applyBouncingFactor(World world, Entity e) {
+        // application du rebond si collision avec le bord de la zone de jeu
+        if (e.getX() < world.getX()
+                || e.getX() + e.getWidth() > e.getWidth() + world.getWidth()) {
+            e.setVelocity(-e.getDx() * e.getElasticity(), e.getDy());
+        }
+        if (e.getY() < world.getY()
+                || e.getY() + e.getHeight() > world.getHeight()) {
+            e.setVelocity(e.getDx(), -e.getDy() * e.getElasticity());
+        }
+    }
+    //...
+
+}
+----
+
+. Nous récupérons l'objet `World` de la scène,
+. Nous calculons la nouvelle position de l'entité en lui appliquant sa vitesse ET la gravité issue de l'objet World,
+. Nous appliquons l'effet de rebond si nécessaire (voir (5)),
+. Nous repositionnons l'entité dans la zone de jeu si sa nouvelle position sort du cadre de la zone de jeu,
+. Et enfin, nous échangeons l'objet `Rectangle2D` pour un objet `World` dans la signature de la méthode de gestion du rebond.
+
+
+== Conclusion
+
+Nous avons ajouté à notre moteur quelques éléments importants qui serviront de base à d'autre principes que nous allons développer dans les chapitres suivants, comme les systèmes de particules qui feront appel à l'utilisation des comportements spécifiques (`Behaviors`), ainsi qu'à la structure en arbred

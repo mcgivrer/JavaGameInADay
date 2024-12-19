@@ -1,4 +1,5 @@
-import entity.Entity;
+package examples;
+
 import game.Game;
 import game.TestGame;
 import scenes.PlayScene;
@@ -266,7 +267,7 @@ public class MonProgrammeScene1 extends TestGame implements KeyListener, Game {
     /**
      * Entry point for the application.
      * <p>
-     * This method creates an instance of MonProgrammeDemo3 and invokes its run method
+     * This method creates an instance of examples.MonProgrammeDemo3 and invokes its run method
      * to start the application.
      *
      * @param args Command-line arguments passed to the application.

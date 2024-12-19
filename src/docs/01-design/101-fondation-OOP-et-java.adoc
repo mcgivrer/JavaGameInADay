@@ -7,26 +7,36 @@ Ces concepts seront les briques essentielles pour construire tout ce qui va suiv
 
 **Pourquoi Java ?**
 
-Java est un langage robuste, portable et facile à apprendre. Avec ses 25 ans d’existence, il a prouvé sa valeur dans des domaines allant de l’industrie aux jeux vidéo. Ce n’est peut-être pas le choix le plus courant pour développer un moteur de jeu, mais c’est justement ce qui en fait un terrain d’apprentissage idéal : en travaillant avec Java, nous apprenons à penser différemment et à maximiser les capacités d’outils simples.
+Java est un langage robuste, portable et facile à apprendre.
+Avec ses 25 ans d’existence, il a prouvé sa valeur dans des domaines allant de l’industrie aux jeux vidéo.
+Ce n’est peut-être pas le choix le plus courant pour développer un moteur de jeu, mais c’est justement ce qui en fait un terrain d’apprentissage idéal : en travaillant avec Java, nous apprenons à penser différemment et à maximiser les capacités d’outils simples.
 
-La Programmation Orientée Objet : un modèle puissant
-À la base, la programmation orientée objet repose sur quatre piliers principaux :
+La Programmation Orientée Objet : un modèle puissant À la base, la programmation orientée objet repose sur quatre piliers principaux :
 
-- L’encapsulation : c’est l’art de cacher les détails internes d’un objet tout en offrant une interface claire pour interagir avec lui. Imaginez une voiture : vous appuyez sur l’accélérateur sans avoir besoin de connaître le fonctionnement du moteur.
+- L’encapsulation : c’est l’art de cacher les détails internes d’un objet tout en offrant une interface claire pour interagir avec lui.
+Imaginez une voiture : vous appuyez sur l’accélérateur sans avoir besoin de connaître le fonctionnement du moteur.
 
-- L’héritage : cette notion permet de réutiliser du code en établissant des relations entre les classes. Par exemple, dans un jeu, une classe Entity pourrait définir des propriétés générales, et des sous-classes comme Player ou Enemy pourraient hériter de ces propriétés tout en ajoutant leur propre comportement.
+- L’héritage : cette notion permet de réutiliser du code en établissant des relations entre les classes.
+Par exemple, dans un jeu, une classe Entity pourrait définir des propriétés générales, et des sous-classes comme Player ou Enemy pourraient hériter de ces propriétés tout en ajoutant leur propre comportement.
 
-- Le polymorphisme : ce concept rend votre code plus flexible en permettant à un même type de se comporter différemment en fonction du contexte. Par exemple, une méthode render() pourrait s’appliquer à différentes entités d’un jeu, chacune ayant sa propre manière de se dessiner à l’écran.
+- Le polymorphisme : ce concept rend votre code plus flexible en permettant à un même type de se comporter différemment en fonction du contexte.
+Par exemple, une méthode render() pourrait s’appliquer à différentes entités d’un jeu, chacune ayant sa propre manière de se dessiner à l’écran.
 
-- L’abstraction : c’est la capacité à se concentrer sur les aspects importants en cachant les détails complexes. Dans notre projet, nous utiliserons des interfaces et des classes abstraites pour définir des comportements sans nous attarder sur leur implémentation immédiate.
+- L’abstraction : c’est la capacité à se concentrer sur les aspects importants en cachant les détails complexes.
+Dans notre projet, nous utiliserons des interfaces et des classes abstraites pour définir des comportements sans nous attarder sur leur implémentation immédiate.
 
 **Java et l’OOP en action**
 
-Java incarne ces principes dans sa conception même. Avec ses classes, ses interfaces, et son riche écosystème, il offre tous les outils nécessaires pour structurer proprement un projet, qu’il s’agisse d’une application d’entreprise ou d’un moteur de jeu.
+Java incarne ces principes dans sa conception même.
+Avec ses classes, ses interfaces, et son riche écosystème, il offre tous les outils nécessaires pour structurer proprement un projet, qu’il s’agisse d’une application d’entreprise ou d’un moteur de jeu.
 
-Dans ce chapitre, nous allons revoir les notions clés de l’OOP à travers Java. Si vous débutez avec ce langage ou si vous avez besoin d’une petite mise à jour, pas d’inquiétude ! Nous avancerons étape par étape, en construisant des exemples concrets qui serviront de point de départ à notre moteur de jeu. Chaque concept sera expliqué avec un œil sur son utilité dans notre projet.
+Dans ce chapitre, nous allons revoir les notions clés de l’OOP à travers Java.
+Si vous débutez avec ce langage ou si vous avez besoin d’une petite mise à jour, pas d’inquiétude !
+Nous avancerons étape par étape, en construisant des exemples concrets qui serviront de point de départ à notre moteur de jeu.
+Chaque concept sera expliqué avec un œil sur son utilité dans notre projet.
 
-Préparez-vous : cette introduction va poser les bases de tout ce que nous allons créer ensemble. Vous serez bientôt prêt à transformer des idées en code, un objet à la fois.
+Préparez-vous : cette introduction va poser les bases de tout ce que nous allons créer ensemble.
+Vous serez bientôt prêt à transformer des idées en code, un objet à la fois.
 
 == Le langage Java
 
@@ -544,10 +554,10 @@ Quelques exemples
 
 . Un Diagramme de Classe
 
-image:https://www.plantuml.com/plantuml/png/SoWkIImgAStDuKhEIImkLd1EB5Aevj9LICxFoI-oKWWkAShCImVoSnEpKv6v-IcfEN2-jWBO50rDAuMo_CmKC3-_08cRc9oScfDQb5YI2XUivN98pKi1MWm0[Diagramme de la classe Car modélisant un voiture]
+image::illustrations/uml-diagram-car.png[Diagramme de la classe Car modélisant un voiture]
 
 . Un Diagramme d'Activité
 
-image:https://www.plantuml.com/plantuml/png/TP0nhi8m38RtdCBRQuTtWVS6Mc3a4b7gYaXkWXo7gOTX3TV8nKWA5QeGM_Jdq_VRxe9ebZYHcW_U3T48HfxLage_EEOqQMPa80rNRoKomh-o8pIdTu11Vf48GHF5AIU4NGjoHWUDZxOjdiLj6JUQalV6v4GvrOQdTe_1MmS3GlWfpVako1-wVltOw902GkEyUpMATR4m-GPchI-G6-ouHViwTPLX1KKRAToNtLT147zHNNdNqpq0[Diagramme d'activité d'une Voiture]
+image::illustrations/uml-diagram-activity-car.png[Diagramme d'activité d'une Voiture]
 
 [^1]: POO signifie Programmation Orientée Objet

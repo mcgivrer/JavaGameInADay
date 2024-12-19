@@ -1,3 +1,5 @@
+package examples;
+
 import game.TestGame;
 import utils.Config;
 
@@ -9,6 +11,11 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
+/**
+ * examples.MonProgrammeEntity1 is a class that represents a game entity, handling configuration,
+ * rendering, and input events within a graphical application window.
+ * It extends TestGame and implements KeyListener to manage keyboard input for game control.
+ */
 public class MonProgrammeEntity1 extends TestGame implements KeyListener {
     private String configFilePath = "/demo3.properties";
     private Config config;
@@ -321,7 +328,7 @@ public class MonProgrammeEntity1 extends TestGame implements KeyListener {
     /**
      * Entry point for the application.
      * <p>
-     * This method creates an instance of MonProgrammeDemo3 and invokes its run method
+     * This method creates an instance of examples.MonProgrammeDemo3 and invokes its run method
      * to start the application.
      *
      * @param args Command-line arguments passed to the application.

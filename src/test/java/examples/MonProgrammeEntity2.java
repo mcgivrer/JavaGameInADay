@@ -1,3 +1,5 @@
+package examples;
+
 import entity.Entity;
 import game.TestGame;
 import utils.Config;
@@ -13,6 +15,14 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents a custom game entity that extends functionality from TestGame and
+ * implements KeyListener for handling keyboard interactions.
+ * <p>
+ * Manages the game environment and entities within it, including the main player
+ * and enemy entities. Supports initialization, game loop management, keyboard
+ * input processing, and updating game state.
+ */
 public class MonProgrammeEntity2 extends TestGame implements KeyListener {
     private String configFilePath = "/demo3.properties";
     private Config config;
@@ -27,6 +37,14 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
     private Map<String, Entity> entities = new HashMap<>();
 
 
+    /**
+     * Constructs a new instance of examples.MonProgrammeEntity2.
+     *
+     * This constructor performs the following actions upon instantiation:
+     * - Outputs a message to the console indicating the start of the program using the class name.
+     * - Initializes the configuration object by creating a new Config instance.
+     * - Loads configuration settings from the specified configuration file path.
+     */
     public MonProgrammeEntity2() {
         System.out.printf("# Démarrage de %s%n", this.getClass().getSimpleName());
         config = new Config(this);
@@ -55,6 +73,24 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
         createScene();
     }
 
+    /**
+     * Creates and initializes the scene with player and enemy entities.
+     *
+     * This method adds a blue-colored player entity at the center of the
+     * rendering buffer with physical properties such as elasticity and friction
+     * configured from application settings. The player's shape is a rectangle
+     * with predefined dimensions and its maximum speed is set to a specified
+     * configuration value.
+     *
+     * Additionally, this method creates multiple red-colored enemy entities
+     * and places them at random positions within the rendering buffer. Each
+     * enemy has unique elasticity and friction properties assigned randomly,
+     * and its shape is defined as an ellipse. The enemies' maximum speed is
+     * also assigned randomly but constrained below a certain percentage of
+     * the player's maximum speed.
+     *
+     * The entities are then added to the scene for further interactions and updates.
+     */
     private void createScene() {
         // Création du player bleu
         Entity player = new Entity("player")
@@ -81,6 +117,11 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
         }
     }
 
+    /**
+     * Adds the specified entity to the collection of entities.
+     *
+     * @param e the entity to be added
+     */
     private void add(Entity e) {
         entities.put(e.getName(), e);
     }
@@ -123,6 +164,26 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
             BufferedImage.TYPE_INT_ARGB);
     }
 
+    /**
+     * Executes the main game loop for the application.
+     *
+     * This method continuously processes game operations such as handling input,
+     * updating the game state, and rendering graphics to the screen. The loop
+     * continues to run until an exit is requested or, if in test mode, until it
+     * has executed a specified maximum number of iterations.
+     *
+     * It performs the following actions in each iteration:
+     * 1. Captures and processes user input.
+     * 2. Updates game objects and logic.
+     * 3. Renders the updated state to the screen.
+     * 4. Waits for a designated frame time to control the frame rate.
+     *
+     * The frame time is calculated based on a frames-per-second (FPS) value
+     * retrieved from the configuration settings.
+     *
+     * At the conclusion of the loop, a message is printed to the console
+     * displaying the total number of loops executed.
+     */
     public void loop() {
         int loopCount = 0;
         int frameTime = 1000 / (int) (config.get("app.render.fps"));
@@ -136,6 +197,12 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
         System.out.printf("=> Game loops %d times%n", loopCount);
     }
 
+    /**
+     * Causes the current thread to sleep for the specified amount of time.
+     *
+     * @param delayInMs the duration of time in milliseconds for which the
+     *                  thread should be put to sleep.
+     */
     private void waitTime(int delayInMs) {
         try {
             Thread.sleep(delayInMs);
@@ -312,7 +379,7 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
     /**
      * Entry point for the application.
      * <p>
-     * This method creates an instance of MonProgrammeDemo3 and invokes its run method
+     * This method creates an instance of examples.MonProgrammeDemo3 and invokes its run method
      * to start the application.
      *
      * @param args Command-line arguments passed to the application.

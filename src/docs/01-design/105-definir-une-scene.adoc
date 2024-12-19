@@ -8,10 +8,10 @@ Le jeu ne se résume pas qu’à cette phase de jeu, il y a souvent un inventair
 
 Tous ces différents types d'affichage sont en fait chacun une Scene, décrivant un ensemble d'objets visuels et de contrôles.
 
-c'est ce que la classe Scene portera comme concept : la définition des éléments interagissant au sein d'un écran, ainsi que les contrôles nécessaires à assurer le gameplay de cet écran.
+c'est ce que la classe Scene portera comme concept : la définition des éléments interagissant au sein d'un écran, ainsi que les contrôles nécessaires à assurer le gameplay de cet écran.
 
 .La scene fait partie d’un arbre à nœuds
-image::https://www.plantuml.com/plantuml/svg/NSzD2i8m48RXVKwHfIAzG91I17VYfbuWDaCxa1zefgA8TxTfsi6u6ryU-xLD93tIvApeh8vHdc3G3mpZyLQ_nKUizHeCB4KU91fbW-_JwRK3rTA8yq-sRGSU93m9l5d_kQJVvvqz8RrAb5lQa0aEQ61p3cW89XPDqxnxdmZMd6TPSlg7_8Lioyeyz_HgB4NUhgfwuwe7skwuswiBHX9vjwfbviai5mAJ1hoPdFq2[La scene fait partie d’un arbre à nœuds]
+image::illustrations/uml-diagram-scene.png[La scene fait partie d’un arbre à nœuds]
 
 Nous allons commencer par créer notre objet `Scene`, et nous agencerons les `Scene` et `Entity` a travers un bel arbre à `Node` plus tard.
 
@@ -374,3 +374,4 @@ Pour reprendre le diagramme de classes du début :
 .Node, Scene AbstractScene et Entity dans un arbre
 image::https://www.plantuml.com/plantuml/png/RO_DIWCn58NtUOeiMwGl46IeY3jnKryWJOxjXUH69dV0Kdnt9ycCJCHTSlZEpprciQDCCIX5B1W_h8C-EJ3ktqgvO7FMRydZyNsuA_sWoPkG-5AUR2FCIKQQlpExqYyi93UDBm7xnToqag0hsiYdSvRHEgbrlQ5AWwRu6H31afTDfVS2gNc4lDkRvnG2d53YjMNBt7QRbNlJj3BXIXxhr0Yv9fyxpSfiEK-29hVwdkpd_s_ugvRZVbDKOmw7OMar_Mclb4KTmNwAuGS0[Node,Scene AbstractScene et Entity dans un arbre]
 
+WARNING: TODO terminer le chapitre Node et l'affichage de la scene en mode arbre composé de nœuds.

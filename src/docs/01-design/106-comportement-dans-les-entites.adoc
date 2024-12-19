@@ -248,17 +248,17 @@ javac -d target/test-classes $(find src/test -name "*.java") && find src/test -n
 ----
 
 
-NOTE: Je vous propose de créer un petit script _bash_ `run.sh` pour exécuter n'importe quel exemple:
+NOTE: Je vous propose de créer un petit script _bash_ `runex.sh` pour exécuter n'importe quel exemple:
 
 .Script 'run.sh' d'exécution de la compilation et d'exécution d'un exemple
 [source,bash]
-include::../../../run.sh[Script 'run.sh' d'exécution de la compilation et d'exécution d'un exemple]
+include::../../../runex.sh[Script 'runex.sh' d'exécution de la compilation et d'exécution d'un exemple]
 
 Ce qui sera exécuté par :
 
 [source,console]
 ----
-./run.sh MonProgrammeBehavior1
+./runex.sh MonProgrammeBehavior1
 ----
 
 Vous obtiendrez quelques chose de similaire à la copie d"cran ci-dessous (ici capturée sous linux Ubuntu 24.04) :
@@ -266,13 +266,9 @@ Vous obtiendrez quelques chose de similaire à la copie d"cran ci-dessous (ici c
 .Le programme de demonstration des "Behavior"'s.
 image::illustrations/capture-behavior-1.png[]
 
-
-
 == Conclusion
 
 Les comportements se comportent comme des modules autonomes attachés à chaque entité.
 Ils reçoivent les événements de la boucle de jeu et agissent en conséquence pour modifier l'état des entités.
 Cette structure permet d'ajouter, de modifier, ou de supprimer facilement des fonctionnalités au niveau des entités sans alourdir la logique centralisée de la boucle de jeu.
 Cela favorise une architecture claire et extensible, où de nouvelles logiques peuvent être ajoutées simplement en définissant de nouveaux comportements et en les associant aux entités pertinentes.
-
-En lanc

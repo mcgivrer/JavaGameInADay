@@ -63,6 +63,8 @@ public class Config extends HashMap<String, Object> {
         put("app.physic.entity.player.speed", 2);
         put("app.physic.entity.player.elasticity", 2);
         put("app.physic.entity.player.friction", 2);
+        // camera1
+        put("app.render.camera.tween.factor", 0.002);
 
         // demo4
         put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, 640, 400));
@@ -122,6 +124,10 @@ public class Config extends HashMap<String, Object> {
                             String[] values = ((String) e.getValue()).split("x");
                             put("app.render.buffer.size", new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
                         }
+
+                        case "app.render.camera.tween.factor" -> {
+                            put("app.render.camera.tween.factor", Double.parseDouble(props.getProperty("app.render.camera.tween.factor")));
+                        }
                         case "app.physic.entity.player.speed" -> {
                             put("app.physic.entity.player.speed", Double.parseDouble(props.getProperty("app.physic.entity.player.speed")));
                         }
@@ -157,5 +163,9 @@ public class Config extends HashMap<String, Object> {
 
     public <T> T get(String name) {
         return (T) super.get(name);
+    }
+
+    public <T> T get(String name, T defaultValue) {
+        return (T) super.getOrDefault(name, defaultValue);
     }
 }

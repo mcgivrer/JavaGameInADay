@@ -1,6 +1,11 @@
+package examples;
+
+import entity.Camera;
+import entity.Entity;
 import game.Game;
 import game.TestGame;
-import scenes.PlayBehaviorScene;
+import physic.World;
+import scenes.PlayCameraScene2;
 import scenes.Scene;
 import utils.Config;
 
@@ -8,31 +13,33 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
- * MonProgrammeBehavior1 is a class that extends TestGame and implements KeyListener and Game interfaces.
- *
+ * MonProgrammeBehavior2 is a class that extends TestGame and implements KeyListener and Game interfaces.
+ * <p>
  * This class manages the initialization and execution of a game application, including configuration
  * loading, scene management, main game loop execution, and handling of user inputs.
  */
-public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game {
+public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
     /**
      * Represents the file path to the configuration file used by the application.
-     *
+     * <p>
      * This variable stores the relative path to the configuration file that
      * contains various settings needed for the initialization and operation
      * of the application. It is typically loaded at the startup of the
-     * `MonProgrammeBehavior1` class to configure application-specific properties.
+     * `MonProgrammeBehavior2` class to configure application-specific properties.
      */
-    private String configFilePath = "/behavior1.properties";
+    private String configFilePath = "/camera2.properties";
 
     /**
      * Indicates whether the application is currently running in test mode.
-     *
+     * <p>
      * When set to true, the application will operate under conditions
      * suitable for testing, such as executing a predefined number of
      * iterations or using mock data. This mode is typically used to facilitate
@@ -45,20 +52,20 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
      * Specifies the maximum number of iterations the main application loop can execute
      * in test mode. This variable is used to limit the loop execution when the application
      * is running in a controlled test environment.
-     *
+     * <p>
      * It helps in testing and debugging by providing a finite number of iterations,
      * allowing for observation of the application's behavior over a specific number of loops.
-     *
+     * <p>
      * When the application is not in test mode, this variable may not affect the loop execution.
      */
     private int maxLoopCount = 1;
     /**
-     * Represents the main application window for the MonProgrammeBehavior1 class.
-     *
+     * Represents the main application window for the MonProgrammeBehavior2 class.
+     * <p>
      * This JFrame is used to display the graphical user interface of the application. It is
      * created and initialized with specific settings such as the window title, size,
      * and close operation based on the application's configuration.
-     *
+     * <p>
      * The window also serves as the primary interface for handling and processing user input,
      * particularly through keyboard interactions. It integrates with the application's event
      * listeners to manage user actions and render updates.
@@ -75,11 +82,11 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
 
     /**
      * An array representing the state of keyboard keys for the application.
-     *
+     * <p>
      * Each index in the array corresponds to a specific key code, and
      * the boolean value at that index indicates whether the key is
      * currently pressed (true) or released (false).
-     *
+     * <p>
      * The array is used to handle and track keyboard input events. It is
      * typically updated in response to key press and release events
      * processed by the application.
@@ -87,8 +94,8 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
     private final boolean[] keys = new boolean[1024];
 
     /**
-     * A collection of scenes managed by the MonProgrammeBehavior1 class.
-     *
+     * A collection of scenes managed by the MonProgrammeBehavior2 class.
+     * <p>
      * This map stores various scenes, keyed by their unique string identifiers.
      * It allows easy retrieval and management of scenes within the application.
      * The scenes can be added, retrieved, or modified as needed by the
@@ -97,27 +104,28 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
     private final Map<String, Scene> scenes = new HashMap<>();
     /**
      * Represents the current scene being rendered and interacted with in the application.
-     *
+     * <p>
      * The scene object referred to by this variable is responsible for defining the
      * graphical and interactive elements present in the current state of the application.
      * It plays a crucial role in the graphical user interface, handling aspects such as
      * visual rendering, user input, and interactions with other scenes or entities.
-     *
+     * <p>
      * The currentScene is subject to changes, typically updated to reflect new states in
      * the application, either through user actions or program logic executed during the
      * application's lifecycle.
      */
     private Scene currentScene;
 
+
     /**
-     * Constructs a new instance of MonProgrammeBehavior1.
-     *
-     * This constructor performs the following actions:
-     * - Outputs a startup message indicating that the MonProgrammeBehavior1 class is starting.
-     * - Initializes the configuration for the application by creating a new Config object.
-     * - Loads the application configuration from a specified configuration file path.
+     * Constructs an instance of the MonProgrammeCamera1 class.
+     * <p>
+     * This constructor initializes the application by performing the following actions:
+     * 1. Outputs a startup message indicating the class name.
+     * 2. Creates a configuration object for the application.
+     * 3. Loads application settings from a configuration file specified by configFilePath.
      */
-    public MonProgrammeBehavior1() {
+    public MonProgrammeCamera2() {
         System.out.printf("# Démarrage de %s%n", this.getClass().getSimpleName());
         config = new Config(this);
         config.load(configFilePath);
@@ -142,7 +150,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
         createWindow();
         createBuffer();
 
-        addScene(new PlayBehaviorScene("play"));
+        addScene(new PlayCameraScene2("play"));
         createScene();
     }
 
@@ -162,18 +170,30 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
 
     /**
      * Initializes and creates the current scene and its entities.
-     *
+     * <p>
      * This method carries out the following actions:
      * - Calls the initialize method of the current scene, passing the current object.
      * - Invokes the create method to set up the scene specifics using the current object.
      * - Iterates over the entities retrieved from the current scene and initializes
-     *   each behavior associated with those entities.
+     * each behavior associated with those entities.
      */
     private void createScene() {
+
+        System.out.printf("=> Load scene '%s' (%s)%n", currentScene.getName(), currentScene.getClass());
         currentScene.initialize(this);
+        System.out.printf("- Scene '%s' (%s) initialized%n", currentScene.getName(), currentScene.getClass());
         currentScene.create(this);
+        System.out.printf("- Scene '%s' (%s) created %d entities%n", currentScene.getName(), currentScene.getClass(), currentScene.getEntities().size());
         currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.init(e)));
+        System.out.printf("- All %d entities' behaviors from Scene %s (%s) initialized%n",
+                currentScene.getEntities().size(),
+                currentScene.getName(),
+                currentScene.getClass());
         currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.create(e)));
+        System.out.printf("- All %d entities' behaviors from Scene %s (%s) created%n",
+                currentScene.getEntities().size(),
+                currentScene.getName(),
+                currentScene.getClass());
     }
 
     /**
@@ -216,7 +236,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
 
     /**
      * Executes the main application loop for the game.
-     *
+     * <p>
      * This method contains the core loop for running the game's logic. It performs
      * the following steps repeatedly until an exit is requested or a test mode condition is met:
      * 1. Handles input by capturing keyboard events.
@@ -224,7 +244,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
      * 3. Renders the current game state to the screen.
      * 4. Records the number of game loops executed for testing or debugging purposes.
      * 5. Waits for a calculated frame time to maintain a consistent frame rate as configured.
-     *
+     * <p>
      * The loop operates at a frame rate determined by the configuration setting "app.render.fps".
      * In test mode, the loop will execute a pre-defined number of times specified by maxLoopCount.
      * Outputs the total number of game loops executed upon termination.
@@ -282,26 +302,41 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
      * - Applies a friction factor to the object's velocity.
      */
     private void update() {
-        // calcul de la position du player bleu en fonction de la vitesse courante.
-        currentScene.getEntities().forEach(e -> {
-            e.setPosition(e.getX() + e.getDx(), e.getY() + e.getDy());
-            // application du rebond si collision avec le bord de la zone de jeu
-            if (e.getX() < -8 || e.getX() > renderingBuffer.getWidth() - 8) {
-                e.setVelocity(-e.getDx() * e.getElasticity(), e.getDy());
-            }
-            if (e.getY() < -8 || e.getY() > renderingBuffer.getHeight() - 8) {
-                e.setVelocity(e.getDx(), -e.getDy() * e.getElasticity());
-            }
+        currentScene.getEntities().stream().filter(e -> !(e instanceof Camera)).forEach(e -> {
+            // Calcul de la nouvelle position en tenant compte de l'objet World issue de la scène active.
+            World world = currentScene.getWorld();
+            e.setPosition(
+                    e.getX() + e.getDx() - (world.getGravity().getX()),
+                    e.getY() + e.getDy() - (world.getGravity().getY()));
 
             // repositionnement dans la zone de jeu si nécessaire
-            e.setPosition(Math.min(Math.max(e.getX(), -8), renderingBuffer.getWidth() - 8),
-                    Math.min(Math.max(e.getY(), -8), renderingBuffer.getHeight() - 8));
+            if (!world.contains(e)) {
+                applyBouncingFactor(world, e);
+                e.setPosition(
+                        Math.min(Math.max(e.getX(), world.getX()), world.getWidth() - e.getWidth()),
+                        Math.min(Math.max(e.getY(), world.getY()), world.getHeight() - e.getHeight()));
+            }
 
-            // application du facteur de friction
+            // Application du facteur de friction
             e.setVelocity(e.getDx() * e.getFriction(), e.getDy() * e.getFriction());
             e.getBehaviors().forEach(b -> b.update(e));
         });
+        Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
+        cam.ifPresent(entity -> ((Camera) entity).update(16.0));
+
         currentScene.update(this);
+    }
+
+    private void applyBouncingFactor(World world, Entity e) {
+        // application du rebond si collision avec le bord de la zone de jeu
+        if (e.getX() < world.getX()
+                || e.getX() + e.getWidth() > e.getWidth() + world.getWidth()) {
+            e.setVelocity(-e.getDx() * e.getElasticity(), e.getDy());
+        }
+        if (e.getY() < world.getY()
+                || e.getY() + e.getHeight() > world.getHeight()) {
+            e.setVelocity(e.getDx(), -e.getDy() * e.getElasticity());
+        }
     }
 
     /**
@@ -316,30 +351,59 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
      * - Shows the buffer strategy to display the rendered image.
      */
     private void render() {
+
+        World world = currentScene.getWorld();
         Graphics2D g = renderingBuffer.createGraphics();
+        // Configure rendering pipeline
+        g.setRenderingHints(
+                Map.of(
+                        RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON,
+                        RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON));
         // clear rendering buffer to black
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight());
 
-        // draw entities
-        currentScene.getEntities().forEach(e -> {
-            g.translate((int) e.getX(), (int) e.getY());
-            g.setColor(e.getFillColor());
-            g.fill(e.getShape());
-            g.setColor(e.getColor());
-            g.drawLine((int) (e.getShape().getBounds().width * 0.5), (int) (e.getShape().getBounds().height * 0.5),
-                    (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (+e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
-            g.translate((int) -e.getX(), (int) -e.getY());
-            // Exécuter les comportements de dessin pour cette instance d'Entity.
-            e.getBehaviors().forEach(b -> b.draw(g, e));
-        });
-        currentScene.draw(this, g);
+        Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
+        Camera camera = cam.isPresent() ? (Camera) cam.get() : null;
 
+        if (camera != null) {
+            g.translate((int) -camera.getX(), (int) -camera.getY());
+        }
+        drawWorldLimit(g, world, 16, 16);
+        if (camera != null) {
+            if (isDebugGreaterThan(1)) {
+                drawDebugCamera(g, camera);
+            }
+            g.translate((int) camera.getX(), (int) camera.getY());
+        }
+
+
+        // draw entities
+        currentScene.getEntities().stream()
+                .filter(e -> !(e instanceof Camera))
+                .forEach(e -> {
+                    if (camera != null) {
+                        g.translate((int) -camera.getX(), (int) -camera.getY());
+                    }
+                    drawEntity(e, world, g);
+                    if (camera != null) {
+                        g.translate((int) camera.getX(), (int) camera.getY());
+                    }
+                    currentScene.draw(this, g);
+
+                    // Exécuter les comportements de dessin pour cette instance d'Entity.
+                    e.getBehaviors().forEach(b -> b.draw(g, e));
+                });
         g.dispose();
 
         // copy buffer to window.
         BufferStrategy bs = window.getBufferStrategy();
-        Graphics gw = bs.getDrawGraphics();
+        Graphics2D gw = (Graphics2D) bs.getDrawGraphics();
+        // configure rendering pipeline
+        gw.setRenderingHints(
+                Map.of(
+                        RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON,
+                        RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON));
         gw.drawImage(renderingBuffer, 0, 0, window.getWidth(), window.getHeight(),
                 0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight()
                 , null);
@@ -347,6 +411,61 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
         gw.dispose();
         bs.show();
 
+    }
+
+    private static void drawDebugCamera(Graphics2D g, Camera camera) {
+        g.setFont(g.getFont().deriveFont(9.0f));
+        g.setColor(Color.yellow);
+        Rectangle2D drawCamera = new Rectangle2D.Double(
+                camera.getBounds2D().getX() + 20, camera.getBounds2D().getY() + 30,
+                camera.getBounds2D().getWidth() - 40, camera.getBounds2D().getHeight() - 40);
+        g.draw(drawCamera);
+        g.drawString("#%d:%s".formatted(camera.getId(), camera.getName()),
+                (int) (camera.getBounds2D().getX() + 20 + camera.getBounds2D().getWidth() * 0.70),
+                (int) (camera.getBounds2D().getY() + camera.getBounds2D().getHeight() - 14));
+    }
+
+    private void drawWorldLimit(Graphics2D g, World world, int tileWidth, int tileHeight) {
+        // draw the world limit.
+        g.setColor(Color.GRAY);
+        for (int ix = 0; ix < world.getWidth(); ix += tileWidth) {
+            for (int iy = 0; iy < world.getHeight(); iy += tileHeight) {
+                g.drawRect(ix, iy,
+                        tileWidth, tileHeight);
+            }
+        }
+        g.setColor(Color.DARK_GRAY);
+        g.draw(world);
+    }
+
+    private void drawEntity(Entity e, World world, Graphics2D g) {
+        g.translate((int) e.getX(), (int) e.getY());
+        g.setColor(e.getFillColor());
+        g.fill(e.getShape());
+        // draw velocity vector
+        g.setColor(e.getColor());
+        g.drawLine((int) (e.getShape().getBounds().width * 0.5), (int) (e.getShape().getBounds().height * 0.5),
+                (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (+e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
+        drawDebugEntity(g, world, e);
+        g.translate((int) -e.getX(), (int) -e.getY());
+    }
+
+    private void drawDebugEntity(Graphics2D g, World world, Entity e) {
+        if (isDebugGreaterThan(1)) {
+            g.setStroke(new BasicStroke(0.5f));
+            g.setColor(Color.ORANGE);
+            g.draw(e.getShape());
+            if (isDebugGreaterThan(2)) {
+                g.setFont(g.getFont().deriveFont(9.0f));
+                g.drawString("#:%d:%s".formatted(e.getId(), e.getName()), (int) e.getWidth(), 0);
+                if (isDebugGreaterThan(3)) {
+                    g.drawString("p:%3.0f,%3.0f".formatted(e.getX(), e.getY()), (int) e.getWidth(), 10);
+                    g.drawString("s:%3.2f,%3.2f".formatted(e.getWidth(), e.getHeight()), (int) e.getWidth(), 20);
+                    g.drawString("av:%3.2f,%3.2f".formatted(e.getDx(), e.getDy()), (int) e.getWidth(), 30);
+                    g.drawString("g:%3.2f,%3.2f".formatted(world.getGravity().getX(), world.getGravity().getY()), (int) e.getWidth(), 40);
+                }
+            }
+        }
     }
 
     /**
@@ -357,11 +476,13 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
      * - Prints a message to the console indicating that the current instance of the application has terminated.
      */
     private void dispose() {
+        System.out.printf("# %s se termine:%n", this.getClass().getSimpleName());
         currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> b.dispose(e)));
-
+        System.out.printf("- all %s entities' behaviors are disposed.%n", currentScene.getEntities().size());
         currentScene.dispose(this);
+        System.out.printf("- Scene '%s' is disposed.%n", currentScene.getName());
         window.dispose();
-        System.out.printf("# %s est terminé.%n", this.getClass().getSimpleName());
+        System.out.printf("=> L'exécution de %s est terminée.%n", this.getClass().getSimpleName());
     }
 
     /**
@@ -392,7 +513,7 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
      * @param args Command-line arguments passed to the application.
      */
     public static void main(String[] args) {
-        MonProgrammeBehavior1 prog = new MonProgrammeBehavior1();
+        MonProgrammeCamera2 prog = new MonProgrammeCamera2();
         prog.run(args);
     }
 
@@ -421,6 +542,12 @@ public class MonProgrammeBehavior1 extends TestGame implements KeyListener, Game
         keys[e.getKeyCode()] = false;
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             this.requestExit();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
+            setDebug(getDebug() + 1 < 6 ? getDebug() + 1 : 0);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_P && e.isControlDown()) {
+            setPause(isNotPaused());
         }
     }
 

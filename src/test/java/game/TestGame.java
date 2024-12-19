@@ -44,7 +44,7 @@ public class TestGame extends JPanel implements Game{
 
     @Override
     public boolean isNotPaused() {
-        return pause;
+        return !pause;
     }
 
     @Override

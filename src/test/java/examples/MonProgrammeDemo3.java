@@ -1,3 +1,5 @@
+package examples;
+
 import game.TestGame;
 import utils.Config;
 
@@ -9,7 +11,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 /**
- * MonProgrammeDemo3 is a demo game application extending game.TestGame and implementing KeyListener.
+ * examples.MonProgrammeDemo3 is a demo game application extending game.TestGame and implementing KeyListener.
  * It includes functionalities for initializing game configurations, handling keyboard inputs,
  * updating game states, rendering frames, and executing the game loop.
  */
@@ -278,7 +280,7 @@ public class MonProgrammeDemo3 extends TestGame implements KeyListener {
     /**
      * Entry point for the application.
      * <p>
-     * This method creates an instance of MonProgrammeDemo3 and invokes its run method
+     * This method creates an instance of examples.MonProgrammeDemo3 and invokes its run method
      * to start the application.
      *
      * @param args Command-line arguments passed to the application.
