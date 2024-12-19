@@ -21,7 +21,7 @@ Une scene est un receptacle qui contiendra tous les objets à animer pour assure
 Il est nécessaire d’avoir la liste des objets à animer, un petit nom pour pouvoir retrouver une scene parmi d’autres (et oui, plusieurs gameplay implique plusieurs scènes).
 
 .Le diagramme de classe de la Scene
-image::https://www.plantuml.com/plantuml/png/TP11oi8m44RtEKMMAV_l1KAHWXHNhdg28HdAG3e9pLHGyUxMr4N0klpUuss-BWlCian1kG0vwy4XetuehG-QOK8xo4mybeqi98JPNY2r6__lt-nsNFtVrfewQmeVKVfFQXfxYY6W4uhSrZ5uRx1ik-76NYFvueZN60BTqK1AzWmJLjRD2B9hYDCYUs99_aVYAQUOlzHJgGxPhp-z0000[]
+image::illustrations/uml-diagram-scene-class.png[Le diagramme de classe de la Scene]
 
 Cela se traduit par la classe java suivante :
 
@@ -193,7 +193,7 @@ public class MonProgrammeScene1 extends TestGame implements Game {
         // <3>
         addScene(new PlayScene("play"));
         // <4>
-        createScene();
+        switchScene("play");
     }
     //...
 }
@@ -202,7 +202,7 @@ public class MonProgrammeScene1 extends TestGame implements Game {
 . Nous avons besoin d’une map pour stocker les différentes scenes de notre jeu,
 . Ensuite, nous déclarons un attribut qui servira à stocker l’instance de Scene en cours (la scène active quoi !),
 . Nous ajoutons la ou les scènes pour notre jeu (ici, une seule, la scène `PlayScene`),
-. Et nous appelons la création (l’activation) de la scène.
+. Et nous demandons à activer la scène souhaitée (ici "play").
 
 Ensuite, nous allons changer la façon de créer la scène, en déléguant cela à la scene elle-même au sein de la méthode `createScene`.
 
@@ -212,20 +212,29 @@ Ensuite, nous allons changer la façon de créer la scène, en déléguant cela 
 ----
 public class MonProgrammeScene1 extends TestCase implements KeyListener,Game {
     //...
-    private void createScene() {
+        public void switchScene(String name) {
         // <1>
-        currentScene.initialize(this);
+        if (Optional.ofNullable(currentScene).isPresent()) {
+            currentScene.dispose(this);
+        }
         // <2>
+        currentScene = scenes.get(name);
+        // Initialise et créé la Scene courante.
+        // <3>
+        currentScene.initialize(this);
+        // <4>
         currentScene.create(this);
     }
     //...
 }
 ----
 
+. Si une scene est dejà active, nous la désactivons,
+. Nous récupérons l’instance de scene demandée depuis la collection (qui est une Map),
 . Nous commençons par initialiser la scene courante,
 . Nous demandons la création de toutes les entités.
 
-Enfin, nous allons intégrer les traitements liées à la Scene dans la boucle principale.
+Enfin, nous allons intégrer les traitements liés à la Scene dans la boucle principale.
 
 [source,java]
 ----
@@ -362,16 +371,33 @@ public abstract class AbstractScene extends Node<Scene> implements Scene {
 
 ----
 
-L'AbstractScene doit implementer quelques surcouches à la classe `Node` :
+L’AbstractScene doit implementer quelques surcouches à la classe `Node` :
 
-. la recherche des Entités de la scene passe maintenant par la collection du héritée de la classe `Node`,
+. La recherche des Entités de la scene passe maintenant par la collection héritée de la classe `Node`,
 . Enfin, la précédente implementation reposait sur une `Map` d'entité, nous n’avons plus cela à notre disposition, aussi, nous allons simuler la fonction get de la map en implémentant grâce aux lambdas java un filtre sur le nom des entités présentes dans la collection child.
 
 Cela simplifie nos classes et aussi contribue à les structurer d’une façon intéressante.
 
-Pour reprendre le diagramme de classes du début :
+Pour reprendre le diagramme de classes du début :
 
-.Node, Scene AbstractScene et Entity dans un arbre
-image::https://www.plantuml.com/plantuml/png/RO_DIWCn58NtUOeiMwGl46IeY3jnKryWJOxjXUH69dV0Kdnt9ycCJCHTSlZEpprciQDCCIX5B1W_h8C-EJ3ktqgvO7FMRydZyNsuA_sWoPkG-5AUR2FCIKQQlpExqYyi93UDBm7xnToqag0hsiYdSvRHEgbrlQ5AWwRu6H31afTDfVS2gNc4lDkRvnG2d53YjMNBt7QRbNlJj3BXIXxhr0Yv9fyxpSfiEK-29hVwdkpd_s_ugvRZVbDKOmw7OMar_Mclb4KTmNwAuGS0[Node,Scene AbstractScene et Entity dans un arbre]
+.Node, Scene, AbstractScene et Entity dans un arbre
+image::illustrations/uml-diagram-abstract-scene-entity-node.png[Node,Scene AbstractScene et Entity dans un arbre]
 
-WARNING: TODO terminer le chapitre Node et l'affichage de la scene en mode arbre composé de nœuds.
+WARNING: TODO terminer le chapitre Node et l’affichage de la scene en mode arbre composé de nœuds.
+
+
+== Conclusion
+
+Nous avons finalement obtenu un système qui permet une gestion fine des différents gameplay ou phases d’un jeu.
+La scene est maintenant organisée pour contenir, sous forme d'arbre, l'ensemble des entités qui la constitue.
+
+Il est possible d'activer une autre scene, simplement en appelant la méthode `switchScene(String)` qui prend en charge sont initialization, la création de ses entités,  mais aussi auparavant vérifie si une autre est déjà activée, et procède à sa désactivation.
+
+Dans le prochain chapitre, nous allons nous intéresser aux comportements et à l'interface `Behavior`.
+
+
+
+
+
+
+
