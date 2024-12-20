@@ -1,5 +1,6 @@
 package game;
 
+import scenes.Scene;
 import utils.Config;
 
 import java.awt.image.BufferedImage;
@@ -96,4 +97,24 @@ public interface Game {
      * @return true if the key corresponding to the specified keyCode is pressed, false otherwise.
      */
     boolean isKeyPressed(int keyCode);
+
+    /**
+     * Retrieve the current active {@link Scene} else return null.
+     *
+     * @return the current active {@link Scene}.
+     */
+    default Scene getCurrentScene() {
+        return null;
+    }
+
+    default boolean isTestMode() {
+        return false;
+    }
+
+
+    default int getMaxLoopCount() {
+        return -1;
+    }
+
+    ;
 }
