@@ -36,7 +36,7 @@ public class MonProgrammeGameLoop1 extends TestGame implements KeyListener, Game
      * of the application. It is typically loaded at the startup of the
      * `MonProgrammeGameLoop1` class to configure application-specific properties.
      */
-    private String configFilePath = "/camera2.properties";
+    private String configFilePath = "/gameloop1.properties";
 
     /**
      * Indicates whether the application is currently running in test mode.
