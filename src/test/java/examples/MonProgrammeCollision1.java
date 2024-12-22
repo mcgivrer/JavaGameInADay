@@ -4,6 +4,7 @@ import entity.Camera;
 import entity.Entity;
 import game.Game;
 import game.TestGame;
+import physic.CollisionEvent;
 import physic.World;
 import scenes.PlayCameraScene2;
 import scenes.Scene;
@@ -16,7 +17,9 @@ import java.awt.event.KeyListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -115,6 +118,11 @@ public class MonProgrammeCollision1 extends TestGame implements KeyListener, Gam
      * application's lifecycle.
      */
     private Scene currentScene;
+
+    /**
+     * The list of all detected collisions, composed of CollisionEvent.
+     */
+    private List<CollisionEvent> collisions = new ArrayList<>();
 
 
     /**
@@ -339,10 +347,38 @@ public class MonProgrammeCollision1 extends TestGame implements KeyListener, Gam
             e.setVelocity(e.getDx() * e.getFriction(), e.getDy() * e.getFriction());
             e.getBehaviors().forEach(b -> b.update(e));
         });
+
+        detectCollision(currentScene);
+        resolveCollision(collisions);
+
         Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
         cam.ifPresent(entity -> ((Camera) entity).update(16.0));
 
         currentScene.update(this);
+    }
+
+    private void resolveCollision(List<CollisionEvent> collisions) {
+        collisions.forEach(ec->{
+            Entity e1 = ec.e1();
+            Entity e2= ec.e2();
+
+            Rectangle2D p=e1.createIntersection(e2);
+
+        });
+    }
+
+    private void detectCollision(Scene scene) {
+        collisions.clear();
+        scene.getEntities().forEach(e1 -> {
+            scene.getEntities().forEach(e2 -> {
+                if (!e1.getName().equals(e2.getName())) {
+                    if (e1.intersects(e2)) {
+                        CollisionEvent ce = new CollisionEvent(e1, e2);
+                        collisions.add(ce);
+                    }
+                }
+            });
+        });
     }
 
     private void applyBouncingFactor(World world, Entity e) {
