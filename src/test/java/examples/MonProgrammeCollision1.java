@@ -1,5 +1,6 @@
 package examples;
 
+import behaviors.CollisionBehavior;
 import entity.Camera;
 import entity.Entity;
 import game.Game;
@@ -358,27 +359,40 @@ public class MonProgrammeCollision1 extends TestGame implements KeyListener, Gam
     }
 
     private void resolveCollision(List<CollisionEvent> collisions) {
-        collisions.forEach(ec->{
+        collisions.forEach(ec -> {
             Entity e1 = ec.e1();
-            Entity e2= ec.e2();
+            Entity e2 = ec.e2();
 
-            Rectangle2D p=e1.createIntersection(e2);
+            e1.getBehaviors().forEach(b -> {
+                if (b instanceof CollisionBehavior) {
+                    ((CollisionBehavior) b).collide(ec.e1(), ec.e2());
+                }
+            });
+            e1.getBehaviors().forEach(b -> {
+                if (b instanceof CollisionBehavior) {
+                    ((CollisionBehavior) b).collide(ec.e2(), ec.e1());
+                }
+            });
 
         });
     }
 
     private void detectCollision(Scene scene) {
         collisions.clear();
-        scene.getEntities().forEach(e1 -> {
-            scene.getEntities().forEach(e2 -> {
-                if (!e1.getName().equals(e2.getName())) {
-                    if (e1.intersects(e2)) {
-                        CollisionEvent ce = new CollisionEvent(e1, e2);
-                        collisions.add(ce);
-                    }
-                }
-            });
-        });
+        scene.getEntities().stream()
+                .filter(e -> !(e instanceof Camera))
+                .forEach(e1 -> {
+                    scene.getEntities().stream()
+                            .filter(e -> !(e instanceof Camera))
+                            .forEach(e2 -> {
+                        if (!e1.getName().equals(e2.getName())) {
+                            if (e1.intersects(e2)) {
+                                CollisionEvent ce = new CollisionEvent(e1, e2);
+                                collisions.add(ce);
+                            }
+                        }
+                    });
+                });
     }
 
     private void applyBouncingFactor(World world, Entity e) {
