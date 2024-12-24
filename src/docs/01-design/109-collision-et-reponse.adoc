@@ -86,9 +86,49 @@ private void resolveCollision(List<CollisionEvent> collisions) {
         Entity e1 = ec.e1();
         Entity e2= ec.e2();
 
-        Rectangle2D p=e1.createIntersection(e2);
-        e1
 
     });
 }
 ----
+
+
+== Nouvelle Scene
+
+Nous allons maintenant créer à partir de la scene précédente PlayGameLoop1 une nouvelle scene permettant d'expérimenter la nouvelle sorte de `CollisionBehavior`:
+
+[source,java]
+----
+public class PlayCollisionScene1 extends AbstractScene {
+ @Override
+    public void create(Game app) {
+     //...
+    // Création du player bleu
+    Entity player = new Entity("player")
+            .setPosition(
+                    ((getWorld().getWidth() - 16) * 0.5),
+                    ((getWorld().getHeight() - 16) * 0.5))
+            //...
+            // <1>
+            .add((CollisionBehavior) new CollisionBehavior() {
+                @Override
+                public void collide(Entity e1, Entity e2) {
+                    // <2>
+                    if(e2.getName().startsWith("enemy")){
+                        e2.setFillColor(Color.ORANGE);
+                    }
+                }
+            });
+    add(player);
+    //...
+    }
+    //...
+}
+----
+
+. Ajoutons une nouvelle implementation de l'interface `Behavior`, une déclaration en ligne de `CollisionBehavior` sur l'`Entity` nommée "player".
+. L'implémentation permet de traiter la collision avec une entité dont le nom commence par "enemy", le cas échéant, la couleur de remplissage de l'entité "enemy" est passée en ORANGE.
+
+Ainsi, lors de l'exécution de notre classe `MonProgrammeCollision1`, lors de chaque collision entre le "player" et un "ennemi", ce dernier se voit alors coloré de orange.
+
+.Lors d'une collision entre 'player' et 'ennemi', celui-ci devient orange.
+image::illustrations/capture-collision-1.png[Lors d'une collision entre 'player' et 'ennemi', celui-ci devient orange]

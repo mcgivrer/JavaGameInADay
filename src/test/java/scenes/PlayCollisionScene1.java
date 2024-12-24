@@ -73,7 +73,7 @@ public class PlayCollisionScene1 extends AbstractScene {
                     @Override
                     public void collide(Entity e1, Entity e2) {
                         if(e2.getName().startsWith("enemy")){
-                            e2.setColor(Color.ORANGE);
+                            e2.setFillColor(Color.ORANGE);
                         }
                     }
                 });

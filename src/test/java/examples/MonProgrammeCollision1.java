@@ -8,6 +8,7 @@ import game.TestGame;
 import physic.CollisionEvent;
 import physic.World;
 import scenes.PlayCameraScene2;
+import scenes.PlayCollisionScene1;
 import scenes.Scene;
 import utils.Config;
 
@@ -159,7 +160,7 @@ public class MonProgrammeCollision1 extends TestGame implements KeyListener, Gam
         createWindow();
         createBuffer();
 
-        addScene(new PlayCameraScene2("play"));
+        addScene(new PlayCollisionScene1("play"));
         switchScene("play");
     }
 
