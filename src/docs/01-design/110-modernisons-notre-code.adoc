@@ -4,11 +4,19 @@ Nous pouvons améliorer le code notre nouveau moteur de jeux en procédant à qu
 
 == Réorganisation en package
 
-TODO
+Dans le cadre du chapitre 10, nous devons revoir l'organisation de notre code. En effet, une grande partie de notre implémentation est concentrée dans la série de classe `MonProgrammeXxx`, et ce la n'est pas une bonne pratique car la complexité de celle-ci est très élevée, et son développement n'en est que plus compliqué.
+
+La bonne pratique, ici, consiste à séparer les activités par type. Nous avons des activités liées à la mise à jour des entités du jeu, des activités
+liées au rendu de celle-ci à l'écran, et enfin certaines sont liées à la gestion des informations générées par le clavier, la souris, ou pourquoi pas d'autres moyens de contrôle comme un gamepad oubien une manette de console.
 
 == Séparation en services
 
-TODO
+- `physic` le package accueille déjà quelques classes liées à la gestion du monde et des matériaux, 
+
+- `gfx` le nouveau package 
+
+- `input`
+
 
 === Processing des entités
 
