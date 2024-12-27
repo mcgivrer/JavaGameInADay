@@ -120,11 +120,11 @@ Nous avons maintenant un ensemble de valeurs prêtes à être servie via le gett
 ----
 import com.snapgames.framework.GameInterface;
 
-public class MonProgrammeConfig1 extends TestGame {
+public class examples.MonProgrammeConfig1 extends TestGame {
     private String configurationFilePath = "/config.properties";
     private Config config;
 
-    public MonProgrammeConfig1() {
+    public examples.MonProgrammeConfig1() {
         System.out.println("Démarrage de mon Programme3");
         config = new Config(this);
     }
@@ -134,7 +134,7 @@ public class MonProgrammeConfig1 extends TestGame {
     }
 
     public static void main(String[] args) {
-        MonProgrammeConfig1 prog = new MonProgrammeConfig1();
+        examples.MonProgrammeConfig1 prog = new examples.MonProgrammeConfig1();
         prog.run(args);
     }
 }
@@ -145,15 +145,15 @@ En exécutant cette classe `MonProgrammeConfig1`
 [source,bash]
 ----
 javac -d target/demo-classes src/main/java/com/snapgames/framework/GameInterface.java src/test/java/*.java src/test/java/**/*.java
-java -cp target/demo-classes MonProgrammeConfig1
+java -cp target/demo-classes examples.MonProgrammeConfig1
 ----
 
 Vous obtenez l'affichage suivante sur la console :
 
 [source,bash]
 ----
-java -cp target/demo-classes MonProgrammeConfig1
-# Démarrage de MonProgrammeConfig1
+java -cp target/demo-classes examples.MonProgrammeConfig1
+# Démarrage de examples.MonProgrammeConfig1
 => Configuration for title:Default Title
 
 ----
@@ -317,14 +317,14 @@ En exécutant cette classe `MonProgrammeConfig2`
 [source,bash]
 ----
 javac -d target/demo-classes src/main/java/com/snapgames/framework/GameInterface.java src/test/java/*.java src/test/java/**/*.java
-java -cp target/demo-classes MonProgrammeConfig2
+java -cp target/demo-classes examples.MonProgrammeConfig2
 ----
 
 Vous obtenez l'affichage suivante sur la console :
 
 [source,plaintext]
 ----
-# Démarrage de MonProgrammeConfig2
+# Démarrage de examples.MonProgrammeConfig2
 # Load configuration Properties file /config2.properties
 - app.scene.list=play:com.snapgames.demo.scenes.PlayScene,
 - app.render.window.size=640x400

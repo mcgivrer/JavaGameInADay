@@ -1,3 +1,5 @@
+package examples;
+
 public class MonProgramme {
 
     public static void main(String[] args) {

@@ -1,29 +1,38 @@
-import entity.Entity;
+package examples;
+
+import game.Game;
 import game.TestGame;
+import scenes.PlayScene;
+import scenes.Scene;
 import utils.Config;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
- * Represents a custom game entity that extends functionality from TestGame and
- * implements KeyListener for handling keyboard interactions.
+ * Represents the main scene of the program.
+ * This class extends the TestGame class and implements the KeyListener and Game interfaces.
  * <p>
- * Manages the game environment and entities within it, including the main player
- * and enemy entities. Supports initialization, game loop management, keyboard
- * input processing, and updating game state.
+ * The class is responsible for managing the game loop and handling keyboard input,
+ * creating and managing scenes, and rendering the current state of the game.
  */
-public class MonProgrammeEntity2 extends TestGame implements KeyListener {
+public class MonProgrammeScene1 extends TestGame implements KeyListener, Game {
+    /**
+     * The file path for the configuration properties file.
+     * <p>
+     * This string variable stores the path to a properties file
+     * that contains application configurations, typically in a format
+     * understood by java.util.Properties. It is used by the application
+     * to load and apply various settings during initialization.
+     */
     private String configFilePath = "/demo3.properties";
-    private Config config;
 
     private boolean testMode = false;
     private int maxLoopCount = 1;
@@ -32,18 +41,10 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
 
     private boolean[] keys = new boolean[1024];
 
-    private Map<String, Entity> entities = new HashMap<>();
+    private Map<String, Scene> scenes = new HashMap<>();
+    private Scene currentScene;
 
-
-    /**
-     * Constructs a new instance of MonProgrammeEntity2.
-     *
-     * This constructor performs the following actions upon instantiation:
-     * - Outputs a message to the console indicating the start of the program using the class name.
-     * - Initializes the configuration object by creating a new Config instance.
-     * - Loads configuration settings from the specified configuration file path.
-     */
-    public MonProgrammeEntity2() {
+    public MonProgrammeScene1() {
         System.out.printf("# Démarrage de %s%n", this.getClass().getSimpleName());
         config = new Config(this);
         config.load(configFilePath);
@@ -68,60 +69,32 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
         createWindow();
         createBuffer();
 
-        createScene();
+        addScene(new PlayScene("play"));
+        switchScene("play");
     }
 
     /**
-     * Creates and initializes the scene with player and enemy entities.
+     * Add Scene instance to the existing collection.
      *
-     * This method adds a blue-colored player entity at the center of the
-     * rendering buffer with physical properties such as elasticity and friction
-     * configured from application settings. The player's shape is a rectangle
-     * with predefined dimensions and its maximum speed is set to a specified
-     * configuration value.
-     *
-     * Additionally, this method creates multiple red-colored enemy entities
-     * and places them at random positions within the rendering buffer. Each
-     * enemy has unique elasticity and friction properties assigned randomly,
-     * and its shape is defined as an ellipse. The enemies' maximum speed is
-     * also assigned randomly but constrained below a certain percentage of
-     * the player's maximum speed.
-     *
-     * The entities are then added to the scene for further interactions and updates.
+     * @param s the Scene instance to be added.
      */
-    private void createScene() {
-        // Création du player bleu
-        Entity player = new Entity("player")
-            .setPosition(
-                ((renderingBuffer.getWidth() - 16) * 0.5),
-                ((renderingBuffer.getHeight() - 16) * 0.5))
-            .setElasticity((double) config.get("app.physic.entity.player.elasticity"))
-            .setFriction((double) config.get("app.physic.entity.player.friction"))
-            .setFillColor(Color.BLUE)
-            .setShape(new Rectangle2D.Double(0, 0, 16, 16))
-            .setAttribute("max.speed", 2.0);
-        add(player);
+    private void addScene(Scene s) {
+        this.scenes.put(s.getName(), s);
+    }
 
-        // Création de l’ennemi rouge
-        for (int i = 0; i < 10; i++) {
-            Entity enemy = new Entity("enemy_%d".formatted(i))
-                .setPosition((Math.random() * (renderingBuffer.getWidth() - 16)), (Math.random() * (renderingBuffer.getHeight() - 16)))
-                .setElasticity(Math.random())
-                .setFriction(Math.random())
-                .setFillColor(Color.RED)
-                .setShape(new Ellipse2D.Double(0, 0, 10, 10))
-                .setAttribute("max.speed", (Math.random() * player.getAttribute("max.speed", 2.0) * 0.90));
-            add(enemy);
+    /**
+     * Activate the name scene by initializing it (Scene resources) and create it (Scene entities).
+     *
+     * @param name the name of the Scene to be activated.
+     */
+    public void switchScene(String name) {
+        if (Optional.ofNullable(currentScene).isPresent()) {
+            currentScene.dispose(this);
         }
-    }
-
-    /**
-     * Adds the specified entity to the collection of entities.
-     *
-     * @param e the entity to be added
-     */
-    private void add(Entity e) {
-        entities.put(e.getName(), e);
+        currentScene = scenes.get(name);
+        // Initialise et créé la Scene courante.
+        currentScene.initialize(this);
+        currentScene.create(this);
     }
 
     /**
@@ -158,30 +131,10 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
     private void createBuffer() {
         Dimension renderBufferSize = config.get("app.render.buffer.size");
         renderingBuffer = new BufferedImage(
-            renderBufferSize.width, renderBufferSize.height,
-            BufferedImage.TYPE_INT_ARGB);
+                renderBufferSize.width, renderBufferSize.height,
+                BufferedImage.TYPE_INT_ARGB);
     }
 
-    /**
-     * Executes the main game loop for the application.
-     *
-     * This method continuously processes game operations such as handling input,
-     * updating the game state, and rendering graphics to the screen. The loop
-     * continues to run until an exit is requested or, if in test mode, until it
-     * has executed a specified maximum number of iterations.
-     *
-     * It performs the following actions in each iteration:
-     * 1. Captures and processes user input.
-     * 2. Updates game objects and logic.
-     * 3. Renders the updated state to the screen.
-     * 4. Waits for a designated frame time to control the frame rate.
-     *
-     * The frame time is calculated based on a frames-per-second (FPS) value
-     * retrieved from the configuration settings.
-     *
-     * At the conclusion of the loop, a message is printed to the console
-     * displaying the total number of loops executed.
-     */
     public void loop() {
         int loopCount = 0;
         int frameTime = 1000 / (int) (config.get("app.render.fps"));
@@ -195,12 +148,6 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
         System.out.printf("=> Game loops %d times%n", loopCount);
     }
 
-    /**
-     * Causes the current thread to sleep for the specified amount of time.
-     *
-     * @param delayInMs the duration of time in milliseconds for which the
-     *                  thread should be put to sleep.
-     */
     private void waitTime(int delayInMs) {
         try {
             Thread.sleep(delayInMs);
@@ -220,54 +167,7 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
      * - Down arrow key increases the vertical speed.
      */
     private void input() {
-        Entity player = entities.get("player");
-        double speed = (double) config.get("app.physic.entity.player.speed");
-
-        if (keys[KeyEvent.VK_LEFT]) {
-            player.setVelocity(-speed, player.getDy());
-        }
-        if (keys[KeyEvent.VK_RIGHT]) {
-            player.setVelocity(speed, player.getDy());
-        }
-        if (keys[KeyEvent.VK_UP]) {
-            player.setVelocity(player.getDx(), -speed);
-        }
-        if (keys[KeyEvent.VK_DOWN]) {
-            player.setVelocity(player.getDx(), speed);
-        }
-
-        // on parcourt les entités en filtrant sur celles dont le nom commence par "enemy_"
-
-        entities.values().stream()
-            .filter(e -> e.getName().startsWith("enemy_"))
-            .forEach(e -> {
-                // new speed will be only a random ratio of the current one (from 50% to 110%)
-                double eSpeed = (0.5 + Math.random() * 1.1);
-
-                // Simulation pour les ennemis qui suivent le player sur l'are X,
-                // but limited to 'max.speed' attribute's value
-                double centerPlayerX = player.getX() + player.getShape().getBounds().width * 0.5;
-                double centerEnemyX = e.getX() + e.getShape().getBounds().width * 0.5;
-                double directionX = Math.signum(centerPlayerX - centerEnemyX);
-                if (directionX != 0.0) {
-                    e.setVelocity(
-                        Math.min(directionX * eSpeed * e.getAttribute("max.speed", 2.0),
-                            e.getAttribute("max.speed", 2.0)),
-                        e.getDy());
-                }
-
-                // Simulation pour les ennemis qui suivent le player sur l'are Y,
-                // but limited to 'max.speed' attribute's value
-                double centerPlayerY = player.getY() + player.getShape().getBounds().width * 0.5;
-                double centerEnemyY = e.getY() + e.getShape().getBounds().width * 0.5;
-                double directionY = Math.signum(centerPlayerY - centerEnemyY);
-                if (directionY != 0.0) {
-                    e.setVelocity(
-                        e.getDx(),
-                        Math.min(directionY * eSpeed * e.getAttribute("max.speed", 2.0),
-                            e.getAttribute("max.speed", 2.0)));
-                }
-            });
+        currentScene.input(this);
     }
 
     /**
@@ -281,7 +181,7 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
      */
     private void update() {
         // calcul de la position du player bleu en fonction de la vitesse courante.
-        entities.values().stream().forEach(e -> {
+        currentScene.getEntities().forEach(e -> {
             e.setPosition(e.getX() + e.getDx(), e.getY() + e.getDy());
             // application du rebond si collision avec le bord de la zone de jeu
             if (e.getX() < -8 || e.getX() > renderingBuffer.getWidth() - 8) {
@@ -293,11 +193,12 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
 
             // repositionnement dans la zone de jeu si nécessaire
             e.setPosition(Math.min(Math.max(e.getX(), -8), renderingBuffer.getWidth() - 8),
-                Math.min(Math.max(e.getY(), -8), renderingBuffer.getHeight() - 8));
+                    Math.min(Math.max(e.getY(), -8), renderingBuffer.getHeight() - 8));
 
             // application du facteur de friction
             e.setVelocity(e.getDx() * e.getFriction(), e.getDy() * e.getFriction());
         });
+        currentScene.update(this);
     }
 
     /**
@@ -318,15 +219,16 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
         g.fillRect(0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight());
 
         // draw entities
-        entities.values().forEach(e -> {
+        currentScene.getEntities().forEach(e -> {
             g.translate((int) e.getX(), (int) e.getY());
             g.setColor(e.getFillColor());
             g.fill(e.getShape());
             g.setColor(e.getColor());
             g.drawLine((int) (e.getShape().getBounds().width * 0.5), (int) (e.getShape().getBounds().height * 0.5),
-                (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (+e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
+                    (int) (e.getShape().getBounds().width * 0.5 + e.getDx() * 4), (int) (+e.getShape().getBounds().height * 0.5 + e.getDy() * 4));
             g.translate((int) -e.getX(), (int) -e.getY());
         });
+        currentScene.draw(this, g);
 
         g.dispose();
 
@@ -334,8 +236,8 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
         BufferStrategy bs = window.getBufferStrategy();
         Graphics gw = bs.getDrawGraphics();
         gw.drawImage(renderingBuffer, 0, 0, window.getWidth(), window.getHeight(),
-            0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight()
-            , null);
+                0, 0, renderingBuffer.getWidth(), renderingBuffer.getHeight()
+                , null);
 
         gw.dispose();
         bs.show();
@@ -350,6 +252,7 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
      * - Prints a message to the console indicating that the current instance of the application has terminated.
      */
     private void dispose() {
+        currentScene.dispose(this);
         window.dispose();
         System.out.printf("# %s est terminé.%n", this.getClass().getSimpleName());
     }
@@ -377,13 +280,13 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
     /**
      * Entry point for the application.
      * <p>
-     * This method creates an instance of MonProgrammeDemo3 and invokes its run method
+     * This method creates an instance of examples.MonProgrammeDemo3 and invokes its run method
      * to start the application.
      *
      * @param args Command-line arguments passed to the application.
      */
     public static void main(String[] args) {
-        MonProgrammeEntity2 prog = new MonProgrammeEntity2();
+        MonProgrammeScene1 prog = new MonProgrammeScene1();
         prog.run(args);
     }
 
@@ -413,5 +316,15 @@ public class MonProgrammeEntity2 extends TestGame implements KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             this.requestExit();
         }
+    }
+
+
+    @Override
+    public boolean isKeyPressed(int keyCode) {
+        return keys[keyCode];
+    }
+
+    public BufferedImage getRenderingBuffer() {
+        return this.renderingBuffer;
     }
 }

@@ -1,3 +1,5 @@
+package examples;
+
 public class MonProgramme2 {
 
     public MonProgramme2() {

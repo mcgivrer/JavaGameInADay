@@ -11,15 +11,14 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
-public class PlayCameraScene extends AbstractScene {
+public class PlayCameraScene2 extends AbstractScene {
     /**
      * Constructs an instance of AbstractScene with the specified name.
      *
      * @param name the name of the scene to be created
      */
-    public PlayCameraScene(String name) {
+    public PlayCameraScene2(String name) {
         super(name);
     }
 
@@ -37,17 +36,17 @@ public class PlayCameraScene extends AbstractScene {
         setWorld(
                 new World(
                         new Point2D.Double(0, -0.981),
-                        new Rectangle2D.Double(0, 0, 30*16, 20*16)));
+                        new Double(0, 0, 30 * 16, 20 * 16)));
 
         // Création du player bleu
         Entity player = new Entity("player")
                 .setPosition(
-                        ((app.getRenderingBuffer().getWidth() - 16) * 0.5),
-                        ((app.getRenderingBuffer().getHeight() - 16) * 0.5))
+                        ((getWorld().getWidth() - 16) * 0.5),
+                        ((getWorld().getHeight() - 16) * 0.5))
                 .setElasticity((double) app.getConfig().get("app.physic.entity.player.elasticity"))
                 .setFriction((double) app.getConfig().get("app.physic.entity.player.friction"))
                 .setFillColor(Color.BLUE)
-                .setShape(new Rectangle2D.Double(0, 0, 16, 16))
+                .setShape(new Double(0, 0, 16, 16))
                 .setAttribute("max.speed", 2.0)
                 // On ajoute le nouveau comportement sur la gestion des entrées
                 .add(new Behavior() {
@@ -100,7 +99,7 @@ public class PlayCameraScene extends AbstractScene {
         // Création de l’ennemi rouge
         for (int i = 0; i < nbEntities; i++) {
             Entity enemy = new Entity(entityBaseName.formatted(i))
-                    .setPosition((Math.random() * (app.getRenderingBuffer().getWidth() - 16)), (Math.random() * (app.getRenderingBuffer().getHeight() - 16)))
+                    .setPosition((Math.random() * (getWorld().getWidth() - 16)), (Math.random() * (getWorld().getHeight() - 16)))
                     .setElasticity(Math.random())
                     .setFriction(Math.random())
                     .setFillColor(Color.RED)

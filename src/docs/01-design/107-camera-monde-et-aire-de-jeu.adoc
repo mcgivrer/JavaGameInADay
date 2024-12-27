@@ -1,5 +1,6 @@
 = Camera, Monde et Aire de jeu
 :source-highlighter: rouge
+:experimental:
 
 La caméra est le moyen le plus simple et bizarrement le plus imagé, pour suivre une autre entité à l'écran.
 
@@ -225,13 +226,253 @@ Dans cette capture d'écran le cadre gris délimite la zone actuelle jeu.
 
 Ajoutons un rectangle jaune délimitant le cadre du viewport.
 
+.Ajout du dessin d'information visuel de débuggage de la caméra
 [source,java]
 ----
-
+private static void drawDebugCamera(Graphics2D g, Camera camera) {
+    g.setFont(g.getFont().deriveFont(9.0f));
+    g.setColor(Color.yellow);
+    Rectangle2D drawCamera = new Rectangle2D.Double(
+        camera.getBounds2D().getX() + 20,
+        camera.getBounds2D().getY() + 30,
+        camera.getBounds2D().getWidth() - 40,
+        camera.getBounds2D().getHeight() - 40);
+    g.draw(drawCamera);
+    g.drawString(
+            "#%d:%s".formatted(camera.getId(), camera.getName()),
+        (int) (camera.getBounds2D().getX() + 20
+            + camera.getBounds2D().getWidth() * 0.70),
+        (int) (camera.getBounds2D().getY()
+            + camera.getBounds2D().getHeight() - 14));
+}
 ----
+
+Et dans la méthode `render` principale:
+
+.Modification de la méthode de rendu
+[source,java]
+----
+private void render() {
+    Graphics2D g = renderingBuffer.createGraphics();
+    //...
+    // <1>
+    Optional<Entity> cam = currentScene.getEntities().stream().filter(e -> e instanceof Camera).findFirst();
+    Camera camera = cam.isPresent() ? (Camera) cam.get() : null;
+    // <2>
+    if (cam.isPresent() != null) {
+        g.translate((int) -camera.getX(), (int) -camera.getY());
+    }
+    drawWorldLimit(g, currentScene.getWorld(), 16, 16);
+    if (cam.isPresent() != null) {
+        if (isDebugGreaterThan(1)) {
+            drawDebugCamera(g, camera);
+        }
+        g.translate((int) camera.getX(), (int) camera.getY());
+    }
+    // draw entities
+    currentScene.getEntities().stream()
+        .filter(e -> !(e instanceof Camera))
+        .forEach(e -> {
+            //...
+        });
+    //...
+}
+----
+
+Si nous relançons maintenant notre programme de test :
+
+[source,bash]
+----
+runex.sh MonProgrammeCamera1
+----
+
+Nous verrons s'afficher la fenêtre suivante, proposant un contenu approchant :
+
+.Affichage d'information visuel de débogage sur l'objet Camera nommé "cam01".
+image::illustrations/capture-camera-2.png[Affichage d'informartion visuel de debuggage sur l'objet Camera]
+
+Si nous pressons la combinaison de touche kbd:[CTRL]+kbd:[D], nous verrons changer le niveau d'information de débogage affichée à côté de chaque entité.
 
 == World, un nouveau monde
 
-gravite et aire de jeu
+Ajoutons un nouvel objet à notre set de jeu, le monde !
+Afin de mieux gérer le context pour l'ensemble des entités évoluant dans notre jeu, nous allons ajouter une classe quip nous permettra de définir certains traits communs.
 
-TODO
+La classe `World` servira à définir :
+
+. Les dimensions de l'espace de jeux dans un `Rectangle2D`,
+. La gravité (`gravity`), nouvelle venue dans notre moteur de jeux, servira à appliquer une force définie à l'ensemble des entités contenues dans l'espace de jeu correspondante à la gravité de notre environnement.
+Par défaut à zéro, elle pourra être définie à __9,81m/s^2^__, soit l'accélération liée à https://fr.wikipedia.org/wiki/Pesanteur[la gravité terrestre,role=external,window=_blank,title=Voir la page sur la pesanteur sur wikipedia].
+
+Ainsi, dans le schéma ci-dessous, nous pouvons voir plusieurs entités (carrés jaunes) évoluant dans la même zone de jeu (cadre vert), contraintes dans l'espace défini par celle-ci, et subissant la gravité (flèche bleue orientée vers le bas).
+
+TIP: TODO Ajouter un schema montrant quelques entités évoluant dans une zone de jeux et en subissant les contraintes
+
+Commençons par créer un nouvel exemple en se basant sur le programme précédent :
+
+Copions la classe précédente `MonProgrammeCamera1` vers une nouvelle classe `MonProgrammeCamera2`.
+
+Ensuite, nous allons créer la classe World :
+
+.La classe World définissant notre monde.
+[source,java]
+----
+import java.awt.geom.Rectangle2D;
+public class World extends Rectangle2D.Double{
+    private Point2D gravity;
+
+    public World(){
+        gravity = new Point2D.Double(0.0,0.0);
+        this.setRect(new Rectangle2D.Double(0,0,640,400));
+    }
+    public World(Rectangle2D playArea, Point2D g){
+        this.gravity=g;
+        this.setRect(playArea);
+    }
+    public World setGravity(Point2D g){
+        this.gravity=g;
+        return this;
+    }
+    public World setPlayArea(Rectangle2D pa){
+        this.setRect(pa);
+        return this;
+    }
+}
+----
+
+Nous devons adapter notre Scene pour qu'elle définisse un objet World:
+
+.Notre Scene `PlayCameraScene2` adapté à l'objet `World`
+[source,java]
+----
+public class PlayCameraScene2 extends AbstractScene {
+
+    public PlayCameraScene2(String name) {
+        super(name);
+    }
+
+    @Override
+    public void create(Game app) {
+        // <1>
+        setWorld(
+                new World(
+                        new Point2D.Double(0, -0.981),
+                        new Double(0, 0, 30*16, 20*16)));
+        //...
+    }
+    //...
+
+}
+----
+
+En utilisant l'interface `setWorld(World)` définie par `AbstractScene`, nous pouvons déclarer une instance de la classe `World` qui définie le monde de notre jeu pour l'ensemble des entités de la `Scene`.
+
+Ici, nous définissons un monde délimitant une zone de jeu de **480** points en largeur et **320** points en hauteur, ainsi qu'une gravité définie via une instance de https://docs.oracle.com/en/java/javase/23/docs/api/java.desktop/java/awt/geom/Point2D.html[`Point2D`] de __(0.0,-0.981)__, soit la gravité terrestre de **9,81m/s^2^**.
+
+NOTE: Nous utilisons ici un object de type Point2D, fourni par le JDK afin de définir un pseudo vecteur.
+Nous aurons dans un prochain chapitre l'opportunité d'implémenter notre propre classe Vector2D permettant les opérations sur les vecteurs en 2 dimensions quand nous travailler sur une simulation physique un peu plus poussée.
+
+Nous allons aussi modifier les méthodes render et update de notre programme de demonstration pour qu'elles prennent en compte notre nouvelle classe.
+
+=== Render
+
+.Modifions la méthode de rendu en intégrant l'attribut `World` de notre `PlayCameraScene2`
+[source,java]
+----
+public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
+    //...
+    private void render() {
+        Graphics2D g = renderingBuffer.createGraphics();
+        // ...
+        if (camera != null) {
+            g.translate((int) -camera.getX(), (int) -camera.getY());
+        }
+
+        // <1>
+        drawWorldLimit(g, currentScene.getWorld(), 16, 16);
+
+        if (camera != null) {
+            if (isDebugGreaterThan(1)) {
+                drawDebugCamera(g, camera);
+            }
+            g.translate((int) camera.getX(), (int) camera.getY());
+        }
+        //...
+    }
+    //...
+    // <2>
+    private void drawWorldLimit(Graphics2D g, World world, int tileWidth, int tileHeight) {
+        // draw the world limit.
+        g.setColor(Color.GRAY);
+        for (int ix = 0; ix < world.getWidth(); ix += tileWidth) {
+            for (int iy = 0; iy < world.getHeight(); iy += tileHeight) {
+                g.drawRect(ix, iy,
+                        tileWidth, tileHeight);
+            }
+        }
+        g.setColor(Color.DARK_GRAY);
+        g.draw(world);
+    }
+    //...
+}
+----
+
+. Dans la méthode `render`, nous passons maintenant l'objet World issue de la scene :  `currentScene.getWorld()`
+. La méthode `drawWorldLimit` prendra maintenant un objet World comme attribut afin de dessiner une représentation de cet objet.
+
+=== Update
+
+Ajoutons également la mise à jour des positions de nos entités présentes dans la scène active en prenant en compte notre nouvel objet `World`:
+
+[source,java]
+----
+public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
+    //...
+    private void update() {
+        currentScene.getEntities().stream().filter(e -> !(e instanceof Camera)).forEach(e -> {
+            // <1>
+            World world = currentScene.getWorld();
+            // <2>
+            e.setPosition(
+                    e.getX() + e.getDx() - (world.getGravity().getX()),
+                    e.getY() + e.getDy() - (world.getGravity().getY()));
+
+            // <3>
+            if (!world.contains(e)) {
+                applyBouncingFactor(world, e);
+                // <4>
+                e.setPosition(
+                        Math.min(Math.max(e.getX(), world.getX()), world.getWidth() - e.getWidth()),
+                        Math.min(Math.max(e.getY(), world.getY()), world.getHeight() - e.getHeight()));
+            }
+            //...
+        });
+        // ...
+    }
+    // <5>
+    private void applyBouncingFactor(World world, Entity e) {
+        // application du rebond si collision avec le bord de la zone de jeu
+        if (e.getX() < world.getX()
+                || e.getX() + e.getWidth() > e.getWidth() + world.getWidth()) {
+            e.setVelocity(-e.getDx() * e.getElasticity(), e.getDy());
+        }
+        if (e.getY() < world.getY()
+                || e.getY() + e.getHeight() > world.getHeight()) {
+            e.setVelocity(e.getDx(), -e.getDy() * e.getElasticity());
+        }
+    }
+    //...
+
+}
+----
+
+. Nous récupérons l'objet `World` de la scène,
+. Nous calculons la nouvelle position de l'entité en lui appliquant sa vitesse ET la gravité issue de l'objet World,
+. Nous appliquons l'effet de rebond si nécessaire (voir (5)),
+. Nous repositionnons l'entité dans la zone de jeu si sa nouvelle position sort du cadre de la zone de jeu,
+. Et enfin, nous échangeons l'objet `Rectangle2D` pour un objet `World` dans la signature de la méthode de gestion du rebond.
+
+
+== Conclusion
+
+Nous avons ajouté à notre moteur quelques éléments importants qui serviront de base à d'autre principes que nous allons développer dans les chapitres suivants, comme les systèmes de particules qui feront appel à l'utilisation des comportements spécifiques (`Behaviors`), ainsi qu'à la structure en arbred
