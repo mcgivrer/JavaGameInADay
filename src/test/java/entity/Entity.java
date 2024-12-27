@@ -2,11 +2,13 @@ package entity;
 
 import behaviors.Behavior;
 
+import physic.CollisionEvent;
 import physic.Material;
 import utils.Node;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -58,6 +60,8 @@ public class Entity extends Node<Entity> {
     private Map<String, Object> attributes = new ConcurrentHashMap<>();
 
     private List<Behavior> behaviors = new ArrayList<>();
+
+    private List<CollisionEvent> collisions = new ArrayList<>();
 
     public Entity(String name) {
         super(name);
@@ -277,6 +281,15 @@ public class Entity extends Node<Entity> {
     public Entity add(Behavior b) {
         this.behaviors.add(b);
         return this;
+    }
+
+    public Entity add(CollisionEvent ce) {
+        collisions.add(ce);
+        return this;
+    }
+
+    public List<CollisionEvent> getCollisions() {
+        return this.collisions;
     }
 
 }

@@ -1,5 +1,6 @@
 = Ajoutons un peu de Physique
 :stem: latexmath
+:experimental:
 
 Dans un jeu 2D, certes le gameplay est important, mais l’aspect simulation de la réalité l’est tout autant.
 (((physique,mouvement)))
@@ -12,7 +13,7 @@ Rendons plus vivante notre scène en ajoutant quelques éléments de la physique
 (((Newton, lois de Newton)))
 
 .Portrait de Sir Isaac Newton, 1689 (source wikipedia)
-image::illustrations/Portrait_of_Sir_Isaac_Newton%2C_1689.jpg["Portrait de Sir Isaac Newton, 1689 (source Wikipeda)"]
+image::illustrations/Portrait_of_Sir_Isaac_Newton_1689.jpg["Portrait de Sir Isaac Newton, 1689 (source Wikipeda)"]
 
 Voici résumé les 3 lois de Newton :
 
@@ -85,7 +86,7 @@ Si maintenant, nous souhaitons modéliser nos objets animés, nous devons créer
 
 Voici une première proposition :
 
-.le modèle UML pour la class `Entity`
+.Le modèle UML pour la class `Entity`
 image::illustrations/uml-diagram-entity.png[Entity UML model]
 
 Ce qui se traduira par le code suivant :
