@@ -8,14 +8,12 @@ import game.Game;
 import game.TestGame;
 import physic.CollisionEvent;
 import physic.World;
-import scenes.PlayCollisionScene1;
+import scenes.PlayInputScene1;
 import scenes.Scene;
 import utils.Config;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -95,6 +93,10 @@ public class MonProgrammeInput1 extends TestGame implements Game {
      */
     private final boolean[] keys = new boolean[1024];
 
+    /**
+     * The InputListener class is the service delegation for the keyboard, mouse and/or gamepad
+     * management.
+     */
     private InputListener inputListener;
 
     /**
@@ -154,14 +156,14 @@ public class MonProgrammeInput1 extends TestGame implements Game {
     public void initialize() {
         testMode = config.get("app.test");
         maxLoopCount = (int) config.get("app.test.loop.max.count");
-        System.out.printf("# %s est initialisé%n", this.getClass().getSimpleName());
-        createWindow();
+
+        inputListener = new InputListener(this);
+        createWindow(inputListener);
         createBuffer();
 
-         inputListener = new InputListener(this);
-
-        addScene(new PlayCollisionScene1("play"));
+        addScene(new PlayInputScene1("play"));
         switchScene("play");
+        System.out.printf("# %s est initialisé%n", this.getClass().getSimpleName());
     }
 
     /**
@@ -235,16 +237,17 @@ public class MonProgrammeInput1 extends TestGame implements Game {
      * <p>
      * Adds the current instance as a key listener to the window to handle keyboard input.
      */
-    private void createWindow() {
+    private void createWindow(InputListener inputListener) {
         // Create the Window
         window = new JFrame((String) config.get("app.render.window.title"));
         window.setPreferredSize(config.get("app.render.window.size"));
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        window.setAutoRequestFocus(true);
         window.setContentPane(this);
-        window.pack();
-        window.setVisible(true);
         window.addKeyListener(inputListener);
+        window.pack();
         window.createBufferStrategy((int) config.get("app.render.buffer.strategy"));
+        window.setVisible(true);
     }
 
     /**
@@ -386,13 +389,13 @@ public class MonProgrammeInput1 extends TestGame implements Game {
                     scene.getEntities().stream()
                             .filter(e -> !(e instanceof Camera))
                             .forEach(e2 -> {
-                        if (!e1.getName().equals(e2.getName())) {
-                            if (e1.intersects(e2)) {
-                                CollisionEvent ce = new CollisionEvent(e1, e2);
-                                collisions.add(ce);
-                            }
-                        }
-                    });
+                                if (!e1.getName().equals(e2.getName())) {
+                                    if (e1.intersects(e2)) {
+                                        CollisionEvent ce = new CollisionEvent(e1, e2);
+                                        collisions.add(ce);
+                                    }
+                                }
+                            });
                 });
     }
 
@@ -592,5 +595,10 @@ public class MonProgrammeInput1 extends TestGame implements Game {
      */
     public BufferedImage getRenderingBuffer() {
         return this.renderingBuffer;
+    }
+
+    @Override
+    public boolean isKeyPressed(int keyCode) {
+        return inputListener.isKeyPressed(keyCode);
     }
 }
