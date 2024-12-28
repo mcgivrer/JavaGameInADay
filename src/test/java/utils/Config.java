@@ -69,8 +69,8 @@ public class Config extends HashMap<String, Object> {
         // demo4
         put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, 640, 400));
         put("app.physic.world.gravity", new Point2D.Double(0, -0.981));
-        put("app.scene.default", "");
-        put("app.scene.list", "");
+        put("app.scene.default", "default");
+        put("app.scene.list", "default:scenes.DefaultScene");
     }
 
     public void load(String filePath) {
@@ -139,6 +139,12 @@ public class Config extends HashMap<String, Object> {
                         }
                         case "app.physic.entity.enemy.max.speed.ratio" -> {
                             put("app.physic.entity.enemy.max.speed.ratio", Double.parseDouble(props.getProperty("app.physic.entity.enemy.max.speed.ratio")));
+                        }
+                        case "app.scene.list" -> {
+                            put("app.scene.list", ((String) e.getValue()).split(","));
+                        }
+                        case "app.scene.default" -> {
+                            put("app.scene.default", ((String) e.getValue()));
                         }
                         default -> {
                             System.out.printf("~ Unknown value for %s=%s%n", e.getKey(), e.getValue());
