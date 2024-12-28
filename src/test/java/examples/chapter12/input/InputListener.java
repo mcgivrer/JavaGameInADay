@@ -4,6 +4,10 @@ import game.Game;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Arrays;
+
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
 
 /**
  * The InputListener class implements everything about managing
@@ -18,7 +22,16 @@ public class InputListener implements KeyListener {
 
     public InputListener(Game app) {
         this.app = app;
-        System.out.printf("=> InputListener : created");
+        initialize(app);
+        System.out.printf("=> InputListener : created%n");
+    }
+
+    private void initialize(Game app) {
+        /* Get the available controllers */
+        Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
+        Arrays.stream(controllers).forEach(controller -> {
+            System.out.printf("~ controller : %s => %s%n", controller.getName(), controller.getType().toString());
+        });
     }
 
     public boolean isKeyPressed(int keyCode) {

@@ -1,9 +1,9 @@
-package examples.chapter12.input;
+package examples.chapter12;
 
-import examples.chapter10.gfx.RenderEngine;
-import examples.chapter10.io.InputListener;
 import examples.chapter10.physic.PhysicEngine;
 import examples.chapter10.scene.SceneManager;
+import examples.chapter12.input.InputListener;
+import examples.chapter12.gfx.RenderEngine;
 import game.Game;
 import game.TestGame;
 import scenes.Scene;
@@ -11,6 +11,8 @@ import utils.Config;
 import utils.gameloop.StandardGameLoop;
 
 import java.awt.image.BufferedImage;
+
+import static com.snapgames.framework.utils.I18n.getI18n;
 
 /**
  * MonProgrammeCollision1 is a class that extends TestGame and implements KeyListener and Game interfaces.
@@ -79,7 +81,13 @@ public class MonProgrammeInput1 extends TestGame implements Game {
      * 3. Loads application settings from a configuration file specified by configFilePath.
      */
     public MonProgrammeInput1() {
-        System.out.printf("# Démarrage de %s%n", this.getClass().getSimpleName());
+        System.out.printf("# Démarrage de %s%n", com.snapgames.framework.Game.class);
+        System.out.printf("~ Initialization application %s (%s) %n- running on JDK %s %n- at %s %n- with classpath = %s%n",
+                getI18n("app.name"),
+                getI18n("app.version"),
+                System.getProperty("java.version"),
+                System.getProperty("java.home"),
+                System.getProperty("java.class.path"));
         config = new Config(this);
         config.load(configFilePath);
     }
@@ -222,7 +230,7 @@ public class MonProgrammeInput1 extends TestGame implements Game {
      *
      * @return a BufferedImage object representing the rendering buffer.
      */
-    public BufferedImage getRenderingBuffer(){
+    public BufferedImage getRenderingBuffer() {
         return renderEngine.getRenderingBuffer();
     }
 
