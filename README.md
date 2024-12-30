@@ -58,3 +58,5 @@ target/build/JavaGameInAWeek-1.0.4.run
 Enjoy !
 
 Frédéric Delorme.
+
+![Repobeats analytics image](https://repobeats.axiom.co/api/embed/53252b7d057801af1f9f6c42cdbbd16813b3b321.svg "Repobeats analytics image")
