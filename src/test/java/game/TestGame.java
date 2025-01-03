@@ -1,5 +1,6 @@
 package game;
 
+import scenes.Scene;
 import utils.Config;
 
 import javax.swing.*;
@@ -9,12 +10,12 @@ import java.awt.image.BufferedImage;
  * The {@code TestGame} class represents a basic framework for a game application,
  * implementing both {@code GameInterface} and {@code Game}.
  * It extends {@code JPanel} to provide a graphical surface for rendering.
- *
+ * <p>
  * This class includes functionality for managing game states such as exit and pause,
  * as well as debugging options. It also provides access to configuration settings
  * and a rendering buffer for the graphical output.
  */
-public class TestGame extends JPanel implements Game{
+public class TestGame extends JPanel implements Game {
     private boolean exit = false;
     private boolean pause = false;
     private int debug = 0;
@@ -82,5 +83,10 @@ public class TestGame extends JPanel implements Game{
     @Override
     public boolean isKeyPressed(int keyCode) {
         return false;
+    }
+
+    @Override
+    public void input(Scene scene) {
+
     }
 }

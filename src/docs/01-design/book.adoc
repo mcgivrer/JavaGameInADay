@@ -35,7 +35,9 @@ include::108-delegation-boucle-de-jeu.adoc[]
 
 include::109-collision-et-reponse.adoc[]
 
-include::110-newton-s-physics.adoc[]
+include::110-modernisons-notre-code.adoc[]
+
+include::111-newton-s-physics.adoc[]
 
 include::120-add-gsystem.adoc[]
 

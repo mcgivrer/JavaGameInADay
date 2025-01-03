@@ -116,5 +116,12 @@ public interface Game {
         return -1;
     }
 
-    ;
+    default void input(Scene scene) {
+    }
+
+    default void update(Scene scene) {
+    }
+
+    default void render(Scene scene) {
+    }
 }

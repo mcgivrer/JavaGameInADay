@@ -1,0 +1,37 @@
+= Modernisons notre code
+
+Nous pouvons améliorer le code notre nouveau moteur de jeux en procédant à quelques aménagements : création de nouveau package, séparation du code en plusieurs services, et ajout de nouvelles fonctionnalités rendant le framework plus malléable et dynamique.
+
+== Réorganisation en package
+
+Dans le cadre du chapitre 10, nous devons revoir l'organisation de notre code. En effet, une grande partie de notre implémentation est concentrée dans la série de classe `MonProgrammeXxx`, et ce la n'est pas une bonne pratique car la complexité de celle-ci est très élevée, et son développement n'en est que plus compliqué.
+
+La bonne pratique, ici, consiste à séparer les activités par type. Nous avons des activités liées à la mise à jour des entités du jeu, des activités
+liées au rendu de celle-ci à l'écran, et enfin certaines sont liées à la gestion des informations générées par le clavier, la souris, ou pourquoi pas d'autres moyens de contrôle comme un gamepad oubien une manette de console.
+
+== Séparation en services
+
+- `physic` le package accueille déjà quelques classes liées à la gestion du monde et des matériaux, 
+
+- `gfx` le nouveau package 
+
+- `input`
+
+
+=== Processing des entités
+
+TODO
+
+=== Rendu
+
+TODO
+
+=== Gestion des entrées
+
+TODO
+
+== Chargement des scènes
+
+Nous allons nous pencher sur le chargement dynamique des scenes de notre jeu, au travers de quelques nouvelles propriétés dans le fichier de configuration de base.
+
+Ainsi, nous pourrons charger autant de scene au démarrage du jeu afin de pouvoir passer de l'une à l'autre sans difficulté et passer ainsi de l'écran de titre du jeu , au menu de choix de démarrage, au gameplay principal, ou bien à l'écran de pause et de sauvegarde.

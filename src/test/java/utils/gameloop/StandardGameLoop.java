@@ -7,10 +7,10 @@ import scenes.Scene;
 import java.io.Serializable;
 
 public class StandardGameLoop implements GameLoop {
-    private final MonProgrammeGameLoop1 game;
+    private final Game game;
 
-    public StandardGameLoop(MonProgrammeGameLoop1 monProgrammeGameLoop1) {
-        this.game = monProgrammeGameLoop1;
+    public StandardGameLoop(Game game) {
+        this.game = game;
     }
 
 
