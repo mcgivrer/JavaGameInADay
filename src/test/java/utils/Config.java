@@ -146,6 +146,7 @@ public class Config extends HashMap<String, Object> {
                         case "app.scene.default" -> {
                             put("app.scene.default", ((String) e.getValue()));
                         }
+
                         default -> {
                             System.out.printf("~ Unknown value for %s=%s%n", e.getKey(), e.getValue());
                         }

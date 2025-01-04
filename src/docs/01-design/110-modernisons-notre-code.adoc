@@ -4,19 +4,24 @@ Nous pouvons améliorer le code notre nouveau moteur de jeux en procédant à qu
 
 == Réorganisation en package
 
-Dans le cadre du chapitre 10, nous devons revoir l'organisation de notre code. En effet, une grande partie de notre implémentation est concentrée dans la série de classe `MonProgrammeXxx`, et ce la n'est pas une bonne pratique car la complexité de celle-ci est très élevée, et son développement n'en est que plus compliqué.
+Dans le cadre du chapitre 10, nous devons revoir l'organisation de notre code.
+En effet, une grande partie de notre implémentation est concentrée dans la série de classe `MonProgrammeXxx`, et ce la n'est pas une bonne pratique car la complexité de celle-ci est très élevée, et son développement n'en est que plus compliqué.
 
-La bonne pratique, ici, consiste à séparer les activités par type. Nous avons des activités liées à la mise à jour des entités du jeu, des activités
-liées au rendu de celle-ci à l'écran, et enfin certaines sont liées à la gestion des informations générées par le clavier, la souris, ou pourquoi pas d'autres moyens de contrôle comme un gamepad oubien une manette de console.
+La bonne pratique, ici, consiste à séparer les activités par type.
+Nous avons des activités liées à la mise à jour des entités du jeu, des activités liées au rendu de celle-ci à l'écran, et enfin certaines sont liées à la gestion des informations générées par le clavier, la souris, ou pourquoi pas d'autres moyens de contrôle comme un gamepad oubien une manette de console.
 
 == Séparation en services
 
-- `physic` le package accueille déjà quelques classes liées à la gestion du monde et des matériaux, 
+- `io`: ce nouveau package va accueillir le service de traitement des entrées faites par l'utilisateur, à savoir les entrées au clavier, pour commencer,
 
-- `gfx` le nouveau package 
+- `physic`: le package accueille déjà quelques classes liées à la gestion du monde et des matériaux,
 
-- `input`
+- `gfx`: ce package hébergera le service de rendu de la scene active, en utilisant les méthodes déjà créées, mais cette fois séparées dans un service (une classe) dédiée.
 
+
+=== Gestion des entrées
+
+TODO
 
 === Processing des entités
 
@@ -26,12 +31,15 @@ TODO
 
 TODO
 
-=== Gestion des entrées
+== Délégation de la boucle de jeu
 
-TODO
+=== GameLoop interface
+
+=== Standard Game loop
 
 == Chargement des scènes
 
 Nous allons nous pencher sur le chargement dynamique des scenes de notre jeu, au travers de quelques nouvelles propriétés dans le fichier de configuration de base.
 
 Ainsi, nous pourrons charger autant de scene au démarrage du jeu afin de pouvoir passer de l'une à l'autre sans difficulté et passer ainsi de l'écran de titre du jeu , au menu de choix de démarrage, au gameplay principal, ou bien à l'écran de pause et de sauvegarde.
+

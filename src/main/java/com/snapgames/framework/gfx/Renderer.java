@@ -42,6 +42,13 @@ public class Renderer implements GSystem {
     private BufferedImage drawbuffer;
     private Font debugFont;
 
+    private int FPS = 60;
+    private int frames = 0;
+    private double frameDuration = 1000.0 / FPS;
+    private int realFPS = 0;
+    private double totalFrameTime = 0;
+    private double realFrameTime = 0;
+
     private boolean fullScreen = false;
 
     /**
@@ -170,8 +177,19 @@ public class Renderer implements GSystem {
         if (window != null) {
             BufferStrategy bf = window.getBufferStrategy();
             if (bf != null) {
-                bf.getDrawGraphics().drawImage(drawbuffer, 0, 0, window.getWidth(), window.getHeight(),
+                Graphics2D g2 = (Graphics2D) bf.getDrawGraphics();
+                g2.drawImage(drawbuffer, 0, 0, window.getWidth(), window.getHeight(),
                         0, 0, drawbuffer.getWidth(), drawbuffer.getHeight(), null);
+                if (app.isDebugGreaterThan(0)) {
+                    g2.setColor(Color.YELLOW);
+                    g2.drawString(
+                            "[ dbg:%d | fps:%d | frame:%2.0f | scn:%s ]".formatted(
+                                    app.getDebug(),
+                                    realFPS,
+                                    realFrameTime,
+                                    scene.getName()),
+                            4, window.getHeight() - 8);
+                }
                 if (!bf.contentsLost()) {
                     bf.show();
                 }
@@ -315,15 +333,18 @@ public class Renderer implements GSystem {
     public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
         SceneManager sm = SystemManager.get(SceneManager.class);
         render(sm.getActiveScene());
+        frames += 1;
+        realFrameTime = elapsed;
+        totalFrameTime += elapsed;
+        if (totalFrameTime > 1000.0) {
+            realFPS = frames;
+            frames = 0;
+            totalFrameTime = 0.0;
+        }
     }
 
     @Override
     public void postProcess(GameInterface game) {
-        PhysicEngine pe = SystemManager.get(PhysicEngine.class);
-        SceneManager sm = SystemManager.get(SceneManager.class);
-        if (sm != null && pe != null) {
-            pe.resetForces(sm.getActiveScene());
-        }
     }
 
     @Override

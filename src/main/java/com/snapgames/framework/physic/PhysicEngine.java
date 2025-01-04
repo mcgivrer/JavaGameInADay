@@ -51,7 +51,6 @@ public class PhysicEngine implements GSystem {
      */
     public PhysicEngine(GameInterface app) {
         this.app = app;
-
         debug(PhysicEngine.class, "Start of processing");
     }
 
@@ -65,19 +64,21 @@ public class PhysicEngine implements GSystem {
      * @param elapsed The time elapsed since the last update, in milliseconds.
      */
     private void update(Scene scene, double elapsed) {
-        scene.getEntities().values().stream()
-                .filter(Entity::isActive)
-                .forEach(entity -> {
-                    World world = scene.getWorld();
-                    if (entity.getPhysicType().equals(PhysicType.DYNAMIC)) {
-                        applyWorldPhysicRules(entity, world);
-                        updatePhysicEntity(entity, world, elapsed);
-                    }
-                    entity.getBehaviors().forEach(b -> b.update(entity, elapsed));
-                    constrainToWorldArea(entity, world);
-                });
-        if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
-            scene.getActiveCamera().update(elapsed);
+        if (app.isNotPaused()) {
+            scene.getEntities().values().stream()
+                    .filter(Entity::isActive)
+                    .forEach(entity -> {
+                        World world = scene.getWorld();
+                        if (entity.getPhysicType().equals(PhysicType.DYNAMIC)) {
+                            applyWorldPhysicRules(entity, world);
+                            updatePhysicEntity(entity, world, elapsed);
+                        }
+                        entity.getBehaviors().forEach(b -> b.update(entity, elapsed));
+                        constrainToWorldArea(entity, world);
+                    });
+            if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
+                scene.getActiveCamera().update(elapsed);
+            }
         }
     }
 

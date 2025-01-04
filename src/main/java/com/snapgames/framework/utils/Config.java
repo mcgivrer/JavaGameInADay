@@ -25,11 +25,17 @@ public class Config extends HashMap<String, Object> implements GSystem {
         this.app = app;
         put("app.test", false);
         put("app.debug.level", 0);
+        // rendering service
         put("app.render.window.title", "Test001");
         put("app.render.window.size", new Dimension(640, 400));
         put("app.render.buffer.size", new Dimension(320, 200));
+        put("app.render.buffer.strategy", 3);
+
+        put("app.render.fps", 60);
+        // Physic engine
         put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, 640, 400));
         put("app.physic.world.gravity", new Point2D.Double(0, -0.981));
+        // scene management
         put("app.scene.default", "");
         put("app.scene.list", "");
     }
@@ -66,6 +72,13 @@ public class Config extends HashMap<String, Object> implements GSystem {
                     String[] values = ((String) e.getValue()).split("x");
                     put("app.render.buffer.size", new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
                 }
+                case "app.render.fps" -> {
+                    put("app.render.fps", Integer.parseInt(props.getProperty("app.render.fps")));
+                }
+                case "app.render.buffer.strategy" -> {
+                    put("app.render.buffer.strategy", Integer.parseInt(props.getProperty("app.render.buffer.strategy")));
+                }
+
                 case "app.physic.world.play.area.size" -> {
                     String[] values = ((String) e.getValue()).split("x");
                     put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, Double.parseDouble(values[0]), Double.parseDouble(values[1])));
