@@ -1,6 +1,5 @@
 package com.snapgames.framework.io;
 
-import com.snapgames.framework.Game;
 import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.gfx.Renderer;
 import com.snapgames.framework.physic.PhysicEngine;
@@ -46,21 +45,23 @@ public class InputListener implements KeyListener, Serializable, GSystem {
     public void keyReleased(KeyEvent e) {
 
         SceneManager scnMgr = SystemManager.get(SceneManager.class);
-        if (isKeyPressed(KeyEvent.VK_Q) || isKeyPressed(KeyEvent.VK_ESCAPE)) {
-            app.requestExit();
-        }
-        if (isKeyPressed(KeyEvent.VK_Z) && e.isControlDown()) {
-            scnMgr.getActiveScene().reset();
-        }
-        if (isKeyPressed(KeyEvent.VK_D)) {
-            app.setDebug(app.getDebug() + 1 < 6 ? app.getDebug() + 1 : 0);
+        if (e.isControlDown()) {
+            if (isKeyPressed(KeyEvent.VK_Q) || isKeyPressed(KeyEvent.VK_ESCAPE)) {
+                app.requestExit();
+            }
+            if (isKeyPressed(KeyEvent.VK_Z)) {
+                scnMgr.getActiveScene().reset();
+            }
+            if (isKeyPressed(KeyEvent.VK_D)) {
+                app.setDebug(app.getDebug() + 1 < 6 ? app.getDebug() + 1 : 0);
+            }
+            if (isKeyPressed(KeyEvent.VK_F11)) {
+                Renderer renderer = SystemManager.get(Renderer.class);
+                renderer.switchFullScreenMode();
+            }
         }
         if (isKeyPressed(KeyEvent.VK_P) || isKeyPressed(KeyEvent.VK_PAUSE)) {
             app.setPause(app.isNotPaused());
-        }
-        if (isKeyPressed(KeyEvent.VK_F11)) {
-            Renderer renderer = SystemManager.get(Renderer.class);
-            renderer.switchFullScreenMode();
         }
         keys[e.getKeyCode()] = false;
     }

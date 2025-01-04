@@ -11,7 +11,7 @@ public interface GameInterface {
      * Requests the game to exit by setting an exit flag to true, indicating that the game should
      * terminate. Typically invoked when the player chooses to exit the game, such as by pressing
      * a specific key combination or selecting an exit option in a menu.
-     *
+     * <p>
      * The actual exit confirmation may involve user interaction, such as displaying a confirmation
      * dialog to ensure that the user indeed intends to exit. If confirmed, the game's main loop
      * will eventually detect the exit flag and terminate accordingly.
@@ -71,4 +71,22 @@ public interface GameInterface {
      * @return true if the current debug level is greater than the specified debug level, false otherwise.
      */
     boolean isDebugGreaterThan(int debugLevel);
+
+    /**
+     * return test mode.
+     *
+     * @return true if test mode is active.
+     */
+    default boolean isTestMode() {
+        return false;
+    }
+
+    /**
+     * If test mode is active, this defines the number of loop to be achieved before auto-exit.
+     *
+     * @return an integer value. if equals 0 no looping count active.
+     */
+    default int getMaxLoopCount() {
+        return 0;
+    }
 }

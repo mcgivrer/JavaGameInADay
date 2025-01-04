@@ -8,6 +8,8 @@ import com.snapgames.framework.scene.SceneManager;
 import com.snapgames.framework.system.SystemManager;
 import com.snapgames.framework.utils.Config;
 import com.snapgames.framework.utils.Log;
+import com.snapgames.framework.utils.gameloop.GameLoop;
+import com.snapgames.framework.utils.gameloop.StandardGameLoop;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -37,12 +39,12 @@ public class Game extends JPanel implements GameInterface {
      */
     public Game() {
         super();
-        Log.info(Game.class,"Initialization application %s (%s) %n- running on JDK %s %n- at %s %n- with classpath = %s%n",
-            getI18n("app.name"),
-            getI18n("app.version"),
-            System.getProperty("java.version"),
-            System.getProperty("java.home"),
-            System.getProperty("java.class.path"));
+        Log.info(Game.class, "Initialization application %s (%s) %n- running on JDK %s %n- at %s %n- with classpath = %s%n",
+                getI18n("app.name"),
+                getI18n("app.version"),
+                System.getProperty("java.version"),
+                System.getProperty("java.home"),
+                System.getProperty("java.class.path"));
     }
 
     /**
@@ -67,7 +69,7 @@ public class Game extends JPanel implements GameInterface {
             Log.info(Game.class, String.format("Argument: %s", s));
         });
 
-       SystemManager.setParent(this);
+        SystemManager.setParent(this);
 
         Config config = new Config(this);
         config.parseArgs(args);
@@ -87,33 +89,20 @@ public class Game extends JPanel implements GameInterface {
     /**
      * Main game loop that runs continuously, processing and updating subsystems.
      * This loop executes until an exit request is detected.
-     *
+     * <p>
      * The loop calculates elapsed time for each iteration and performs the following tasks:
      * 1. Calculate the time difference between the current and previous iterations.
      * 2. Invoke the SystemManager to process game subsystems using the elapsed time.
      * 3. Execute post-processing on all subsystems.
      * 4. Control the frame rate to maintain a consistent FPS (Frames Per Second).
-     *
+     * <p>
      * The loop also handles interruptions during the sleep period by catching
      * InterruptedException and rethrowing it as a RuntimeException.
      */
     private void loop() {
 
-        long startTime = System.currentTimeMillis();
-        long endTime = startTime;
-        double elapsed = 0;
-        while (!isExitRequested()) {
-            elapsed = endTime - startTime;
-            startTime = endTime;
-            SystemManager.process(elapsed);
-            SystemManager.postProcess();
-            endTime = System.currentTimeMillis();
-            try {
-                Thread.sleep((long) (elapsed < (1000 / FPS) ? (1000 / FPS) - elapsed : 1));
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        GameLoop gameLoop = new StandardGameLoop(this);
+        gameLoop.process(this);
     }
 
     /**
@@ -125,7 +114,7 @@ public class Game extends JPanel implements GameInterface {
      */
     private void dispose() {
         SystemManager.dispose();
-        Log.info(Game.class,"End of application ");
+        Log.info(Game.class, "End of application ");
     }
 
     /**
@@ -191,8 +180,8 @@ public class Game extends JPanel implements GameInterface {
         setPause(true);
         Renderer renderer = SystemManager.get(Renderer.class);
         int response = JOptionPane.showConfirmDialog(renderer.getWindow(),
-            getI18n("app.exit.confirm.message"),
-            getI18n("app.exit.confirm.title"), JOptionPane.YES_NO_OPTION);
+                getI18n("app.exit.confirm.message"),
+                getI18n("app.exit.confirm.title"), JOptionPane.YES_NO_OPTION);
         if (response == JOptionPane.YES_OPTION) {
             status = true;
         }
