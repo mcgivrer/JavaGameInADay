@@ -76,6 +76,7 @@ public class StandardGameLoop implements GameLoop {
 
     @Override
     public void update(Scene scene, double elapsed) {
+        game.update(scene, elapsed);
         game.update(scene);
     }
 
