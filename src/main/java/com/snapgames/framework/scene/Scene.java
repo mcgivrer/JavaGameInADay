@@ -6,6 +6,7 @@ import com.snapgames.framework.entity.Camera;
 import com.snapgames.framework.entity.Entity;
 import com.snapgames.framework.io.InputListener;
 import com.snapgames.framework.physic.World;
+import com.snapgames.framework.utils.Config;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ public interface Scene {
 
     World getWorld();
 
-    void create();
+    void create(Config config);
 
     void add(Entity<?> entity);
 

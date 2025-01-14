@@ -22,7 +22,7 @@ public class SceneManager implements GSystem {
     private Scene activeScene;
     private String defaultSceneName;
 
-    public SceneManager(Game app) {
+    public SceneManager(GameInterface app) {
         this.game = app;
         initialize();
     }
@@ -45,7 +45,7 @@ public class SceneManager implements GSystem {
         Scene scene = null;
         try {
             Class<?> sceneClass = Class.forName(className);
-            Constructor<?> constructor = sceneClass.getConstructor(Game.class, String.class);
+            Constructor<?> constructor = sceneClass.getConstructor(GameInterface.class, String.class);
             scene = (Scene) constructor.newInstance(this.game, sceneName);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException |
                  IllegalAccessException e) {
@@ -66,12 +66,13 @@ public class SceneManager implements GSystem {
     }
 
     public void switchScene(String sceneName) {
+        Config config = (Config) SystemManager.get(Config.class);
         if (activeScene != null) {
             activeScene.dispose();
         }
         this.activeScene = scenes.get(sceneName);
         activeScene.load();
-        activeScene.create();
+        activeScene.create(config);
         // start all behaviors
         activeScene.getEntities().values().forEach(e -> e.getBehaviors().forEach(b -> b.start(e)));
 

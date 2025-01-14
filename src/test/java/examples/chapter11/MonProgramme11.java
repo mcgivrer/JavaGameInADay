@@ -1,18 +1,17 @@
 package examples.chapter11;
 
-import examples.chapter11.behaviors.Behavior2;
-import examples.chapter11.entity.Entity2;
-import examples.chapter11.gfx.RenderEngine;
-import examples.chapter11.io.InputListener;
-import examples.chapter11.physic.PhysicEngine2;
-import examples.chapter11.scene.Scene;
-import examples.chapter11.scene.SceneManager;
-import game.Game;
-import game.TestGame;
-import utils.Config;
-import utils.gameloop.StandardGameLoop;
 
-import java.awt.image.BufferedImage;
+import com.snapgames.framework.GameInterface;
+import com.snapgames.framework.io.InputListener;
+import com.snapgames.framework.scene.Scene;
+import com.snapgames.framework.utils.Config;
+import examples.chapter11.gameloop.StandardGameLoop2;
+import examples.chapter11.gfx.Renderer;
+import examples.chapter11.physic.PhysicEngine;
+import examples.chapter11.scene.SceneManager;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * MonProgrammeCollision1 is a class that extends TestGame and implements KeyListener and Game interfaces.
@@ -20,7 +19,18 @@ import java.awt.image.BufferedImage;
  * This class manages the initialization and execution of a game application, including configuration
  * loading, scene management, main game loop execution, and handling of user inputs.
  */
-public class MonProgrammePE2 extends TestGame implements Game {
+public class MonProgramme11 implements GameInterface {
+
+    private static final double FPS = 60.0;
+
+    // Game exit request flag.
+    public static boolean exit = false;
+
+    // internal Pause flag
+    private boolean pause = false;
+
+    // debug level
+    private int debug = 1;
     /**
      * Represents the file path to the configuration file used by the application.
      * <p>
@@ -67,10 +77,14 @@ public class MonProgrammePE2 extends TestGame implements Game {
     /**
      * physic computation engine for Scene entities.
      */
-    private PhysicEngine2 physicEngine;
+    private PhysicEngine physicEngine;
 
 
-    private RenderEngine renderEngine;
+    private Renderer renderEngine;
+
+    private Config config;
+
+    private Map<String, Object> stats = new ConcurrentHashMap<>();
 
     /**
      * Constructs an instance of the MonProgrammeCamera1 class.
@@ -80,7 +94,7 @@ public class MonProgrammePE2 extends TestGame implements Game {
      * 2. Creates a configuration object for the application.
      * 3. Loads application settings from a configuration file specified by configFilePath.
      */
-    public MonProgrammePE2() {
+    public MonProgramme11() {
         System.out.printf("# Démarrage de %s%n", this.getClass().getSimpleName());
         config = new Config(this);
         config.load(configFilePath);
@@ -103,18 +117,27 @@ public class MonProgrammePE2 extends TestGame implements Game {
         maxLoopCount = (int) config.get("app.test.loop.max.count");
 
         // Initialization de services
+
         // init Input service manager
         inputListener = new InputListener(this);
+        inputListener.initialize(this);
+
         // init scene manager (loaded from config)
-        sceneManager = new SceneManager(this);
+        sceneManager = new SceneManager(this, config);
+        sceneManager.initialize(this);
+
         // init physic computation engine for scene entities.
-        physicEngine = new PhysicEngine2(this);
+        physicEngine = new PhysicEngine(this, sceneManager);
+        physicEngine.initialize(this);
+
         // init the rendering engine to display all scene entities on screen.
-        renderEngine = new RenderEngine(this, inputListener);
+        renderEngine = new Renderer(this, config, sceneManager);
+        renderEngine.initialize(this);
+        renderEngine.setInputListener(inputListener);
 
         System.out.printf("# %s est initialisé%n", this.getClass().getSimpleName());
 
-        sceneManager.switchTo("play");
+        sceneManager.switchScene("play");
     }
 
 
@@ -134,22 +157,8 @@ public class MonProgrammePE2 extends TestGame implements Game {
      * Outputs the total number of game loops executed upon termination.
      */
     public void loop() {
-        StandardGameLoop standardGameLoop = new StandardGameLoop(this);
-        standardGameLoop.process(this);
-    }
-
-    /**
-     * Delegate scene computation to {@link PhysicEngine2} instance.
-     *
-     * @param scene the current active Scene to be updated.
-     */
-    public void update(Scene scene, double elapsed) {
-        physicEngine.update(scene, elapsed);
-    }
-
-
-    public void render(Scene scene) {
-        renderEngine.render(scene);
+        StandardGameLoop2 standardGameLoop = new StandardGameLoop2(this, config, renderEngine, physicEngine, inputListener, stats);
+        standardGameLoop.process(this, sceneManager.getActiveScene());
     }
 
     /**
@@ -160,9 +169,9 @@ public class MonProgrammePE2 extends TestGame implements Game {
      * - Prints a message to the console indicating that the current instance of the application has terminated.
      */
     private void dispose() {
-        Scene currentScene = (Scene) sceneManager.getCurrentScene();
+        Scene currentScene = sceneManager.getActiveScene();
         System.out.printf("# %s se termine:%n", this.getClass().getSimpleName());
-        currentScene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> ((Behavior2<Entity2>) b).dispose(e)));
+        currentScene.getEntities().values().forEach(e -> e.getBehaviors().forEach(b -> b.dispose(e)));
         System.out.printf("- all %s entities' behaviors are disposed.%n", currentScene.getEntities().size());
         sceneManager.dispose(this);
         System.out.printf("- Scene '%s' is disposed.%n", currentScene.getName());
@@ -198,38 +207,54 @@ public class MonProgrammePE2 extends TestGame implements Game {
      * @param args Command-line arguments passed to the application.
      */
     public static void main(String[] args) {
-        MonProgrammePE2 prog = new MonProgrammePE2();
+        MonProgramme11 prog = new MonProgramme11();
         prog.run(args);
     }
 
-    /**
-     * Determines if the specified key is currently pressed.
-     *
-     * @param keyCode the code of the key to check, corresponding to a standard key code.
-     * @return true if the key specified by keyCode is pressed, false otherwise.
-     */
-    @Override
-    public boolean isKeyPressed(int keyCode) {
-        return inputListener.isKeyPressed(keyCode);
-    }
-
-    @Override
     public void input(Scene scene) {
-        scene.input(this);
-        scene.getEntities().forEach(e -> e.getBehaviors().forEach(b -> ((Behavior2<Entity2>) b).input(e)));
+        scene.input(inputListener);
+        scene.getEntities().values()
+                .forEach(e -> e.getBehaviors()
+                        .forEach(b -> b.input(inputListener, e)));
     }
 
-    /**
-     * Retrieves the current rendering buffer used for drawing operations.
-     *
-     * @return a BufferedImage object representing the rendering buffer.
-     */
-    public BufferedImage getRenderingBuffer() {
-        return renderEngine.getRenderingBuffer();
+    @Override
+    public void requestExit() {
+        setExit(true);
     }
 
-    public Scene getCurrentScene() {
-        return (Scene) sceneManager.getCurrentScene();
+    @Override
+    public void setDebug(int i) {
+
     }
 
+    @Override
+    public int getDebug() {
+        return debug;
+    }
+
+    @Override
+    public boolean isNotPaused() {
+        return !pause;
+    }
+
+    @Override
+    public void setPause(boolean p) {
+        this.pause = p;
+    }
+
+    @Override
+    public void setExit(boolean b) {
+        this.exit = b;
+    }
+
+    @Override
+    public boolean isExitRequested() {
+        return exit;
+    }
+
+    @Override
+    public boolean isDebugGreaterThan(int debugLevel) {
+        return debug > debugLevel;
+    }
 }

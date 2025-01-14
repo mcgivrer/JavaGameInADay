@@ -1,6 +1,7 @@
 package com.snapgames.framework.scene;
 
 import com.snapgames.framework.Game;
+import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.entity.Camera;
 import com.snapgames.framework.entity.Entity;
 import com.snapgames.framework.io.InputListener;
@@ -14,13 +15,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractScene extends Node<AbstractScene> implements Scene {
-    protected final Game app;
+    protected final GameInterface app;
     protected Map<String, Entity<?>> entities = new ConcurrentHashMap<>();
     protected World world = new World("default");
+    Config config;
 
     protected Camera activeCamera;
 
-    public AbstractScene(Game app, String name) {
+    public AbstractScene(GameInterface app, String name) {
         super(name);
         this.app = app;
     }
@@ -64,7 +66,11 @@ public abstract class AbstractScene extends Node<AbstractScene> implements Scene
     public void load() {
     }
 
-    public abstract void create();
+    public void create(Config config) {
+        this.config = config;
+    }
+
+    ;
 
     public void dispose() {
         // end all behaviors.
@@ -73,13 +79,8 @@ public abstract class AbstractScene extends Node<AbstractScene> implements Scene
 
     public void reset() {
         entities.clear();
-        create();
+        create(config);
     }
-
-    public Config getConfig() {
-        return SystemManager.get(Config.class);
-    }
-
 
     @Override
     public String toString() {
