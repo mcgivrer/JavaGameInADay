@@ -1,6 +1,7 @@
 package examples.chapter11.gameloop;
 
 import com.snapgames.framework.GameInterface;
+import com.snapgames.framework.entity.Entity;
 import com.snapgames.framework.io.InputListener;
 import com.snapgames.framework.scene.Scene;
 import com.snapgames.framework.utils.Config;
@@ -87,8 +88,12 @@ public class StandardGameLoop2 implements GameLoop {
 
     @Override
     public void input(Scene scene) {
-
         scene.input(inputListener);
+        scene.getEntities().values().stream()
+                .filter(Entity::isActive)
+                .forEach(e -> e.getBehaviors()
+                        .forEach(b ->
+                                b.input(inputListener, e)));
     }
 
     @Override
@@ -98,7 +103,6 @@ public class StandardGameLoop2 implements GameLoop {
 
     @Override
     public void render(Scene scene, double elapsed) {
-
         render.process(game, elapsed, stats);
     }
 

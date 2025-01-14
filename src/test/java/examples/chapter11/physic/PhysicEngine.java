@@ -68,10 +68,10 @@ public class PhysicEngine {
                 .filter(Entity::isActive)
                 .forEach(entity -> {
                     World world = scene.getWorld();
-                    if (entity.getPhysicType().equals(PhysicType.DYNAMIC)) {
+                    //if (entity.getPhysicType().equals(PhysicType.STATIC)) {
                         applyWorldPhysicRules(entity, world);
                         updatePhysicEntity(entity, world, elapsed);
-                    }
+                    //}
                     entity.getBehaviors().forEach(b -> b.update(entity, elapsed));
                     constrainToWorldArea(entity, world);
                 });

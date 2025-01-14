@@ -293,6 +293,8 @@ public class Renderer {
 
     public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
         render(sm.getActiveScene());
+        // clear all activities
+        sm.getActiveScene().getEntities().values().stream().filter(Entity::isActive).forEach(e -> e.getForces().clear());
     }
 
 }

@@ -132,6 +132,7 @@ public class MonProgramme11 implements GameInterface {
 
         // init the rendering engine to display all scene entities on screen.
         renderEngine = new Renderer(this, config, sceneManager);
+        
         renderEngine.initialize(this);
         renderEngine.setInputListener(inputListener);
 
