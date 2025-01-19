@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.snapgames.framework.utils.Log.debug;
-import static com.snapgames.framework.utils.Log.error;
+import static com.snapgames.framework.utils.Log.*;
+import static com.snapgames.framework.utils.Log.isDebugGreaterThan;
 
 /**
  * The Renderer class is responsible for rendering game scenes and entities onto a window.
@@ -186,7 +186,12 @@ public class Renderer implements GSystem {
         g.setColor(Color.ORANGE);
         g.draw(e);
         g.setFont(debugFont);
-        g.drawString("#%d:%s".formatted(e.getId(), e.getName()), (int) (e.getX() + e.getWidth() + 4), (int) e.getY());
+        g.drawString("#:%d:%s".formatted(e.getId(), e.getName()), (int) e.getWidth(), 0);
+        if (isDebugGreaterThan(3)) {
+            g.drawString("p:%3.0f,%3.0f".formatted(e.getX(), e.getY()), (int) e.getWidth(), 10);
+            g.drawString("s:%3.2f,%3.2f".formatted(e.getWidth(), e.getHeight()), (int) e.getWidth(), 20);
+            g.drawString("av:%3.2f,%3.2f".formatted(e.getVelocity().x, e.getVelocity().y), (int) e.getWidth(), 30);
+        }
         // draw velocity vector
         drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), velocity.getX() * 100, velocity.getY() * 100, Color.CYAN);
         // draw acceleration vector
