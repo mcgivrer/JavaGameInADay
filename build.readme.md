@@ -165,6 +165,22 @@ user or developer documentation for better clarity.
 
 ---
 
+> **IMPORTANT**<br/>
+> To buid PDF documentation, please install the following dependencies texlive-latex-base pandoc and texlive-fonts-recommended and texlive-latex-extra.
+>
+> Here is an example with Ubuntu :
+>
+> ```bash
+> $>sudo apt install \
+>    pandoc \
+>    texlive-latex-base \
+>    texlive-fonts-recommended \
+>    texlive-extra-utils \
+>    texlive-latex-extra \
+>    texlive-xetex
+>```
+>
+>And execute `build p`
 
 
 

@@ -48,7 +48,7 @@ export EXTERNAL_JARS=$(prop project.build.jars)
 export CHECKSTYLES_RULES=$(prop project.quality.rules)
 
 # ---- to enforce preview compatibility use the --enable-preview mode,
-# ---- for more information, see https://docs.oracle.com/en/java/javase/18/language/preview-language-and-vm-features.html
+# ---- for more information, see https://$DOCS_INPUT.oracle.com/en/java/javase/18/language/preview-language-and-vm-features.html
 # ---- define the checkstyle rule set file
 export COMPILATION_OPTS=$(prop project.compilation.opts)
 export JAR_OPTS=${COMPILATION_OPTS} $(prop project.jar.opts)
@@ -62,6 +62,8 @@ export TARGET=./target
 export BUILD=${TARGET}/build
 export CLASSES=${TARGET}/classes
 export RESOURCES=${SRC}/main/resources
+export DOCS_INPUT=${SRC}/docs/01-design
+export DOCS_OUTPUT=${BUILD}/book
 
 # ---- Java JDK version and file encoding
 export SOURCE_VERSION=${JAVA_VERSION}
@@ -268,41 +270,42 @@ function executeJar() {
 }
 #
 function generateEpub() {
-  echo -e "|_ ${BLUE}10.1 Generate documentation as E-PUB from '/docs' to '$TARGET/book/book-$PROGRAM_NAME-$PROGRAM_VERSION.epub'${NC}..."
+  echo -e "|_ ${BLUE}10.1 Generate documentation as E-PUB from '/$DOCS_INPUT' to '$DOCS_OUTPUT/book-$PROGRAM_NAME-$PROGRAM_VERSION.epub'${NC}..."
   if ! [ -x "$(command -v pandoc)" ]; then
     echo -e "   |_ ${RED}ERROR: pandoc not available.${NC}"
   else
-    rm -Rf $TARGET/book
-    mkdir $TARGET/book
-    cat docs/*.yml >$TARGET/book/book.mdo
-    cat docs/preface.md >>$TARGET/book/book.mdo
-    cat docs/chapter-*.md >>$TARGET/book/book.mdo
-    mv $TARGET/book/book.mdo $TARGET/book/book.md
-    pandoc $TARGET/book/book.md --resource-path=./docs -t epub3 -o $TARGET/book/book-$PROGRAM_NAME-$PROGRAM_VERSION.epub
+    rm -Rf $DOCS_OUTPUT
+    mkdir $DOCS_OUTPUT
+    cat $DOCS_INPUT/book.yml >$DOCS_OUTPUT/book.mdo
+    cat $DOCS_INPUT/preface.md >>$DOCS_OUTPUT/book.mdo
+    cat $DOCS_INPUT/chapter-*.md >>$DOCS_OUTPUT/book.mdo
+    mv $DOCS_OUTPUT/book.mdo $DOCS_OUTPUT/book.md
+    pandoc $DOCS_OUTPUT/book.md --resource-path=./$DOCS_INPUT -t epub3 -o $DOCS_OUTPUT/book-$PROGRAM_NAME-$PROGRAM_VERSION.epub
     echo "   |_ done."
   fi
-  echo "- generate an EPUB file '$TARGET/book/book-$PROGRAM_NAME-$PROGRAM_VERSION.epub'." >>target/build.log
+  echo "- generate an EPUB file '$DOCS_OUTPUT/book-$PROGRAM_NAME-$PROGRAM_VERSION.epub'." >>target/build.log
 }
 # TODO https://www.toptal.com/docker/pandoc-docker-publication-chain
 function generatePDF() {
-  echo -e "|_ ${BLUE}10.2 Generate documentation as PDF from '/docs' to '$TARGET/book/book-$PROGRAM_NAME-$PROGRAM_VERSION.pdf'${NC}..."
+  echo -e "|_ ${BLUE}10.2 Generate documentation as PDF from '/$DOCS_INPUT' to '$DOCS_OUTPUT/book-$PROGRAM_NAME-$PROGRAM_VERSION.pdf'${NC}..."
   if ! [ -x "$(command -v pandoc)" ]; then
     echo -e "   |_ ${RED}ERROR: pandoc not available.${NC}"
   else
-    rm -Rf $TARGET/book/
-    mkdir $TARGET/book
-    cat docs/*.yml >$TARGET/book/book.mdo
-    cat docs/chapter-*.md >>$TARGET/book/book.mdo
-    mv $TARGET/book/book.mdo $TARGET/book/book.md
+    rm -Rf $DOCS_OUTPUT/
+    mkdir $DOCS_OUTPUT
+    cat $DOCS_INPUT/book-theme.yml >$DOCS_OUTPUT/book.mdo
+    cat $DOCS_INPUT/preface.md >>$DOCS_OUTPUT/book.mdo
+    cat $DOCS_INPUT/chapter-*.md >>$DOCS_OUTPUT/book.mdo
+    mv $DOCS_OUTPUT/book.mdo $DOCS_OUTPUT/book.md
     # see https://stackoverflow.com/questions/29240290/pandoc-for-windows-pdflatex-not-found
-    pandoc $TARGET/book/book.md --resource-path=./docs --pdf-engine=xelatex -o $TARGET/book/book-$PROGRAM_NAME-$PROGRAM_VERSION.pdf
+    pandoc $DOCS_OUTPUT/book.md --resource-path=./$DOCS_INPUT --toc --pdf-engine=xelatex -o $DOCS_OUTPUT/book-$PROGRAM_NAME-$PROGRAM_VERSION.pdf --pdf-engine=xelatex
     echo -e "   |_ ${GREEN}done$NC"
   fi
-  echo "- generate a PDF file '$TARGET/book/book-$PROGRAM_NAME-$PROGRAM_VERSION.pdf'." >>target/build.log
+  echo "- generate a PDF file '$DOCS_OUTPUT/book-$PROGRAM_NAME-$PROGRAM_VERSION.pdf'." >>target/build.log
 }
 #
 function sign() {
-  # must see here: https://docs.oracle.com/javase/tutorial/security/toolsign/signer.html
+  # must see here: https://$DOCS_INPUT.oracle.com/javase/tutorial/security/toolsign/signer.html
   echo "not already implemented... sorry"
 }
 #
@@ -324,13 +327,13 @@ function help() {
   echo " - a|A|all     : perform all following operations"
   echo " - c|C|compile : compile all sources project"
   echo " - d|D|doc     : generate javadoc for project"
-  echo " - e|E|epub    : generate *.epub file as docs for project (require pandoc : https://pandoc.org )"
+  echo " - e|E|epub    : generate *.epub file as $DOCS_INPUT for project (require pandoc : https://pandoc.org )"
   echo " - k|K|check   : check code source quality againt rules set (sun or google: see in build.sh for details)"
   echo " - t|T|test    : execute JUnit tests"
   echo " - j|J|jar     : build JAR with all resources"
   echo " - w|W|wrap    : Build and wrap jar as a shell script"
   echo " - z|Z|zip     : create a delivery zip for the full application"
-  echo " - p|P|pdf     : generate *.pdf file as docs for project (require pandoc: https://pandoc.org and miktex: https://miktex.org/download)"
+  echo " - p|P|pdf     : generate *.pdf file as $DOCS_INPUT for project (require pandoc: https://pandoc.org and miktex: https://miktex.org/download)"
   echo " - s|S|sign    : Build and wrap signed jar as a shell script"
   echo " - r|R|run     : execute (and build if needed) the created JAR"
   echo ""
