@@ -1,34 +1,42 @@
 # Ajoutons un peu de Physique
 
 Dans un jeu 2D, certes le gameplay est important, mais l’aspect simulation de la réalité l’est tout autant.
-(((physique,mouvement)))
-Aussi, apporter un peu de réalité physique peut largement apporter au gameplay, mais assi permettre quelques nouveaux effets dans celui-ci, comme influencer des objects quand ils pénètrent une zone particulière de la zone de jeux, pour leur faire subir, du vent, une contrainte magnétique, etc. Votre seule limite, alors, sera votre imagination sur comment modifier les paramètre de la simulation pour apporter de nouveau gameplay, comme on a pu l’observer dans les jeux Mario ces dernières années.
+(((physique, mouvement)))
+Aussi, apporter un peu de réalité physique peut largement apporter au gameplay, mais assi permettre quelques nouveaux
+effets.
+Comme influencer des objects quand ils pénètrent une zone particulière de la zone de jeux, pour leur faire subir, du
+vent, une contrainte magnétique, etc.
+Votre seule limite, alors, sera votre imagination sur comment modifier les paramètre de la simulation pour apporter de
+nouveau gameplay, comme on a pu l’observer dans les jeux Mario ces dernières années.
 
 ## Contexte
 
 Faisons en sorte que nos objets soient animés de façon un plus réaliste.
-Rendons plus vivante notre scène en ajoutant quelques éléments de la physique du mouvement dont Newton et sa pomme ont été les premiers contributeurs.
+Rendons plus vivante notre scène en ajoutant quelques éléments de la physique du mouvement dont Newton et sa pomme ont
+été les premiers contributeurs.
 (((Newton, lois de Newton)))
 
 **Portrait de Sir Isaac Newton, 1689 (source wikipedia)**
 
 !["Portrait de Sir Isaac Newton](illustrations/Portrait_of_Sir_Isaac_Newton_1689.jpg)
 
-Voici résumé les 3 lois de Newton :
+Voici résumé les 3 lois de Newton:
 
-1. **Première loi de Newton** : Tout objet reste au repos ou en mouvement rectiligne uniforme sauf si une force nette  agit sur lui.
-(((premiereloi de Newton, 1ere loi de Newton)))
-2. **Deuxième loi de Newton** : La force appliquée sur un objet est proportionnelle à son accélération, et inversement  proportionnelle à sa masse.
-(((deuxieme loi de Newton, 2eme loi de Newton)))
-3. **Troisième loi de Newton** : Pour chaque action, il y a une réaction égale et opposée.
-(((troisieme loi de Newton, 3eme loi de Newton)))
+1. **Première loi de Newton**: Tout objet reste au repos ou en mouvement rectiligne uniforme sauf si une force nette
+   agit sur lui.
+   (((premiereloi de Newton, 1ere loi de Newton)))
+2. **Deuxième loi de Newton**: La force appliquée sur un objet est proportionnelle à son accélération, et inversement
+   proportionnelle à sa masse.
+   (((deuxieme loi de Newton, 2eme loi de Newton)))
+3. **Troisième loi de Newton**: Pour chaque action, il y a une réaction égale et opposée.
+   (((troisieme loi de Newton, 3eme loi de Newton)))
 
-Voyons comment convertir ces belles lois via un peu de math à du code Java !
+Voyons comment convertir ces belles lois via un peu de math à du code Java!
 
 ## Un peu de théorie
 
-Dans un monde en deux dimensions, la vitesse ($\vec{v}$) d’un objet peut être exprimée en fonction de l’accélération (
-$\vec{a}$) et du temps ($t$) à l’aide de la formule suivante :
+Dans un monde en deux dimensions, la vitesse ($\vec{v}$) d’un objet peut être exprimée en fonction de
+l’accélération ($\vec{a}$) et du temps ($t$) à l’aide de la formule suivante:
 
 $\vec{V} = \vec{V_0} + \vec{a} * t$
 
@@ -36,34 +44,39 @@ où :
 
 * ($\vec{V_0}$) est la vitesse initiale de l’objet,
 * ($\vec{a}$) est le vecteur d’accélération,
-* ($t$) represente  le temps écoulé.
-* Cette formule indique que la vitesse à un moment donné est égale à la vitesse initiale plus la variation de vitesse  causée par l’accélération sur une période. En deux dimensions, les vecteurs peuvent être décomposés en  composantes (x) et (y) pour chaque variable.
+* ($t$) représente le temps écoulé.
+* Cette formule indique que la vitesse à un moment donné est égale à la vitesse initiale plus la variation de vitesse
+  causée par l’accélération sur une période. En deux dimensions, les vecteurs peuvent être décomposés en composantes (x)
+  et (y) pour chaque variable.
 
-Dans un monde en deux dimensions, l’accélération ($\vec{a}$) d’un objet peut être calculée à partir des forces appliquées en utilisant la deuxième loi de Newton, qui s’exprime par la formule suivante :
+Dans un monde en deux dimensions, l’accélération ($\vec{a}$) d’un objet peut être calculée à partir des forces
+appliquées en utilisant la deuxième loi de Newton, qui s’exprime par la formule suivante:
 
 $\vec{F}_{\text{résultante}} = m * \vec{a}$
 
 où :
 
-* ($\vec{F}_{\text{résultante}}$) est la force résultante agissant sur l’objet,
+* ($\vec{F}_{\text{résultante}}$) est la force résultante, agissant sur l’objet,
 * ($m$) est la masse de l’objet,
 * ($\vec{a}$) est l’accélération de l’objet.
 
-Pour calculer l’accélération, vous pouvez suivre ces étapes : 
+Pour calculer l’accélération, vous pouvez suivre ces étapes:
 
-1. Déterminer les forces appliquées : Identifiez toutes les forces agissant sur l’objet. Cela peut inclure des forces
- telles que la gravité, la friction, la tension, etc.
-2. Calculer la force résultante : Additionnez toutes les forces vectorielles. Si vous avez des forces ($\vec{F_1}$), ($\vec{F_2}$), etc., la force résultante est donnée par :
+1. Déterminer les forces appliquées: Identifiez toutes les forces agissant sur l’objet. Cela peut inclure des forces
+   telles que la gravité, la friction, la tension, etc.
+2. Calculer la force résultante: Additionnez toutes les forces vectorielles. Si vous avez des
+   forces ($\vec{F_1}$), ($\vec{F_2}$), etc., la force résultante est donnée par:
 
 $\vec{F}_{\text{résultante}} = \vec{F_1} + \vec{F_2} + … + \vec{F_n}$
 
-1. Appliquer la deuxième loi de Newton : Une fois que vous avez la force résultante, vous pouvez calculer l’accélération en réarrangeant la formule :
+1. Appliquer la deuxième loi de Newton: Une fois que vous avez la force résultante, vous pouvez calculer l’accélération
+   en réarrangeant la formule:
 
 $\vec{a} = \vec{F}_{\text{résultante}} / m$
 
 Cette formule vous donnera l’accélération ($\vec{a}$) de l’objet en fonction des forces appliquées et de sa masse ($m$).
 
-La position résultante pour l’objet en mouvement sera alors :
+La position résultante pour l’objet en mouvement sera alors:
 
 $\vec{P} = \vec{P_0} + 0.5 * \vec{V} * t$
 
@@ -75,21 +88,25 @@ où :
 
 ## Un peu de code Java
 
-Nous allons voir, étape par étape, classe par classe, une solution possible d’implémentation d’un moteur de physique qui remplira le rôle principal d’animation et de coordination des mouvements des entités au sein d’une scene.
+Nous allons voir, étape par étape, classe par classe, une solution possible d’implémentation d’un moteur de physique qui
+remplira le rôle principal d’animation et de coordination des mouvements des entités au sein d’une scene.
 
-Nous commencerons par modéliser un objet censé bouger sur notre écran de jeu, puis, point par point, nous construirons notre moteur physique, en implémentant, fonction après fonction, l’ensemble des operations nécessaires pour obtenir une simulation suffisamment précise pour l’emploi dans un jeu de plateforme 2D.
+Nous commencerons par modéliser un objet censé bouger sur notre écran de jeu.
+Puis, point par point, nous construirons notre moteur physique, en implémentant, fonction après fonction, l’ensemble des
+operations nécessaires pour obtenir une simulation suffisamment précise pour l’emploi dans un jeu de plateforme 2D.
 
 ## Une Entité
 
-Si maintenant, nous souhaitons modéliser nos objets animés, nous devons créer un certain nombre d’attributs permettant de représenter ces vecteurs et forces, ainsi que quelques attributs permettant d’identifier facilement les objets.
+Si maintenant, nous souhaitons modéliser nos objets animés, nous devons créer un certain nombre d’attributs permettant
+de représenter ces vecteurs et forces, ainsi que quelques attributs permettant d’identifier facilement les objets.
 
-Voici une première proposition :
+Voici une première proposition:
 
 **Le modèle UML pour la class `Entity`**
 
 ![Entity UML model](illustrations/uml-diagram-entity.png)
 
-Ce qui se traduira par le code suivant :
+Ce qui se traduira par le code suivant:
 
 ```java
 public class Entity extends Rectangle2D {
@@ -113,17 +130,22 @@ public class Entity extends Rectangle2D {
 }
 ```
 
-Cette classe Entity hérite de la classe [Rectangle2D](https://docs.oracle.com/en/java/javase/23/docs/api/java.desktop/java/awt/geom/Rectangle2D.html)
-du JDK, ce afin de faciliter l’implémentation à venir de certains contrôles et comparaison. pour que cela fonctionne, nous utiliserons une méthode update qui synchronisera la position
+Cette classe Entity hérite de la
+classe [Rectangle2D](https://docs.oracle.com/en/java/javase/23/docs/api/java.desktop/java/awt/geom/Rectangle2D.html)
+du JDK, ce afin de faciliter l’implémentation à venir de certains contrôles et comparaison. pour que cela fonctionne,
+nous utiliserons une méthode update qui synchronisera la position
 du `Rectangle2D` avec celle issue du `Vector2` position.
 
-Notre classe devra également proposer quelques accesseurs pour définir les différentes valeurs des attributs. Nous ne les aborderons pas ici, je vous invite à aller voir le code source.
-Cependant, il est à noter que nous proposerons une implémentation que l’on appelle communément [Fluent Interface](https://en.wikipedia.org/wiki/Fluent_interface)
-permettant la création facile d’entité, passant par le principe de [Method Cascading](https://en.wikipedia.org/wiki/Method_cascading).
+Notre classe devra également proposer quelques accesseurs pour définir les différentes valeurs des attributs. Nous ne
+les aborderons pas ici, je vous invite à aller voir le code source.
+Cependant, il est à noter que nous proposerons une implémentation que l’on appelle
+communément [Fluent Interface](https://en.wikipedia.org/wiki/Fluent_interface)
+permettant la création facile d’entité, passant par le principe
+de [Method Cascading](https://en.wikipedia.org/wiki/Method_cascading).
 
 Nous avons la base de nos entités.
 
-Afin de satisfaire la seconde loi, nous ajouterons également la masse, et bien sûr, ses accesseurs :
+Afin de satisfaire la seconde loi, nous ajouterons également la masse, et bien sûr, ses accesseurs:
 
 ```java
 public class Entity {
@@ -134,18 +156,21 @@ public class Entity {
 }
 ```
 
-> **IMPORTANT** Afin d’éviter tout futur problème de calcul lié à la possible division par zéro, nous prenons la valeur 1.0 par défaut.
+> **IMPORTANT** Afin d’éviter tout futur problème de calcul lié à la possible division par zéro, nous prenons la valeur
+> 1.0 par défaut.
 >
 
-Nous pourrons ajouter d’autres attributs plus tard via la notion de "matériel" pour jouer sur les paramètres de friction et d’élasticité de nos entités.
+Nous pourrons ajouter d’autres attributs plus tard via la notion de "matériel" pour jouer sur les paramètres de friction
+et d’élasticité de nos entités.
 
 Regardons d’un peu plus près maintenant l’implementation du moteur physic qui supervisera les calculs.
 
 ## Le service PhysicEngine
 
-Ce que nous savons à travers les lois de Newton, c’est que le mouvement de notre Entité sera dirigé par les forces qui lui seront appliquées et du temps écoulé.
+Ce que nous savons à travers les lois de Newton, c’est que le mouvement de notre Entité sera dirigé par les forces qui
+lui seront appliquées et du temps écoulé.
 
-Commençons par calculer l’accélération résultante de ces forces :
+Commençons par calculer l’accélération résultante de ces forces:
 
 ```java
 public class PhysicEngine {
@@ -196,13 +221,15 @@ Ce code peut être décrit sommairement via UML avec ce diagramme d’activités
 
 ![Calculs dans le moteur physique pour l’ensemble des entités d’une scene.](illustrations/uml-diagram-physic-activity.png)
 
-Nous avons le fondement de notre moteur de calcul. Il est temps de mettre quelques contraintes, afin de garder les entités dans un espace visible, et dans des limites de vitesse et d’accélération contrôlées.
+Nous avons le fondement de notre moteur de calcul. Il est temps de mettre quelques contraintes, afin de garder les
+entités dans un espace visible, et dans des limites de vitesse et d’accélération contrôlées.
 
 ## Les limites liées au jeu
 
-Dans l’absolue, la proposition d’implémentation pourrait suffire, mais dans la réalité, la fenêtre par laquelle nous regardons notre espace de jeu est limitée.
+Dans l’absolue, la proposition d’implémentation pourrait suffire, mais dans la réalité, la fenêtre par laquelle nous
+regardons notre espace de jeu est limitée.
 
-Ce sera notre première limite à définir : garder les entités de notre scene dans l’espace du monde de notre jeu.
+Ce sera notre première limite à définir: garder les entités de notre scene dans l’espace du monde de notre jeu.
 
 **Notre Entité soumise à un ensemble de forces et limitée dans l’espace**
 
@@ -212,7 +239,8 @@ Nous allons donc passer par un autre objet qui sera attaché à notre scene, et 
 
 ## La classe World
 
-Notre nouvel object sera défini par une class World, permettant dans un premier temps de définir la zone de jeu dans laquelle les entités de la scène évolueront.
+Notre nouvel object sera défini par une class World, permettant dans un premier temps de définir la zone de jeu dans
+laquelle les entités de la scène évolueront.
 
 ```java
 import java.awt.geom.Rectangle2D;
@@ -226,13 +254,15 @@ public class World {
 }
 ```
 
-Par défaut, et pour à nouveau éviter des erreurs de calcul ou tout problème de valeur nulle, nous initialisons la zone de jeu fin définir une zone minimum de 320 par 200.
+Par défaut, et pour à nouveau éviter des erreurs de calcul ou tout problème de valeur nulle, nous initialisons la zone
+de jeu fin définir une zone minimum de 320 par 200.
 
 > **NOTE** La taille de cette zone de jeu correspond à la taille minimum par défaut
 > de la fenêtre d’affichage de notre jeu.
 >
 
-Nous pouvons donc faire évoluer notre moteur physique en lui ajoutant une méthode permettant de contenir toute entité dans la zone de jeu :
+Nous pouvons donc faire évoluer notre moteur physique en lui ajoutant une méthode permettant de contenir toute entité
+dans la zone de jeu:
 
 ```java
 public class PhysicEngine {
@@ -277,7 +307,8 @@ Si ce n’est pas le cas, nous repositionnons l’instance `Entity` dans la limi
 ![Les limite du monde imposées à une instance d’Entity](illustrations/game101_Physic_World_Limit.png)
 
 Nous avons ainsi corrigé la position de notre entité, mais les vitesses sur les deux axes sont toujours actives.
-Il est préférable, pour des facilités de calculs, de les ramener à zéro sur l’axe où se produit la collision avec la zone de jeu :
+Il est préférable, pour des facilités de calculs, de les ramener à zéro sur l’axe avec lequel se produit la collision
+avec la zone de jeu:
 
 ```java
 public class PhysicEngine {
@@ -314,10 +345,12 @@ Nous pouvons apporter un peu plus de réalisme en introduisant d’autres compos
 ## l’effet Material
 
 Afin de simuler au mieux les comportements de nos objets en movement, nous nous proposons d’ajouter de nouvelles notions
-liées à la physique du mouvement, à savoir la friction pour appliquer une resistance sur les déplacements en contact avec
+liées à la physique du mouvement, à savoir la friction pour appliquer une resistance sur les déplacements en contact
+avec
 une surface, ainsi qu’une elasticité qui permettra de calcul le rebond lors de collision.
 
-La classe `Material` sera notre object de définition des valeurs et une instance de celle-ci sera ajouté à la classe `Entity` en tant qu’attribut `material`
+La classe `Material` sera notre object de définition des valeurs et une instance de celle-ci sera ajouté à la classe
+`Entity` en tant qu’attribut `material`
 
 ```java
 public class Material {
@@ -335,16 +368,17 @@ public class Material {
 }
 ```
 
-Une petite amélioration permettra d’affecter bien plus rapidement un `Material` : la définition d’une liste de Materiaux par défaut.
+Une petite amélioration permettra d’affecter bien plus rapidement un `Material` : la définition d’une liste de Materiaux
+par défaut.
 
-| Name | Density | Elasticity | Friction  |
-| --- | --- | --- | --- |
-| Default | 1.0 | 1.0 | 1.0  |
-| Wood | 1.1 | 0.3 | 0.7  |
-| Glass | 1.3 | 0.5 | 1.0  |
-| Ice | 1.1 | 0.4 | 1.0  |
-| Water | 1.0 | 0.4 | 0.3  |
-| Boucning ball | 1.0 | 0.999 | 1.0  |
+| Name          | Density | Elasticity | Friction |
+|---------------|---------|------------|----------|
+| Default       | 1.0     | 1.0        | 1.0      |
+| Wood          | 1.1     | 0.3        | 0.7      |
+| Glass         | 1.3     | 0.5        | 1.0      |
+| Ice           | 1.1     | 0.4        | 1.0      |
+| Water         | 1.0     | 0.4        | 0.3      |
+| Bouncing ball | 1.0     | 0.999      | 1.0      |
 
 Matériaux qui seront implémentés par l’intermédiaire de variables finales dans la classe :
 
@@ -356,8 +390,10 @@ public class Material {
 }
 ```
 
-Occupons-nous maintenant des calculs dans le moteur physique. Nous devons, afin de savoir quand appliquer la friction, si l’Entity est en contact avec autre chose.
-Dans notre premier exemple, le seul contact que nous pouvons détecter est celui avec le bord de la zone de jeux. Aussi, modifions Entity avec l’ajout d’un flag `contact`
+Occupons-nous maintenant des calculs dans le moteur physique. Nous devons, afin de savoir quand appliquer la friction,
+si l’Entity est en contact avec autre chose.
+Dans notre premier exemple, le seul contact que nous pouvons détecter est celui avec le bord de la zone de jeux. Aussi,
+modifions Entity avec l’ajout d’un flag `contact`
 et ajoutons le code nécessaire.
 
 ```java
@@ -378,7 +414,7 @@ public class Entity extends Rectangle2D {
 ```
 
 Appliquons dans un premier temps le facteur d’élasticité afin de calculer la nouvelle vitesse
-suite à une collision :
+suite à une collision:
 
 ```java
 public class PhysicEngine {
@@ -415,7 +451,7 @@ public class PhysicEngine {
 }
 ```
 
-Ensuite, si le contact est persistant, appliquons le facteur de friction dans le calcul de la vitesse :
+Ensuite, si le contact est persistant, appliquons le facteur de friction dans le calcul de la vitesse:
 
 ```java
 public class PhysicEngine {
@@ -427,23 +463,23 @@ public class PhysicEngine {
     public void update(Entity e, elapsed time) {
         // Calculons la somme des forces appliquées pour obtenir l’accélération résultante
         e.setAcceleration(e.getAcceleration()
-            .addAll(e.getForces())
-            .divide(e.getMass()));
+                .addAll(e.getForces())
+                .divide(e.getMass()));
 
         // La vélocité et le résultat l’effet de l’accélération en fonction du temps écoulé 
         e.setVelocity(e.getVelocity()
-            .add(e.getAcceleration()
-                .multiply(time)
-                .multiply(
-                    e.getContact()
-                        ? e.getMaterial().getFriction()
-                        : 1.0);
+                .add(e.getAcceleration()
+                        .multiply(time)
+                        .multiply(
+                                e.getContact()
+                                        ? e.getMaterial().getFriction()
+                                        : 1.0)));
 
         // la position résultante est calculée en fonction de la vitesse et du temps écoulé.
         e.setPosition(e.getPosition()
-            .add(e.getVelocity()
-            .multiply(0.5)
-            .multiply(time)));
+                .add(e.getVelocity()
+                        .multiply(0.5)
+                        .multiply(time)));
 
         // on supprime toutes les forces appliquées en attendant le prochain cycle dans la boucle de jeu.
         e.getForces().clear();
@@ -454,16 +490,20 @@ public class PhysicEngine {
 
 Les autres facteurs issus de la classe Material seront utilisés ultérieurement dans d’autres fonctions.
 
-Nous pouvons continuer d’améliorer notre moteur en proposant d’autres possibilités. Nous pouvons ajouter quelques éléments de simulation comme les effets que sont le vent, le courant de l’eau, le magnétisme.
-Nous allons donc ajouter de nouvelles capacités à notre class World pour définir des zones d’interaction dans notre zone de jeu.
+Nous pouvons continuer d’améliorer notre moteur en proposant d’autres possibilités. Nous pouvons ajouter quelques
+éléments de simulation comme les effets que sont le vent, le courant de l’eau, le magnétisme.
+Nous allons donc ajouter de nouvelles capacités à notre class World pour définir des zones d’interaction dans notre zone
+de jeu.
 
 ## Les WorldArea
 
-La class World telle qu’elle existe ne définit qu’une chose, la taille de la zone de jeu. Nous allons lui adjoindre ne nouveaux attributs pour étendre ses effets sur les entitiés d’une scène.
+La class World telle qu’elle existe ne définit qu’une chose, la taille de la zone de jeu. Nous allons lui adjoindre ne
+nouveaux attributs pour étendre ses effets sur les entitiés d’une scène.
 
 Imaginons une Scene d’automne, où le vent souffle, et l’eau de la rivière est soumise à un fort courant.
 
-Nous allons matérialiser ces zones de vent et de courant dans la classe World à travers la definition de la nouvelle classe `WorldArea`.
+Nous allons matérialiser ces zones de vent et de courant dans la classe World à travers la definition de la nouvelle
+classe `WorldArea`.
 
 **Définissons une zone de vent et une zone de courant.**
 
@@ -472,7 +512,7 @@ Nous allons matérialiser ces zones de vent et de courant dans la classe World �
 Nous pouvons maintenant définir ce qu’est une `WorldArea`, une zone d’influence pour toute Entity qui sera contenue par
 celle-ci.
 
-Cet objet partage des caractéristiques avec l’`Entity` : une position, une taille, une ou plusieurs forces qui peuvent
+Cet objet partage des caractéristiques avec l’`Entity`: une position, une taille, une ou plusieurs forces qui peuvent
 lui être appliquées, elle peut aussi contenir un `Material` définissant des attributs physique comme la friction et la
 densité, il parait judicieux de la faire hériter de la class `Entity` :
 
@@ -484,9 +524,12 @@ public class WorldArea extends Entity {
 }
 ```
 
-Si nous mettons en place une mécanique d’héritage en place, les fonctions de fluent interface offerte par `Entity` deviennent problématiques, car la création d’une `WorldArea` via les setters "fluent" retournera une `Entity` et non une WorldArea.
+Si nous mettons en place une mécanique d’héritage en place, les fonctions de fluent interface offerte par `Entity`
+deviennent problématiques, car la création d’une `WorldArea` via les setters "fluent" retournera une `Entity` et non une
+WorldArea.
 
-Aussi, il est nécessaire de modifier un peu notre Entity pour permettre de paramétrer la nature de l’objet de retour des setters :
+Aussi, il est nécessaire de modifier un peu notre Entity pour permettre de paramétrer la nature de l’objet de retour des
+setters:
 
 ```java
 // ①
@@ -528,7 +571,7 @@ public class WorldArea extends Entity<WorldArea> {
 
 ### Modifions l’objet World
 
-Nous allons définir la liste de zones d’influence dans l’objet extant. Ajoutons donc une liste à cet effet :
+Nous allons définir la liste de zones d’influence dans l’objet extant. Ajoutons donc une liste à cet effet:
 
 ```java
 public class World {
@@ -597,7 +640,8 @@ public class PhysicEngine {
 }
 ```
 
-Ainsi, lorsque qu’un objet `Entity` pénétrera dans une zone définie par un objet `WorldArea`, toutes les forces décrites dans celui-ci seront appliquées à l’entité contenue.
+Ainsi, lorsque qu’un objet `Entity` pénétrera dans une zone définie par un objet `WorldArea`, toutes les forces décrites
+dans celui-ci seront appliquées à l’entité contenue.
 
 **Effets de zone d’influence sur les Entités**
 
@@ -607,5 +651,5 @@ Les entités sur l’image ci-dessus subissent les forces comme suit :
 
 * l’entité **E1** est soumise au vent de la WorldArea "**wind**",
 * l’entité **E2** est quant à elle soumise à l’influence de l’objet `WorldArea` "Effets de zone d’influence sur les
- Entités",
-* alors que l’objet **E3** est lui soumis à l’influence des 2 zones que sont "**water**" et "**wind**".
+  Entités",
+* alors que l’objet **E3** est lui soumis à l’influence des deux zones que sont "**water**" et "**wind**".
