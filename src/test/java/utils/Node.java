@@ -60,7 +60,7 @@ public class Node<T> extends Rectangle2D.Double {
      * This private constructor is used internally within the class to
      * initialize a Node object without any specific parameters.
      */
-    private Node() {
+    protected Node() {
     }
 
     /**

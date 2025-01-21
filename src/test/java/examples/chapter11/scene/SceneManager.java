@@ -1,9 +1,8 @@
-package com.snapgames.framework.scene;
+package examples.chapter11.scene;
 
 import com.snapgames.framework.Game;
 import com.snapgames.framework.GameInterface;
-import com.snapgames.framework.system.GSystem;
-import com.snapgames.framework.system.SystemManager;
+import com.snapgames.framework.scene.Scene;
 import com.snapgames.framework.utils.Config;
 import com.snapgames.framework.utils.Log;
 import com.snapgames.framework.utils.Node;
@@ -14,16 +13,18 @@ import java.util.*;
 
 import static com.snapgames.framework.utils.Log.debug;
 
-public class SceneManager implements GSystem {
+public class SceneManager {
 
     private final GameInterface game;
     // Scene Management
     private final Map<String, Scene> scenes = new HashMap<>();
+    private final Config config;
     private Scene activeScene;
     private String defaultSceneName;
 
-    public SceneManager(GameInterface app) {
+    public SceneManager(GameInterface app, Config config) {
         this.game = app;
+        this.config = config;
         initialize();
     }
 
@@ -46,10 +47,10 @@ public class SceneManager implements GSystem {
         try {
             Class<?> sceneClass = Class.forName(className);
             Constructor<?> constructor = sceneClass.getConstructor(GameInterface.class, String.class);
-            scene = (Scene) constructor.newInstance(this.game, sceneName);
+            scene = (Scene) constructor.newInstance( this.game, sceneName);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException |
                  IllegalAccessException e) {
-            Log.error("Unable to load Scene class for %s : %s", className, e.getMessage());
+            Log.error(SceneManager.class, "Unable to load Scene class for %s : %s", className, e.getMessage());
         }
         return scene;
     }
@@ -66,7 +67,6 @@ public class SceneManager implements GSystem {
     }
 
     public void switchScene(String sceneName) {
-        Config config = (Config) SystemManager.get(Config.class);
         if (activeScene != null) {
             activeScene.dispose();
         }
@@ -84,11 +84,11 @@ public class SceneManager implements GSystem {
 
     private static void displaySceneTreeOnLog(Node<?> node, String space) {
         String spaces = space + "  ";
-        debug(Game.class, "%s |_ Node<%s> named '%s' : %s", spaces, node.getClass().getSimpleName(), node.getName(), node);
+        debug(SceneManager.class, "%s |_ Node<%s> named '%s' : %s", spaces, node.getClass().getSimpleName(), node.getName(), node);
         node.getChildren().forEach(c -> displaySceneTreeOnLog(c, spaces));
     }
 
-    public void dispose() {
+    public void dispose(GameInterface app) {
         if (Optional.ofNullable(activeScene).isPresent()) {
             activeScene.dispose();
         }
@@ -103,14 +103,7 @@ public class SceneManager implements GSystem {
         return activeScene;
     }
 
-    @Override
-    public Collection<Class<?>> getDependencies() {
-        return List.of(Config.class);
-    }
-
-    @Override
     public void initialize(GameInterface game) {
-        Config config = SystemManager.get(Config.class);
         String[] scenesList = config.get("app.scene.list");
         Arrays.stream(scenesList).forEach(sceneItem -> {
             String[] kv = sceneItem.split(":");
@@ -119,27 +112,4 @@ public class SceneManager implements GSystem {
         });
     }
 
-    @Override
-    public void start(GameInterface game) {
-        Config config = SystemManager.get(Config.class);
-        defaultSceneName = config.get("app.scene.default");
-        switchScene(defaultSceneName);
-    }
-
-    @Override
-    public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
-        if (Optional.ofNullable(this.activeScene).isPresent()) {
-            activeScene.process(game, elapsed);
-        }
-    }
-
-    @Override
-    public void stop(GameInterface game) {
-
-    }
-
-    @Override
-    public void dispose(GameInterface game) {
-
-    }
 }

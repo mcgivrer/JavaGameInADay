@@ -46,18 +46,26 @@ public class InputListener implements KeyListener, Serializable, GSystem {
     public void keyReleased(KeyEvent e) {
 
         SceneManager scnMgr = SystemManager.get(SceneManager.class);
+        // request to exit the game
         if (isKeyPressed(KeyEvent.VK_Q) || isKeyPressed(KeyEvent.VK_ESCAPE)) {
             app.requestExit();
         }
-        if (isKeyPressed(KeyEvent.VK_Z) && e.isControlDown()) {
-            scnMgr.getActiveScene().reset();
+        // protect special development feature with a CTRL+ condition.
+        if (e.isControlDown()) {
+            if (isKeyPressed(KeyEvent.VK_Z) && e.isControlDown()) {
+                scnMgr.getActiveScene().reset();
+            }
+            if (isKeyPressed(KeyEvent.VK_D)) {
+                app.setDebug(app.getDebug() + 1 < 6 ? app.getDebug() + 1 : 0);
+            }
         }
-        if (isKeyPressed(KeyEvent.VK_D)) {
-            app.setDebug(app.getDebug() + 1 < 6 ? app.getDebug() + 1 : 0);
-        }
+
+        // switch Pause mode
         if (isKeyPressed(KeyEvent.VK_P) || isKeyPressed(KeyEvent.VK_PAUSE)) {
             app.setPause(app.isNotPaused());
         }
+
+        // switch Windowed/Full screen mode.
         if (isKeyPressed(KeyEvent.VK_F11)) {
             Renderer renderer = SystemManager.get(Renderer.class);
             renderer.switchFullScreenMode();

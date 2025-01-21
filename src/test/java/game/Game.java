@@ -122,6 +122,9 @@ public interface Game {
     default void update(Scene scene) {
     }
 
+    default void update(Scene scene, double elapsed) {
+    }
+
     default void render(Scene scene) {
     }
 }
