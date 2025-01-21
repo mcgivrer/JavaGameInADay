@@ -3,6 +3,9 @@ package com.snapgames.framework.entity;
 import com.snapgames.framework.behaviors.Behavior;
 import com.snapgames.framework.physic.Material;
 import com.snapgames.framework.physic.PhysicType;
+import com.snapgames.framework.physic.collision.BoundingBox;
+import com.snapgames.framework.physic.collision.BoundingBoxType;
+import com.snapgames.framework.physic.collision.Collidable;
 import com.snapgames.framework.physic.math.Vector2d;
 import com.snapgames.framework.utils.Node;
 
@@ -11,7 +14,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Entity<T> extends Node<T> {
+public class Entity<T> extends Node<T> implements Collidable {
 
 
     public Vector2d position = new Vector2d();
@@ -32,6 +35,8 @@ public class Entity<T> extends Node<T> {
     private List<Behavior<Entity<?>>> behaviors = new ArrayList<>();
     private int priority = 0;
     private Camera cameraFixedTo;
+
+    private BoundingBox bbox = new BoundingBox().setType(BoundingBoxType.RECTANGLE);
 
     public Entity() {
         super();
@@ -216,4 +221,13 @@ public class Entity<T> extends Node<T> {
         return this.physicType;
     }
 
+    @Override
+    public BoundingBox getBoundingBox() {
+        return bbox;
+    }
+
+    @Override
+    public void addCollider(Collidable c) {
+
+    }
 }

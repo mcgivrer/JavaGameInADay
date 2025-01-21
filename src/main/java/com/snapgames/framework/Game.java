@@ -1,15 +1,18 @@
 package com.snapgames.framework;
 
+import com.snapgames.framework.behaviors.Behavior;
 import com.snapgames.framework.gfx.Renderer;
 import com.snapgames.framework.io.InputListener;
-import com.snapgames.framework.physic.CollisionManager;
+import com.snapgames.framework.physic.collision.CollisionManager;
 import com.snapgames.framework.physic.PhysicEngine;
 import com.snapgames.framework.scene.SceneManager;
+import com.snapgames.framework.system.GSystem;
 import com.snapgames.framework.system.SystemManager;
 import com.snapgames.framework.utils.Config;
 import com.snapgames.framework.utils.Log;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,12 +40,12 @@ public class Game extends JPanel implements GameInterface {
      */
     public Game() {
         super();
-        Log.info(Game.class,"Initialization application %s (%s) %n- running on JDK %s %n- at %s %n- with classpath = %s%n",
-            getI18n("app.name"),
-            getI18n("app.version"),
-            System.getProperty("java.version"),
-            System.getProperty("java.home"),
-            System.getProperty("java.class.path"));
+        Log.info(Game.class, "Initialization application %s (%s) %n- running on JDK %s %n- at %s %n- with classpath = %s%n",
+                getI18n("app.name"),
+                getI18n("app.version"),
+                System.getProperty("java.version"),
+                System.getProperty("java.home"),
+                System.getProperty("java.class.path"));
     }
 
     /**
@@ -67,14 +70,22 @@ public class Game extends JPanel implements GameInterface {
             Log.info(Game.class, String.format("Argument: %s", s));
         });
 
-       SystemManager.setParent(this);
+        SystemManager.setParent(this);
 
         Config config = new Config(this);
         config.parseArgs(args);
         SystemManager.add(config);
 
         SystemManager.add(new PhysicEngine(this));
-        SystemManager.add(new CollisionManager(this));
+        SystemManager.add(new CollisionManager(this).add(new Behavior<GSystem>() {
+            @Override
+            public void draw(Graphics2D g, GSystem e) {
+                if (e instanceof CollisionManager) {
+                    CollisionManager cm = (CollisionManager) e;
+                    cm.getQuadTree().draw(g);
+                }
+            }
+        }));
         SystemManager.add(new Renderer(this));
         SystemManager.add(new InputListener(this));
         SystemManager.add(new SceneManager(this));
@@ -87,13 +98,13 @@ public class Game extends JPanel implements GameInterface {
     /**
      * Main game loop that runs continuously, processing and updating subsystems.
      * This loop executes until an exit request is detected.
-     *
+     * <p>
      * The loop calculates elapsed time for each iteration and performs the following tasks:
      * 1. Calculate the time difference between the current and previous iterations.
      * 2. Invoke the SystemManager to process game subsystems using the elapsed time.
      * 3. Execute post-processing on all subsystems.
      * 4. Control the frame rate to maintain a consistent FPS (Frames Per Second).
-     *
+     * <p>
      * The loop also handles interruptions during the sleep period by catching
      * InterruptedException and rethrowing it as a RuntimeException.
      */
@@ -125,7 +136,7 @@ public class Game extends JPanel implements GameInterface {
      */
     private void dispose() {
         SystemManager.dispose();
-        Log.info(Game.class,"End of application ");
+        Log.info(Game.class, "End of application ");
     }
 
     /**
@@ -191,8 +202,8 @@ public class Game extends JPanel implements GameInterface {
         setPause(true);
         Renderer renderer = SystemManager.get(Renderer.class);
         int response = JOptionPane.showConfirmDialog(renderer.getWindow(),
-            getI18n("app.exit.confirm.message"),
-            getI18n("app.exit.confirm.title"), JOptionPane.YES_NO_OPTION);
+                getI18n("app.exit.confirm.message"),
+                getI18n("app.exit.confirm.title"), JOptionPane.YES_NO_OPTION);
         if (response == JOptionPane.YES_OPTION) {
             status = true;
         }

@@ -150,6 +150,7 @@ public class Renderer implements GSystem {
         // draw World borders
         g.setColor(Color.DARK_GRAY);
         g.draw(scene.getWorld());
+        SystemManager.getSystems().forEach(s -> s.getBehaviors().forEach((b -> b.draw(g, s))));
 
         if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
             g.translate(scene.getActiveCamera().x, scene.getActiveCamera().y);

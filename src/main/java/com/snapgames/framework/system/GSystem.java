@@ -1,7 +1,9 @@
 package com.snapgames.framework.system;
 
 import com.snapgames.framework.GameInterface;
+import com.snapgames.framework.behaviors.Behavior;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
@@ -10,6 +12,9 @@ import java.util.Map;
  * methods for a game system.
  */
 public interface GSystem {
+
+
+    Collection<Behavior<GSystem>> behaviors = new ArrayList<>();
 
     /**
      * Retrieves the collection of system dependencies.
@@ -32,6 +37,16 @@ public interface GSystem {
      */
     void start(GameInterface game);
 
+    default GSystem add(Behavior<GSystem> b) {
+        behaviors.add(b);
+        return this;
+    }
+
+    default Collection<Behavior<GSystem>> getBehaviors() {
+        return behaviors;
+    }
+
+    ;
 
     /**
      * Performs any necessary preprocessing before the main processing step of the game system.

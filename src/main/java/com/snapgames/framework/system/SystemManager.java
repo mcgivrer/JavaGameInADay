@@ -3,6 +3,7 @@ package com.snapgames.framework.system;
 import com.snapgames.framework.Game;
 import com.snapgames.framework.utils.Log;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,7 +46,7 @@ public class SystemManager {
      * Initializes the SystemManager and logs a startup message.
      */
     private SystemManager() {
-        Log.info(SystemManager.class,"Start SystemManager");
+        Log.info(SystemManager.class, "Start SystemManager");
     }
 
     /**
@@ -141,6 +142,10 @@ public class SystemManager {
         systems.values().stream().sorted(
                         (s1, s2) -> s2.getDependencies() != null && s2.getDependencies().contains(s1.getClass()) ? -1 : 1)
                 .forEach(s -> s.start(parent));
+    }
+
+    public static Collection<GSystem> getSystems() {
+        return systems.values();
     }
 
     /**

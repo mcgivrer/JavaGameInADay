@@ -1,6 +1,5 @@
 package com.snapgames.framework.physic;
 
-import com.snapgames.framework.Game;
 import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.entity.Entity;
 import com.snapgames.framework.entity.WorldArea;
@@ -11,7 +10,6 @@ import com.snapgames.framework.system.GSystem;
 import com.snapgames.framework.system.SystemManager;
 import com.snapgames.framework.utils.Config;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -141,6 +139,7 @@ public class PhysicEngine implements GSystem {
                 // apply Material roughness on velocity
                 entity.setVelocity(entity.getVelocity().multiply(entity.getMaterial().friction));
 
+                updateBoundingBox(entity);
             }
             case STATIC -> {
                 // TODO define processing for static entity
@@ -149,6 +148,11 @@ public class PhysicEngine implements GSystem {
                 // TODO define default processing (if any)
             }
         }
+
+    }
+
+    private void updateBoundingBox(Entity<?> entity) {
+        entity.getBoundingBox().update(entity);
     }
 
 
