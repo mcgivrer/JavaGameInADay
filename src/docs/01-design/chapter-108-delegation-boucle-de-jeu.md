@@ -1,3 +1,5 @@
+
+
 # Délégation de la boucle de jeu
 
 Afin de vous plonger dans l’ambiance ad hoc, je pense qu’il serait utile de se refaire une courte histoire de la technologie des années 80-90, qui a imposé un “moule” de fabrication des jeux.

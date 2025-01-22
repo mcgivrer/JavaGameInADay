@@ -1,3 +1,5 @@
+
+
 # Comportement dans les entités
 
 Dans ce chapitre, nous allons nous concentrer sur la gestion des comportements au sein de la classe `MonProgrammeBehavior1`.
