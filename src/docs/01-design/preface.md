@@ -9,3 +9,6 @@ Mon but ? Vous emmener dans les coulisses d’un jeu vidéo, pour construire ens
 Pourquoi Java ? Parce que c’est une boîte à outils polyvalente que je connais par cœur, mais aussi parce que ça prouve qu’on n’a pas besoin des dernières technologies pour s’amuser et apprendre. Ce projet est une invitation à retourner à l’essentiel, à jouer avec le code comme on jouait avec des LEGO quand on était gamins.
 
 Alors, que vous soyez curieux, passionné de rétro-gaming, ou simplement en quête d’un défi créatif, ce livre est fait pour vous. Prenez votre clavier, mettez-vous à l’aise, et embarquons ensemble dans cette aventure. Vous verrez, construire un jeu vidéo, c’est un peu comme jouer à un jeu… sauf que vous êtes le créateur.
+
+
+-----
