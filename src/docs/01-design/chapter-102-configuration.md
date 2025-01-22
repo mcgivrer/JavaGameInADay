@@ -1,3 +1,5 @@
+
+
 # Configuration
 
 Avant de plonger dans le cœur de notre moteur de jeu, nous devons établir un système flexible pour gérer la configuration. En nous appuyant sur un fichier `*.properties`, bien connu des développeurs Java, nous allons lire des paramètres clés, les stocker dans une map et les rendre accessibles sous une forme typée. Ce système servira de socle pour adapter facilement les comportements de notre moteur tout au long du projet.

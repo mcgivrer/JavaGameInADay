@@ -1,3 +1,5 @@
+
+
 # Entité et ennemis
 
 Nous avons maintenant la structure de base pour notre boucle de jeu, nous pouvons essayer de passer à l’étape suivante : passer à un plus grand nombre d’objets affichés à l’écran !

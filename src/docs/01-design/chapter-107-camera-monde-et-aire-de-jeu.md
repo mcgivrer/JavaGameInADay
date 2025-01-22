@@ -1,3 +1,5 @@
+
+
 # Camera, Monde et Aire de jeu
 
 La caméra est le moyen le plus simple et bizarrement le plus imagé, pour suivre une autre entité à l’écran.
