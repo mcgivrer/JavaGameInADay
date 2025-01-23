@@ -23,5 +23,4 @@ Alors, que vous soyez curieux, passionné de rétro-gaming, ou simplement en qu�
 pour vous. Prenez votre clavier, mettez-vous à l’aise, et embarquons ensemble dans cette aventure. Vous verrez,
 construire un jeu vidéo, c’est un peu comme jouer à un jeu… sauf que vous êtes le créateur.
 
-
-----
+-----
