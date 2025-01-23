@@ -129,3 +129,5 @@ Ainsi, lors de l’exécution de notre classe `MonProgrammeCollision1`, lors de 
 **Lors d’une collision entre 'player' et 'ennemi', celui-ci devient orange.**
 
 ![Lors d'une collision entre 'player' et 'ennemi'](illustrations/capture-collision-1.png)
+
+----

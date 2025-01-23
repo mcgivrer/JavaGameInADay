@@ -261,3 +261,5 @@ Les comportements se comportent comme des modules autonomes attachés à chaque 
 Ils reçoivent les événements de la boucle de jeu et agissent en conséquence pour modifier l’état des entités.
 Cette structure permet d’ajouter, de modifier, ou de supprimer facilement des fonctionnalités au niveau des entités sans alourdir la logique centralisée de la boucle de jeu.
 Cela favorise une architecture claire et extensible, où de nouvelles logiques peuvent être ajoutées simplement en définissant de nouveaux comportements et en les associant aux entités pertinentes.
+
+----

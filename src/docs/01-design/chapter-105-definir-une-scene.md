@@ -400,3 +400,5 @@ La scene est maintenant organisée pour contenir, sous forme d’arbre, l’ense
 Il est possible d’activer une autre scene, simplement en appelant la méthode `switchScene(String)` qui prend en charge sont initialization, la création de ses entités,  mais aussi auparavant vérifie si une autre est déjà activée, et procède à sa désactivation.
 
 Dans le prochain chapitre, nous allons nous intéresser aux comportements et à l’interface `Behavior`.
+
+----

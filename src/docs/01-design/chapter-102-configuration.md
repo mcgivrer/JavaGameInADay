@@ -329,3 +329,5 @@ Vous obtenez l’affichage suivante sur la console :
 ```
 
 Nous voilà fin prêt à passer à un autre sujet, l’affichage dans une fenêtre.
+
+----

@@ -669,3 +669,5 @@ Nous avons passé nos premieres ligne de code à explorer un premier programme j
 4. Un peu de physique du mouvement, simplifie, permettant d’appliquer une vitesse (`speed` dans notre code) sur notre carre bleu, tout en tenant compte de 2 nouveaux paramètres dans le calcul de la vitesse appliquée que sont l’élasticité et la friction (`elasticity` et `friction` dans le code).
 
 Il est grand temps de prendre un peu de recul et de voir un peu plus grand.
+
+----

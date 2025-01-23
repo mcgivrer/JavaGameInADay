@@ -476,4 +476,6 @@ public class MonProgrammeCamera2 extends TestGame implements KeyListener, Game {
 
 ## Conclusion
 
-Nous avons ajouté à notre moteur quelques éléments importants qui serviront de base à d’autre principes que nous allons développer dans les chapitres suivants, comme les systèmes de particules qui feront appel à l’utilisation des comportements spécifiques (`Behaviors`), ainsi qu’à la structure en arbred
+Nous avons ajouté à notre moteur quelques éléments importants qui serviront de base à d’autre principes que nous allons développer dans les chapitres suivants, comme les systèmes de particules qui feront appel à l’utilisation des comportements spécifiques (`Behaviors`), ainsi qu’à la structure en arbre.
+
+----

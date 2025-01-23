@@ -22,3 +22,6 @@ Scene
 
 UML
 : L'_Unified Modeling Language_ est un ensemble de pratique et des diagrammes permettant de décrire et de décomposer en schémas simples des processus en traitement complexe. Ce standard de définition permet à l’ensemble des intervenants sur un projet de se comprendre en partageant ainsi un ensemble d’outils de description communs.
+
+
+----
