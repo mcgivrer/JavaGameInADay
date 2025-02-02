@@ -1,17 +1,13 @@
-package com.snapgames.framework.gfx;
+package examples.chapter11.gfx;
 
-import com.snapgames.framework.Game;
 import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.entity.*;
 import com.snapgames.framework.io.InputListener;
 import com.snapgames.framework.io.ResourceManager;
-import com.snapgames.framework.physic.PhysicEngine;
 import com.snapgames.framework.physic.math.Vector2d;
 import com.snapgames.framework.scene.Scene;
-import com.snapgames.framework.scene.SceneManager;
-import com.snapgames.framework.system.GSystem;
-import com.snapgames.framework.system.SystemManager;
 import com.snapgames.framework.utils.Config;
+import examples.chapter11.scene.SceneManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,23 +16,20 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import static com.snapgames.framework.utils.Log.*;
-import static com.snapgames.framework.utils.Log.isDebugGreaterThan;
+import static com.snapgames.framework.utils.Log.debug;
+import static com.snapgames.framework.utils.Log.error;
 
 /**
  * The Renderer class is responsible for rendering game scenes and entities onto a window.
  * It implements the GSystem interface and utilizes various graphics operations to draw
  * the game world, entities, and debug information.
  */
-public class Renderer implements GSystem {
+public class Renderer {
     private final GameInterface app;
+    private final Config config;
+    private final SceneManager sm;
 
     private JFrame window;
     private BufferedImage drawbuffer;
@@ -52,8 +45,10 @@ public class Renderer implements GSystem {
      * @param app the GameInterface instance that the Renderer will be linked to,
      *            representing the game application that this renderer will manage.
      */
-    public Renderer(GameInterface app) {
+    public Renderer(GameInterface app, Config config, SceneManager sm) {
         this.app = app;
+        this.config = config;
+        this.sm = sm;
         debug(Renderer.class, "start of processing");
     }
 
@@ -186,12 +181,7 @@ public class Renderer implements GSystem {
         g.setColor(Color.ORANGE);
         g.draw(e);
         g.setFont(debugFont);
-        g.drawString("#:%d:%s".formatted(e.getId(), e.getName()), (int) e.getWidth(), 0);
-        if (isDebugGreaterThan(3)) {
-            g.drawString("p:%3.0f,%3.0f".formatted(e.getX(), e.getY()), (int) e.getWidth(), 10);
-            g.drawString("s:%3.2f,%3.2f".formatted(e.getWidth(), e.getHeight()), (int) e.getWidth(), 20);
-            g.drawString("av:%3.2f,%3.2f".formatted(e.getVelocity().x, e.getVelocity().y), (int) e.getWidth(), 30);
-        }
+        g.drawString("#%d:%s".formatted(e.getId(), e.getName()), (int) (e.getX() + e.getWidth() + 4), (int) e.getY());
         // draw velocity vector
         drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), velocity.getX() * 100, velocity.getY() * 100, Color.CYAN);
         // draw acceleration vector
@@ -282,23 +272,13 @@ public class Renderer implements GSystem {
         return window;
     }
 
-    @Override
-    public Collection<Class<?>> getDependencies() {
-        return List.of(Config.class, SceneManager.class, PhysicEngine.class, InputListener.class);
-    }
-
-    @Override
     public void initialize(GameInterface game) {
-        Config config = SystemManager.get(Config.class);
         Dimension bufferSize = config.get("app.render.buffer.size");
         drawbuffer = new BufferedImage(bufferSize.width, bufferSize.height, BufferedImage.TYPE_INT_ARGB);
 
         Dimension windowSize = config.get("app.render.window.size");
         String title = config.get("app.render.window.title");
         createWindow(title, windowSize);
-
-        InputListener inputListener = SystemManager.get(InputListener.class);
-        setInputListener(inputListener);
     }
 
     public void switchFullScreenMode() {
@@ -311,28 +291,10 @@ public class Renderer implements GSystem {
         app.setPause(false);
     }
 
-    @Override
-    public void start(GameInterface game) {
-
-    }
-
-    @Override
     public void process(GameInterface game, double elapsed, Map<String, Object> stats) {
-        SceneManager sm = SystemManager.get(SceneManager.class);
         render(sm.getActiveScene());
+        // clear all activities
+        sm.getActiveScene().getEntities().values().stream().filter(Entity::isActive).forEach(e -> e.getForces().clear());
     }
 
-    @Override
-    public void postProcess(GameInterface game) {
-    }
-
-    @Override
-    public void stop(GameInterface game) {
-
-    }
-
-    @Override
-    public void dispose(GameInterface game) {
-        dispose();
-    }
 }

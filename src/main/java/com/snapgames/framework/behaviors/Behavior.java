@@ -37,4 +37,8 @@ public interface Behavior<T> {
     default void onCollision(Entity<?> a, Entity<?> b) {
 
     }
+
+    default void dispose(T e) {
+
+    }
 }

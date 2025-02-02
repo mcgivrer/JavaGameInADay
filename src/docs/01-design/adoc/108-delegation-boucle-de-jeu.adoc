@@ -131,7 +131,7 @@ public class MonProgrammeGameLoop1 extends TestGame implements KeyListener, Game
 }
 ----
 
-. Nous instancions l’implémentation désirée de l’interface `GameLoop`, ici, la class `StandardGameLoop` dont nous verrons le code juste après,
+. Nous instancions l’implémentation désirée de l’interface `GameLoop`, ici, la class `StandardGameLoop2` dont nous verrons le code juste après,
 . L’exécution de la boucle est déléguée à la classe instanciée via la méthode `GameLoop.loop()`
 
 Si nous regardons dans le détail le diagramme d’appel ci-dessous, nous voyons que la boucle est réellement exécutée dans l’instance de GameLoop, appelant en contre-parti les traitements nécessaires dans la classe parente (ici symbolisée par `Game`.
@@ -223,7 +223,7 @@ public class StandardGameLoop implements GameLoop {
 }
 ----
 
-. Initialisation de l’implémentation de la boucle de jeu (`StandardGameLoop`)en lui passant l’instance parente du jeu (`Game`),
+. Initialisation de l’implémentation de la boucle de jeu (`StandardGameLoop2`)en lui passant l’instance parente du jeu (`Game`),
 . C’est dans la méthode  `process(Game game)` est le cœur de la boucle, ici l’implémentation est basée sur le respect d’un temps de "frame",
 . La méthode `wait` donne le 'la' pour déterminer le temps de refresh de la boucle,
 . La gestion des entrées (`input`) est déléguée à l’instance du jeu,

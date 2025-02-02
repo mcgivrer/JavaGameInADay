@@ -1,16 +1,36 @@
-package utils.gameloop;
+package examples.chapter11.gameloop;
 
-import examples.MonProgrammeGameLoop1;
-import game.Game;
-import scenes.Scene;
+import com.snapgames.framework.GameInterface;
+import com.snapgames.framework.entity.Entity;
+import com.snapgames.framework.io.InputListener;
+import com.snapgames.framework.scene.Scene;
+import com.snapgames.framework.utils.Config;
+import examples.chapter11.gfx.Renderer;
+import examples.chapter11.physic.PhysicEngine;
 
-import java.io.Serializable;
+import java.util.Map;
 
-public class StandardGameLoop implements GameLoop {
-    private final Game game;
+public class StandardGameLoop2 implements GameLoop {
+    private final GameInterface game;
+    private final Config config;
+    private final Renderer render;
+    private final PhysicEngine physicEngine;
+    private final InputListener inputListener;
+    private final Map<String, Object> stats;
 
-    public StandardGameLoop(Game game) {
+    public StandardGameLoop2(GameInterface game,
+                             Config config,
+                             Renderer render,
+                             PhysicEngine physicEngine,
+                             InputListener inputListener,
+                             Map<String, Object> stats) {
         this.game = game;
+        this.config = config;
+        this.render = render;
+        this.physicEngine = physicEngine;
+        this.inputListener = inputListener;
+        this.stats = stats;
+
     }
 
 
@@ -30,23 +50,20 @@ public class StandardGameLoop implements GameLoop {
      * Outputs the total number of game loops executed upon termination.
      */
     @Override
-    public void process(Game game) {
-        Scene scene = game.getCurrentScene();
+    public void process(GameInterface game, Scene scene) {
         int loopCount = 0;
-        int frameTime = 1000 / (int) (game.getConfig().get("app.render.fps"));
+        int frameTime = 1000 / (int) (config.get("app.render.fps"));
         long elapsed = 0;
         long startLoop = System.currentTimeMillis();
         long endLoop = startLoop;
-        while (!game.isExitRequested()
-                && ((game.isTestMode()
-                && loopCount < game.getMaxLoopCount()) || !game.isTestMode())) {
+        while (!game.isExitRequested()) {
             elapsed = endLoop - startLoop;
             startLoop = endLoop;
             input(scene);
             if (game.isNotPaused()) {
                 update(scene, elapsed);
             }
-            render(scene);
+            render(scene, elapsed);
             loopCount++;
             waitTime(frameTime);
             endLoop = System.currentTimeMillis();
@@ -71,18 +88,22 @@ public class StandardGameLoop implements GameLoop {
 
     @Override
     public void input(Scene scene) {
-        game.input(scene);
+        scene.input(inputListener);
+        scene.getEntities().values().stream()
+                .filter(Entity::isActive)
+                .forEach(e -> e.getBehaviors()
+                        .forEach(b ->
+                                b.input(inputListener, e)));
     }
 
     @Override
     public void update(Scene scene, double elapsed) {
-        game.update(scene, elapsed);
-        game.update(scene);
+        physicEngine.process(game, elapsed, stats);
     }
 
     @Override
-    public void render(Scene scene) {
-        game.render(scene);
+    public void render(Scene scene, double elapsed) {
+        render.process(game, elapsed, stats);
     }
 
     @Override

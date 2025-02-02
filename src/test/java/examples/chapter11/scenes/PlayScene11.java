@@ -1,7 +1,8 @@
-package com.snapgames.demo.scenes;
+package examples.chapter11.scenes;
 
-import com.snapgames.framework.behaviors.Behavior;
 import com.snapgames.framework.Game;
+import com.snapgames.framework.GameInterface;
+import com.snapgames.framework.behaviors.Behavior;
 import com.snapgames.framework.behaviors.WaveWaterSimulator;
 import com.snapgames.framework.entity.*;
 import com.snapgames.framework.io.InputListener;
@@ -9,7 +10,6 @@ import com.snapgames.framework.io.ResourceManager;
 import com.snapgames.framework.physic.Material;
 import com.snapgames.framework.physic.PhysicType;
 import com.snapgames.framework.physic.World;
-import com.snapgames.framework.entity.WorldArea;
 import com.snapgames.framework.physic.math.Vector2d;
 import com.snapgames.framework.scene.AbstractScene;
 import com.snapgames.framework.utils.Config;
@@ -18,11 +18,11 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 
-public class PlayScene extends AbstractScene {
+public class PlayScene11 extends AbstractScene {
 
     private Font scoreFont, textFont;
 
-    public PlayScene(Game app, String name) {
+    public PlayScene11(GameInterface app, String name) {
         super(app, name);
     }
 
@@ -33,6 +33,7 @@ public class PlayScene extends AbstractScene {
 
     @Override
     public void create(Config config) {
+        super.create(config);
 
         Dimension windowSize = config.get("app.window.size");
         Rectangle2D playArea = config.get("app.physic.world.play.area.size");
@@ -49,6 +50,7 @@ public class PlayScene extends AbstractScene {
                 .setSize(16, 32)
                 .setPosition(world.getWidth() * 0.5, world.getHeight() * 0.5)
                 .setColor(Color.BLUE)
+                .setPhysicType(PhysicType.DYNAMIC)
                 .setMass(8)
                 .setMaterial(new Material("player_mat", 1.0, 0.92, 0.66))
                 .setPriority(10)

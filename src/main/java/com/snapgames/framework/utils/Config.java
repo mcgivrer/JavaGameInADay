@@ -24,14 +24,25 @@ public class Config extends HashMap<String, Object> implements GSystem {
         super();
         this.app = app;
         put("app.test", false);
+        put("app.test.loop.max.count", -1);
+
         put("app.debug.level", 0);
+
         put("app.render.window.title", "Test001");
         put("app.render.window.size", new Dimension(640, 400));
         put("app.render.buffer.size", new Dimension(320, 200));
+        put("app.render.fps", 60);
+        put("app.render.camera.tween.factor", 0.002);
+
         put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, 640, 400));
         put("app.physic.world.gravity", new Point2D.Double(0, -0.981));
+        put("app.physic.entity.player.speed", 2);
+        put("app.physic.entity.player.elasticity", 2);
+        put("app.physic.entity.player.friction", 2);
+
         put("app.scene.default", "");
         put("app.scene.list", "");
+
     }
 
     public void load(String configFilePath) {
@@ -49,14 +60,21 @@ public class Config extends HashMap<String, Object> implements GSystem {
     private void parseAttributes(List<Entry<Object, Object>> collect) {
         collect.forEach(e -> {
             switch (e.getKey().toString()) {
-                case "app.render.window.title" -> {
-                    put("app.render.window.title", (String) e.getValue());
+                case "app.test" -> {
+                    put("app.test", Boolean.parseBoolean(props.getProperty("app.test")));
                 }
+                case "app.test.loop.max.count" -> {
+                    put("app.test.loop.max.count", Integer.parseInt(props.getProperty("app.test.loop.max.count")));
+                }
+
                 case "app.exit" -> {
                     app.setExit(Boolean.parseBoolean(props.getProperty("app.exit")));
                 }
                 case "app.debug.level" -> {
                     app.setDebug(Integer.parseInt(props.getProperty("app.debug.level")));
+                }
+                case "app.render.window.title" -> {
+                    put("app.render.window.title", (String) e.getValue());
                 }
                 case "app.render.window.size" -> {
                     String[] values = ((String) e.getValue()).split("x");
@@ -66,9 +84,27 @@ public class Config extends HashMap<String, Object> implements GSystem {
                     String[] values = ((String) e.getValue()).split("x");
                     put("app.render.buffer.size", new Dimension(Integer.parseInt(values[0]), Integer.parseInt(values[1])));
                 }
+                case "app.render.fps" -> {
+                    put("app.render.fps", Integer.parseInt(props.getProperty("app.render.fps")));
+                }
+                case "app.render.buffer.strategy" -> {
+                    put("app.render.buffer.strategy", Integer.parseInt(props.getProperty("app.render.buffer.strategy")));
+                }
                 case "app.physic.world.play.area.size" -> {
                     String[] values = ((String) e.getValue()).split("x");
                     put("app.physic.world.play.area.size", new Rectangle2D.Double(0, 0, Double.parseDouble(values[0]), Double.parseDouble(values[1])));
+                }
+                case "app.physic.entity.player.speed" -> {
+                    put("app.physic.entity.player.speed", Double.parseDouble(props.getProperty("app.physic.entity.player.speed")));
+                }
+                case "app.physic.entity.player.elasticity" -> {
+                    put("app.physic.entity.player.elasticity", Double.parseDouble(props.getProperty("app.physic.entity.player.elasticity")));
+                }
+                case "app.physic.entity.player.friction" -> {
+                    put("app.physic.entity.player.friction", Double.parseDouble(props.getProperty("app.physic.entity.player.friction")));
+                }
+                case "app.physic.entity.enemy.max.speed.ratio" -> {
+                    put("app.physic.entity.enemy.max.speed.ratio", Double.parseDouble(props.getProperty("app.physic.entity.enemy.max.speed.ratio")));
                 }
                 case "app.physic.world.gravity" -> {
                     String[] values = ((String) e.getValue()).substring(((String) e.getValue()).indexOf("(") + 1, ((String) e.getValue()).lastIndexOf(")")).split(",");
