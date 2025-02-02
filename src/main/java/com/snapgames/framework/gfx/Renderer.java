@@ -215,6 +215,9 @@ public class Renderer implements GSystem {
             case "GameObject", "WorldArea" -> {
                 drawObject(g, e);
             }
+            case "ImageObject" -> {
+                drawImage(g, (ImageObject) e);
+            }
             case "TextObject" -> {
                 drawText(g, (TextObject) e);
             }
@@ -229,6 +232,10 @@ public class Renderer implements GSystem {
             }
         }
         e.getBehaviors().forEach(b -> b.draw(g, e));
+    }
+
+    private void drawImage(Graphics2D g, ImageObject e) {
+        g.drawImage(e.getImage(), (int) e.x, (int) e.y, null);
     }
 
     private static void drawObject(Graphics2D g, Entity<?> e) {

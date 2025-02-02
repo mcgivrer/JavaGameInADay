@@ -1,7 +1,7 @@
 package com.snapgames.demo.scenes;
 
+import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.behaviors.Behavior;
-import com.snapgames.framework.Game;
 import com.snapgames.framework.behaviors.WaveWaterSimulator;
 import com.snapgames.framework.entity.*;
 import com.snapgames.framework.io.InputListener;
@@ -9,7 +9,6 @@ import com.snapgames.framework.io.ResourceManager;
 import com.snapgames.framework.physic.Material;
 import com.snapgames.framework.physic.PhysicType;
 import com.snapgames.framework.physic.World;
-import com.snapgames.framework.entity.WorldArea;
 import com.snapgames.framework.physic.math.Vector2d;
 import com.snapgames.framework.scene.AbstractScene;
 import com.snapgames.framework.utils.Config;
@@ -17,20 +16,38 @@ import com.snapgames.framework.utils.Config;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
+/**
+ * The PlayScene class extends the AbstractScene and represents a specific game scene
+ * where the main gameplay elements and logic are implemented. This scene includes
+ * various entities like a player, camera, UI elements, world areas, and dynamically
+ * generated objects.
+ */
 public class PlayScene extends AbstractScene {
 
     private Font scoreFont, textFont;
+    private BufferedImage tilesImg;
 
-    public PlayScene(Game app, String name) {
+    public PlayScene(GameInterface app, String name) {
         super(app, name);
     }
 
     public void load() {
         scoreFont = ResourceManager.get("/assets/fonts/upheavtt.ttf");
         textFont = ResourceManager.get("/assets/fonts/Minecraftia-Regular.ttf");
+        tilesImg = ResourceManager.get("/assets/images/tiles01.png");
+
     }
 
+    /**
+     * Initializes the play scene by creating and configuring various game objects,
+     * UI elements, and environmental components based on the provided configuration.
+     *
+     * @param config The configuration object used to set up the scene, which includes
+     *               information such as window size, play area dimensions, and other
+     *               relevant parameters.
+     */
     @Override
     public void create(Config config) {
 
@@ -85,6 +102,14 @@ public class PlayScene extends AbstractScene {
                 .setFixedToCamera(camera)
                 .setPriority(100);
         add(score);
+
+        ImageObject heart = new ImageObject("heart")
+                .setImage(tilesImg.getSubimage(0, 6 * 16, 16, 16))
+                .setPosition(camera.getWidth() - 44, 32)
+                .setPhysicType(PhysicType.STATIC)
+                .setFixedToCamera(camera)
+                .setPriority(100);
+        add(heart);
 
         TextObject lives = new TextObject("lives")
                 .setPosition(camera.getWidth() - 30, 32)
