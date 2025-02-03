@@ -241,7 +241,7 @@ public class Renderer implements GSystem {
     private static void drawObject(Graphics2D g, Entity<?> e) {
         if (e.getFillColor() != null) {
             g.setColor(e.getFillColor());
-            g.fill(e);
+            g.fill(e.getShape());
         }
     }
 
@@ -254,7 +254,7 @@ public class Renderer implements GSystem {
     }
 
     private void drawGauge(Graphics2D g, GaugeObject gg) {
-        g.setColor(Color.BLACK);
+        g.setColor(new Color(0.0f, 0.0f, 0.0f, 0.6f));
         g.drawRect((int) gg.getX(), (int) gg.getY(), (int) gg.getWidth(), (int) gg.getHeight());
         g.drawRect((int) gg.getX() + 2, (int) gg.getY() + 2, (int) gg.getWidth() - 4, (int) gg.getHeight() - 4);
         g.setColor(gg.getColor());
