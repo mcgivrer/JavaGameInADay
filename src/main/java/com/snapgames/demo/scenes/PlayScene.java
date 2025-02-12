@@ -28,7 +28,7 @@ import java.awt.image.BufferedImage;
 public class PlayScene extends AbstractScene {
 
     private Font scoreFont, textFont;
-    private BufferedImage tilesImg;
+    private BufferedImage playerImg, tilesImg, moonImg;
 
     public PlayScene(GameInterface app, String name) {
         super(app, name);
@@ -38,6 +38,8 @@ public class PlayScene extends AbstractScene {
         scoreFont = ResourceManager.get("/assets/fonts/upheavtt.ttf");
         textFont = ResourceManager.get("/assets/fonts/Minecraftia-Regular.ttf");
         tilesImg = ResourceManager.get("/assets/images/tiles01.png");
+        playerImg = ((BufferedImage) ResourceManager.get("/assets/images/sprites01.png")).getSubimage(0, 0, 32, 32);
+        moonImg = ResourceManager.get("/assets/images/moon-128/Moon_Phase_1.png");
 
     }
 
@@ -63,8 +65,9 @@ public class PlayScene extends AbstractScene {
         GridObject go = new GridObject("grid").setTileSize(16, 16).setColor(Color.DARK_GRAY).setPriority(1);
         add(go);
 
-        GameObject player = new GameObject("player")
-                .setSize(16, 32)
+        ImageObject player = new ImageObject("player")
+                .setImage(playerImg)
+                .setSize(32, 32)
                 .setPosition(world.getWidth() * 0.5, world.getHeight() * 0.5)
                 .setColor(Color.BLUE)
                 .setShape(new Rectangle(0, 0, 16, 32))
@@ -118,6 +121,15 @@ public class PlayScene extends AbstractScene {
                 .setFixedToCamera(camera)
                 .setPriority(99);
         add(heart);
+
+        ImageObject moon = new ImageObject("moon")
+                .setImage(moonImg)
+                .setSize(128, 128)
+                .setPosition(world.getWidth() * 0.5, world.getHeight() * 0.08)
+                .setPhysicType(PhysicType.STATIC)
+                .setPriority(9);
+        add(moon);
+
 
         TextObject lives = new TextObject("lives")
                 .setPosition(camera.getWidth() - 30, 32)
