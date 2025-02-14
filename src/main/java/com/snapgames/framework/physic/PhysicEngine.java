@@ -131,8 +131,8 @@ public class PhysicEngine implements GSystem {
 
             case DYNAMIC -> {
 
-                entity.setAcceleration(new Vector2d().addAll(entity.getForces()).maximize(0.3));
-                entity.setVelocity(entity.getVelocity().add(entity.getAcceleration().multiply(0.5 * elapsed)).maximize(0.5));
+                entity.setAcceleration(new Vector2d().addAll(entity.getForces()).maximize(0.1));
+                entity.setVelocity(entity.getVelocity().add(entity.getAcceleration().maximize(2.5)));
                 entity.setPosition(entity.getPosition().add(entity.getVelocity().multiply(elapsed)));
 
                 entity.getForces().clear();

@@ -215,6 +215,12 @@ public class Renderer implements GSystem {
             case "GameObject", "WorldArea" -> {
                 drawObject(g, e);
             }
+            case "ImageObject" -> {
+                drawImage(g, (ImageObject) e);
+            }
+            case "SpriteObject" -> {
+                drawSprite(g, (SpriteObject) e);
+            }
             case "TextObject" -> {
                 drawText(g, (TextObject) e);
             }
@@ -231,10 +237,22 @@ public class Renderer implements GSystem {
         e.getBehaviors().forEach(b -> b.draw(g, e));
     }
 
+    private void drawSprite(Graphics2D g, SpriteObject e) {
+        if (e.getVelocity().x > 0) {
+            g.drawImage(e.getImage(), (int) e.x, (int) e.y, null);
+        } else {
+            g.drawImage(e.getImage(), (int) (e.x + e.getWidth()), (int) e.y, (int) -e.getWidth(), (int) e.getHeight(), null);
+        }
+    }
+
+    private void drawImage(Graphics2D g, ImageObject e) {
+        g.drawImage(e.getImage(), (int) e.x, (int) e.y, null);
+    }
+
     private static void drawObject(Graphics2D g, Entity<?> e) {
         if (e.getFillColor() != null) {
             g.setColor(e.getFillColor());
-            g.fill(e);
+            g.fill(e.getShape());
         }
     }
 
@@ -247,7 +265,7 @@ public class Renderer implements GSystem {
     }
 
     private void drawGauge(Graphics2D g, GaugeObject gg) {
-        g.setColor(Color.BLACK);
+        g.setColor(new Color(0.0f, 0.0f, 0.0f, 0.6f));
         g.drawRect((int) gg.getX(), (int) gg.getY(), (int) gg.getWidth(), (int) gg.getHeight());
         g.drawRect((int) gg.getX() + 2, (int) gg.getY() + 2, (int) gg.getWidth() - 4, (int) gg.getHeight() - 4);
         g.setColor(gg.getColor());

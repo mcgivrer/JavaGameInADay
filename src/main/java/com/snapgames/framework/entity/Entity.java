@@ -7,9 +7,13 @@ import com.snapgames.framework.physic.math.Vector2d;
 import com.snapgames.framework.utils.Node;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Entity<T> extends Node<T> {
 
@@ -26,12 +30,17 @@ public class Entity<T> extends Node<T> {
     private boolean active = true;
     private boolean contact = false;
 
+    private long duration = -1;
+    private long lifetime = 0;
+
     private Color color = Color.RED;
     private Color fillColor = Color.RED;
+    private Shape shape = new Rectangle2D.Double();
 
     private List<Behavior<Entity<?>>> behaviors = new ArrayList<>();
     private int priority = 0;
     private Camera cameraFixedTo;
+    private Map<String, Object> attributes = new HashMap<>();
 
     public Entity() {
         super();
@@ -42,8 +51,18 @@ public class Entity<T> extends Node<T> {
     }
 
 
+    public void update(double elapsed) {
+        if (duration != -1) {
+            lifetime -= elapsed;
+            if (lifetime <= 0) {
+                lifetime = 0;
+            }
+        }
+    }
+
     public T setSize(double w, double h) {
         super.setRect(x, y, w, h);
+        this.shape.getBounds2D().setRect(x, y, w, h);
         return (T) this;
     }
 
@@ -127,6 +146,18 @@ public class Entity<T> extends Node<T> {
         return contact;
     }
 
+    public T setShape(Shape shape) {
+        this.shape = shape;
+        return (T) this;
+    }
+
+    public Shape getShape() {
+        if (shape instanceof Rectangle2D) {
+            return new Rectangle2D.Double(x, y, width, height);
+        } else {
+            return new Ellipse2D.Double(x, y, width, height);
+        }
+    }
 
     public PhysicType getPhysicType() {
         return physicType;
@@ -166,15 +197,13 @@ public class Entity<T> extends Node<T> {
 
 
     public T setPosition(double x, double y) {
-        super.setRect(x, y, width, height);
-        position.set(x, y);
-        return (T) this;
+        return (T) setPosition(new Vector2d(x, y));
     }
-
 
     public T setPosition(Vector2d p) {
         super.setRect(p.getX(), p.getY(), width, height);
         position.set(p.getX(), p.getY());
+        this.shape.getBounds2D().setRect(p.getX(), p.getY(), width, height);
         return (T) this;
     }
 
@@ -214,6 +243,43 @@ public class Entity<T> extends Node<T> {
 
     public PhysicType getType() {
         return this.physicType;
+    }
+
+    public <Y> T addAttribute(String attrName, Y attrValue) {
+        attributes.put(attrName, attrValue);
+        return (T) this;
+    }
+
+    public <Y> Y getAttribute(String attrName, Y attrDefaultValue) {
+        return (Y) attributes.getOrDefault(attrName, attrDefaultValue);
+    }
+
+    public T setDuration(long d) {
+        this.duration = d;
+        if (lifetime == 0) {
+            this.lifetime = d;
+        }
+        return (T) this;
+    }
+
+    public T setLifeTime(long t) {
+        this.lifetime = t;
+        return (T) this;
+    }
+
+    public long getDuration() {
+        return this.duration;
+    }
+
+    public long getLifeTime() {
+        return this.lifetime;
+    }
+
+    public boolean isAlive() {
+        if (duration != -1 && lifetime <= 0) {
+            return false;
+        }
+        return true;
     }
 
 }
