@@ -54,12 +54,10 @@ public class PlayScene extends AbstractScene {
     @Override
     public void create(Config config) {
 
-        Dimension windowSize = config.get("app.window.size");
         Rectangle2D playArea = config.get("app.physic.world.play.area.size");
 
-
         setWorld(new World("earth", new Vector2d(0, -0.981))
-                .setSize(800, 600)
+                .setSize(playArea.getWidth(), playArea.getHeight())
                 .setPosition(0, 0));
 
         GridObject go = new GridObject("grid").setTileSize(16, 16).setColor(Color.DARK_GRAY).setPriority(1);
@@ -73,6 +71,7 @@ public class PlayScene extends AbstractScene {
                 .setColor(Color.BLUE)
                 .setShape(new Rectangle(0, 0, 16, 32))
                 .setMass(8)
+                .setLayer(2)
                 .setMaterial(new Material("player_mat", 1.0, 0.92, 0.66))
                 .setPriority(10)
                 .addAttribute("stepSpeed", 0.005)
@@ -98,11 +97,82 @@ public class PlayScene extends AbstractScene {
                 });
         add(player);
 
+        ImageObject moon = new ImageObject("moon")
+                .setImage(moonImg)
+                .setSize(128, 128)
+                .setPosition(world.getWidth() * 0.5, world.getHeight() * 0.08)
+                .setPhysicType(PhysicType.STATIC)
+                .setPriority(9)
+                .setLayer(1);
+        add(moon);
+
         Camera camera = new Camera("cam01")
                 .setViewPort(320, 200)
                 .setTween(0.2)
                 .setTarget(player);
         add(camera);
+
+        // add background stars
+        generate("star_%d", world, 20, 2, 2,
+                Color.WHITE, 100000000,
+                Material.DEFAULT,
+                PhysicType.STATIC,
+                5,
+                1);
+
+        // add enemy's ball
+        generate("ball_%d", world, 5, 20, 20,
+                Color.ORANGE, 5.0,
+                new Material("ball_mat", 1.0, 0.7, 0.8),
+                PhysicType.DYNAMIC, 5, 1);
+
+        // add World specific Area
+        WorldArea water = (WorldArea) new WorldArea("water")
+                .setFillColor(new Color(0.1f, 0.1f, 0.7f, 0.8f))
+                .setColor(Color.BLUE)
+                .setSize(world.width, 64)
+                .setPosition(0, world.height - 64)
+                .setPhysicType(PhysicType.STATIC)
+                .setMaterial(new Material("water", 1.0, 0.67, 0.90))
+                .addForce(0.02, -0.21)
+                .setPriority(20)
+                .setLayer(0)
+                .add(new WaveWaterSimulator());
+        getWorld().add(water);
+        add(water);
+        // add sky
+        WorldArea sky = (WorldArea) new WorldArea("sky")
+                .setFillColor(new Color(0.0f, 0.1f, 0.7f))
+                .setColor(null)
+                .setSize(world.width, world.height - 64)
+                .setPosition(0, 0)
+                .addForce(0.01, 0.0)
+                .setPriority(2)
+                .setLayer(0)
+                .setPhysicType(PhysicType.STATIC)
+                .add(new Behavior<Entity<?>>() {
+                    double cumul = 0;
+
+                    @Override
+                    public void update(Entity<?> e, double elapsed) {
+                        // change the wind direction every random ms
+                        cumul -= elapsed;
+                        if (cumul <= 0) {
+                            e.getForces().clear();
+                            e.addForce(0.05 - Math.random() * 0.1, 0);
+                            cumul = Math.random() * 1000;
+                        }
+                    }
+
+                    @Override
+                    public void draw(Graphics2D g, Entity<?> e) {
+                        g.setColor(e.getFillColor());
+                        g.fill(e);
+                    }
+                });
+        getWorld().add(sky);
+        add(sky);
+
 
         // draw HUD
         TextObject score = new TextObject("score")
@@ -122,14 +192,6 @@ public class PlayScene extends AbstractScene {
                 .setFixedToCamera(camera)
                 .setPriority(99);
         add(heart);
-
-        ImageObject moon = new ImageObject("moon")
-                .setImage(moonImg)
-                .setSize(128, 128)
-                .setPosition(world.getWidth() * 0.5, world.getHeight() * 0.08)
-                .setPhysicType(PhysicType.STATIC)
-                .setPriority(9);
-        add(moon);
 
 
         TextObject lives = new TextObject("lives")
@@ -164,63 +226,7 @@ public class PlayScene extends AbstractScene {
                 .setPriority(100);
         add(mana);
 
-        // add background stars
-        generate("star_%d", world, 20, 2, 2,
-                Color.WHITE, 100000000,
-                Material.DEFAULT,
-                PhysicType.STATIC,
-                5);
 
-        // add enemy's ball
-        generate("ball_%d", world, 5, 20, 20,
-                Color.ORANGE, 5.0,
-                new Material("ball_mat", 1.0, 0.7, 0.8),
-                PhysicType.DYNAMIC, 5);
-
-        // add World specific Area
-        WorldArea water = (WorldArea) new WorldArea("water")
-                .setFillColor(new Color(0.1f, 0.1f, 0.7f, 0.8f))
-                .setColor(Color.BLUE)
-                .setSize(world.width, 64)
-                .setPosition(0, world.height - 64)
-                .setPhysicType(PhysicType.STATIC)
-                .setMaterial(new Material("water", 1.0, 0.67, 0.90))
-                .addForce(0.02, -0.21)
-                .setPriority(20)
-                .add(new WaveWaterSimulator());
-        getWorld().add(water);
-        add(water);
-        // add sky
-        WorldArea sky = (WorldArea) new WorldArea("sky")
-                .setFillColor(new Color(0.0f, 0.1f, 0.7f))
-                .setColor(null)
-                .setSize(world.width, world.height - 64)
-                .setPosition(0, 0)
-                .addForce(0.01, 0.0)
-                .setPriority(2)
-                .setPhysicType(PhysicType.STATIC)
-                .add(new Behavior<Entity<?>>() {
-                    double cumul = 0;
-
-                    @Override
-                    public void update(Entity<?> e, double elapsed) {
-                        // change the wind direction every random ms
-                        cumul -= elapsed;
-                        if (cumul <= 0) {
-                            e.getForces().clear();
-                            e.addForce(0.05 - Math.random() * 0.1, 0);
-                            cumul = Math.random() * 1000;
-                        }
-                    }
-
-                    @Override
-                    public void draw(Graphics2D g, Entity<?> e) {
-                        g.setColor(e.getFillColor());
-                        g.fill(e);
-                    }
-                });
-        getWorld().add(sky);
-        add(sky);
         //activate our camera as the default one.
         setActiveCamera(camera);
     }
@@ -231,7 +237,8 @@ public class PlayScene extends AbstractScene {
                           double mass,
                           Material mat,
                           PhysicType pt,
-                          int priority) {
+                          int priority,
+                          int layer) {
         for (int i = 0; i < nb; i++) {
             GameObject star = new GameObject(templateName.formatted(i))
                     .setShape(new Ellipse2D.Double())
@@ -242,7 +249,8 @@ public class PlayScene extends AbstractScene {
                     .setMass(mass)
                     .setMaterial(mat)
                     .setPhysicType(pt)
-                    .setPriority(priority);
+                    .setPriority(priority)
+                    .setLayer(layer);
             add(star);
         }
     }

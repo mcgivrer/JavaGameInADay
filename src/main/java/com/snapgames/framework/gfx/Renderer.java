@@ -21,11 +21,8 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static com.snapgames.framework.utils.Log.*;
 import static com.snapgames.framework.utils.Log.isDebugGreaterThan;
@@ -131,21 +128,38 @@ public class Renderer implements GSystem {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, drawbuffer.getWidth(), drawbuffer.getHeight());
 
-        if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
-            g.translate(-scene.getActiveCamera().x, -scene.getActiveCamera().y);
-        }
-        // draw the scene
+        // Create layers
+        Map<Integer, RenderLayer> layers = new HashMap<>();
+        // dispatch Entities into layers
         scene.getEntities().values().stream()
                 .filter(e -> !(e instanceof Camera))
                 .filter(Entity::isActive)
                 .filter(e -> e.getCameraIsStickedTo() == null)
-                .sorted(Comparator.comparingInt(Entity::getPriority))
                 .forEach(e -> {
-                    drawEntity(g, scene, e);
-                    if (app.isDebugGreaterThan(0)) {
-                        drawDebugInfoEntity(g, scene, e);
+                    if (!layers.containsKey(e.getLayer())) {
+                        RenderLayer layer = new RenderLayer("layer_%d".formatted(e.getLayer()));
+                        layers.put(e.getLayer(), layer);
                     }
+                    layers.get(e.getLayer()).add(e);
                 });
+
+        if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
+            g.translate(-scene.getActiveCamera().x, -scene.getActiveCamera().y);
+        }
+        // draw the scene
+        layers.entrySet().stream()
+                .sorted(Comparator.comparingInt(Map.Entry::getKey))
+                .forEach(l -> l.getValue().getChildren().stream()
+                        .filter(e -> !(e instanceof Camera))
+                        .filter(e -> ((Entity<?>) e).isActive())
+                        .filter(e -> ((Entity<?>) e).getCameraIsStickedTo() == null)
+                        .sorted((a, b) -> Integer.compare(((Entity<?>) a).getPriority(), ((Entity<?>) a).getPriority()))
+                        .forEach(e -> {
+                            drawEntity(g, scene, ((Entity<?>) e));
+                            if (app.isDebugGreaterThan(0)) {
+                                drawDebugInfoEntity(g, scene, ((Entity<?>) e));
+                            }
+                        }));
 
         // draw World borders
         g.setColor(Color.DARK_GRAY);

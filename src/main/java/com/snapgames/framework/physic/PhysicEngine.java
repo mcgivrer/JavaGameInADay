@@ -12,6 +12,7 @@ import com.snapgames.framework.system.SystemManager;
 import com.snapgames.framework.utils.Config;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -67,6 +68,7 @@ public class PhysicEngine implements GSystem {
     private void update(Scene scene, double elapsed) {
         scene.getEntities().values().stream()
                 .filter(Entity::isActive)
+                .sorted(Comparator.comparingInt(Entity::getLayer))
                 .forEach(entity -> {
                     World world = scene.getWorld();
                     if (entity.getPhysicType().equals(PhysicType.DYNAMIC)) {
