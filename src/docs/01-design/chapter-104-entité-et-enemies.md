@@ -479,3 +479,5 @@ Dans un chapitre ultérieur, nous découvrirons comment coder des comportements 
 
 **⚠️ WARNING**\
 TODO rédiger la conclusion de ce chapitre avant d’exposer la suite.
+
+----

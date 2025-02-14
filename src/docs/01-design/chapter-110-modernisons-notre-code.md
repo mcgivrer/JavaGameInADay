@@ -33,4 +33,7 @@ TODO
 
 Nous allons nous pencher sur le chargement dynamique des scenes de notre jeu, au travers de quelques nouvelles propriétés dans le fichier de configuration de base.
 
-Ainsi, nous pourrons charger autant de scene au démarrage du jeu afin de pouvoir passer de l’une à l’autre sans difficulté et passer ainsi de l’écran de titre du jeu , au menu de choix de démarrage, au gameplay principal, ou bien à l’écran de pause et de sauvegarde.
+Ainsi, nous pourrons charger autant de scene au démarrage du jeu que nécessaire. Cela, afin de pouvoir passer de l’une à l’autre sans difficulté.
+Ainsi passer de l’écran de titre du jeu, au menu de choix de démarrage, au gameplay principal, ou bien à l’écran de pause et de sauvegarde sera trè facile.
+
+----

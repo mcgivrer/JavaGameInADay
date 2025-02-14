@@ -241,3 +241,5 @@ Nous avons ici délégué le traitement de la boucle à une classe dite spécial
 ![.Exemple de boucle de jeu alternative](illustrations/game-loop-fixed-update.jpg)
 
 Dans le prochain chapitre, nous allons passer à la détection des collisions entre entités, et au traitement de celles-ci.
+
+----

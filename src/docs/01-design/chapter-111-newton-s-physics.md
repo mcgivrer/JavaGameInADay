@@ -655,3 +655,6 @@ Les entités sur l’image ci-dessus subissent les forces comme suit :
 * l’entité **E2** est quant à elle soumise à l’influence de l’objet `WorldArea` "Effets de zone d’influence sur les
   Entités",
 * alors que l’objet **E3** est lui soumis à l’influence des deux zones que sont "**water**" et "**wind**".
+
+
+----

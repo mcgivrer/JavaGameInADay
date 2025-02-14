@@ -178,6 +178,7 @@ user or developer documentation for better clarity.
 >    texlive-extra-utils \
 >    texlive-latex-extra \
 >    texlive-xetex
+>    librsvg2-bin
 >```
 >
 >And execute `build p`
