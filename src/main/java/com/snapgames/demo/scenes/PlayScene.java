@@ -65,7 +65,8 @@ public class PlayScene extends AbstractScene {
         GridObject go = new GridObject("grid").setTileSize(16, 16).setColor(Color.DARK_GRAY).setPriority(1);
         add(go);
 
-        ImageObject player = new ImageObject("player")
+        SpriteObject player = (SpriteObject) new SpriteObject("player")
+                .setEnergy(100.0)
                 .setImage(playerImg)
                 .setSize(32, 32)
                 .setPosition(world.getWidth() * 0.5, world.getHeight() * 0.5)

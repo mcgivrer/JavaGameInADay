@@ -30,6 +30,9 @@ public class Entity<T> extends Node<T> {
     private boolean active = true;
     private boolean contact = false;
 
+    private long duration = -1;
+    private long lifetime = 0;
+
     private Color color = Color.RED;
     private Color fillColor = Color.RED;
     private Shape shape = new Rectangle2D.Double();
@@ -47,6 +50,15 @@ public class Entity<T> extends Node<T> {
         super(name);
     }
 
+
+    public void update(double elapsed) {
+        if (duration != -1) {
+            lifetime -= elapsed;
+            if (lifetime <= 0) {
+                lifetime = 0;
+            }
+        }
+    }
 
     public T setSize(double w, double h) {
         super.setRect(x, y, w, h);
@@ -241,4 +253,33 @@ public class Entity<T> extends Node<T> {
     public <Y> Y getAttribute(String attrName, Y attrDefaultValue) {
         return (Y) attributes.getOrDefault(attrName, attrDefaultValue);
     }
+
+    public T setDuration(long d) {
+        this.duration = d;
+        if (lifetime == 0) {
+            this.lifetime = d;
+        }
+        return (T) this;
+    }
+
+    public T setLifeTime(long t) {
+        this.lifetime = t;
+        return (T) this;
+    }
+
+    public long getDuration() {
+        return this.duration;
+    }
+
+    public long getLifeTime() {
+        return this.lifetime;
+    }
+
+    public boolean isAlive() {
+        if (duration != -1 && lifetime <= 0) {
+            return false;
+        }
+        return true;
+    }
+
 }
