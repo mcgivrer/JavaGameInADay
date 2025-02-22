@@ -20,15 +20,53 @@ import static com.snapgames.framework.utils.I18n.getI18n;
  * and game termination processes. It extends JPanel and implements the GameInterface.
  */
 public class Game extends JPanel implements GameInterface {
+    /**
+     * Represents the target frame rate for the game, defined as frames per second (FPS).
+     *
+     * This constant is used to control the pacing of the game loop by specifying
+     * how many frames should be rendered per second. A higher value results in a
+     * smoother experience but requires more processing power, whereas a lower value
+     * reduces system demands but may appear less smooth.
+     *
+     * The value of FPS is primarily utilized in the game loop to calculate the
+     * time allocated for each frame and ensure consistent frame timing. The main
+     * loop adjusts its sleep duration to maintain this target frame rate, improving
+     * the overall experience by avoiding frame drops or excessive performance spikes.
+     */
     private static final double FPS = 60.0;
 
-    // Game exit request flag.
+    /**
+     * A boolean flag indicating whether the game has been requested to exit.
+     *
+     * This variable is used as a control mechanism in the game loop to determine
+     * if the game should terminate its execution. When set to {@code true}, the
+     * main game loop will recognize the exit request and initiate the termination
+     * process. It is typically updated through corresponding methods like
+     * {@code requestExit()} or {@code setExit(boolean)}.
+     */
     public static boolean exit = false;
 
-    // internal Pause flag
+    /**
+     * Represents the game's pause state.
+     *
+     * This flag determines whether the game is currently paused. When set to true,
+     * the game loop will suspend its main execution, pausing updates and rendering.
+     * When set to false, the game will resume normal operation. The pause state can
+     * be toggled programmatically or through user interaction.
+     */
     private boolean pause = false;
 
-    // debug level
+    /**
+     * Represents the debug level of the game.
+     * The debug level controls the verbosity of debug output,
+     * with higher levels providing more detailed information
+     * about the game's internal state and logic.
+     *
+     * A debug level of 0 typically indicates that debugging is disabled,
+     * while higher values enable various degrees of debugging features.
+     * The value of this variable can be adjusted dynamically during runtime
+     * through appropriate methods to modify the debugging behavior.
+     */
     private int debug = 1;
 
     /**
@@ -148,32 +186,74 @@ public class Game extends JPanel implements GameInterface {
         return debug > debugLevel;
     }
 
+    /**
+     * Sets the debug level of the game. The debug level controls the verbosity
+     * of debugging information and is used to enable or disable specific debugging features.
+     *
+     * @param dl The desired debug level to set. Acceptable values typically
+     *           range from 0 (no debugging) to a maximum predefined level.
+     */
     public void setDebug(int dl) {
         debug = dl;
     }
 
+    /**
+     * Retrieves the current debug level of the game. The debug level determines
+     * the verbosity of debugging output and active debugging features.
+     *
+     * @return the current debug level as an integer.
+     */
     public int getDebug() {
         return debug;
     }
 
+    /**
+     * Sets the pause state of the game.
+     *
+     * @param p true to pause the game, false to resume it.
+     */
     public void setPause(boolean p) {
         this.pause = p;
     }
 
+    /**
+     * Sets the exit flag for the game, indicating whether the game should terminate.
+     *
+     * @param e true to request game termination, false otherwise.
+     */
     @Override
     public void setExit(boolean e) {
         this.exit = e;
     }
 
+    /**
+     * Determines whether an exit has been requested for the game.
+     *
+     * @return true if an exit has been requested, false otherwise.
+     */
     @Override
     public boolean isExitRequested() {
         return exit;
     }
 
+    /**
+     * Determines whether the game is currently not in a paused state.
+     *
+     * @return true if the game is not paused, false otherwise.
+     */
     public boolean isNotPaused() {
         return !pause;
     }
 
+    /**
+     * Requests the game to exit by setting the exit flag if the user confirms
+     * their intention to terminate the game.
+     *
+     * This method invokes the {@code confirmExit()} method to display a
+     * confirmation dialog to the user. If the user confirms the exit, the
+     * method sets the {@code exit} flag to {@code true}, indicating that the
+     * game's main loop should terminate.
+     */
     public void requestExit() {
         if (confirmExit()) {
             exit = true;
@@ -181,10 +261,13 @@ public class Game extends JPanel implements GameInterface {
     }
 
     /**
-     * Prompts the user with a confirmation dialog to confirm if they wish to exit the game.
-     * Pauses the game while awaiting user input and resumes it after receiving a response.
+     * Displays a confirmation dialog to the user to confirm if they want to exit the game.
      *
-     * @return true if the user confirms the exit, false otherwise.
+     * This method pauses the game, invokes a confirmation dialog, and resumes the game
+     * regardless of the user's choice. If the user confirms exit, it returns {@code true};
+     * otherwise, it returns {@code false}.
+     *
+     * @return {@code true} if the user confirms the exit, {@code false} otherwise.
      */
     public boolean confirmExit() {
         boolean status = false;
