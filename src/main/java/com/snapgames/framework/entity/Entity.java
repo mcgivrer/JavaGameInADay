@@ -39,6 +39,7 @@ public class Entity<T> extends Node<T> {
 
     private List<Behavior<Entity<?>>> behaviors = new ArrayList<>();
     private int priority = 0;
+    private int layer = 0;
     private Camera cameraFixedTo;
     private Map<String, Object> attributes = new HashMap<>();
 
@@ -184,6 +185,16 @@ public class Entity<T> extends Node<T> {
 
     public int getPriority() {
         return this.priority;
+    }
+
+
+    public T setLayer(int l) {
+        this.layer = l;
+        return (T) this;
+    }
+
+    public int getLayer() {
+        return this.layer;
     }
 
     public Camera getCameraIsStickedTo() {
