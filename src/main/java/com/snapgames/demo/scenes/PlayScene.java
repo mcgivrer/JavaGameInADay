@@ -1,5 +1,6 @@
 package com.snapgames.demo.scenes;
 
+import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.behaviors.Behavior;
 import com.snapgames.framework.Game;
 import com.snapgames.framework.behaviors.WaveWaterSimulator;
@@ -18,19 +19,81 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 
+/**
+ * The PlayScene class is an implementation of the AbstractScene class, representing
+ * the main gameplay scene within the application. This scene includes the player
+ * character, interactive elements, and supporting visual components such as
+ * a camera, score display, lives counter, energy, and mana gauges.
+ *
+ * It also initializes environmental elements like a water area and sky,
+ * as well as dynamically generated objects such as stars and balls.
+ *
+ * Key functionalities include:
+ *
+ * - Setting up the world and its physical properties.
+ * - Adding entities such as the player, environmental areas, and UI components.
+ * - Attaching behavior logic for interactive entities.
+ * - Managing the active camera and assigning it to specific targets.
+ */
 public class PlayScene extends AbstractScene {
 
-    private Font scoreFont, textFont;
+    /**
+     * Represents the font used to display score-related information in the PlayScene.
+     * This Font object is utilized for rendering text elements specific to the scoring
+     * system of the scene, such as player points or game statistics.
+     * The font can be customized or initialized via external resources using
+     * the ResourceManager class.
+     */
+    private Font scoreFont, /**
+     * Represents the font used for text rendering in the PlayScene.
+     * This variable is likely loaded at runtime from external resources using the ResourceManager.
+     * It is utilized for displaying textual elements within the scene,
+     * ensuring consistent styling and rendering of text objects.
+     */
+    textFont;
 
-    public PlayScene(Game app, String name) {
+    /**
+     * Constructs a new PlayScene instance that represents a playable scene in the game.
+     * It is initialized with the specified game application interface and scene name.
+     *
+     * @param app  the game application interface that provides core game functionalities
+     *             such as debugging, pausing, and exiting the game.
+     * @param name the name of the scene, used to identify and manage the scene.
+     */
+    public PlayScene(GameInterface app, String name) {
         super(app, name);
     }
 
+    /**
+     * Loads the necessary font resources required for the game scene.
+     *
+     * This method retrieves specific font files from the configured
+     * assets directory using the {@code ResourceManager.get} method.
+     * It assigns the retrieved fonts to class-level fields for later use in rendering
+     * text within the game scene.
+     *
+     * Modifies:
+     * - Initializes and assigns the {@code scoreFont} and {@code textFont}
+     *   fields with their corresponding loaded font resources.
+     *
+     * Resources loaded:
+     * - "/assets/fonts/upheavtt.ttf" for the scoreFont.
+     * - "/assets/fonts/Minecraftia-Regular.ttf" for the textFont.
+     */
     public void load() {
         scoreFont = ResourceManager.get("/assets/fonts/upheavtt.ttf");
         textFont = ResourceManager.get("/assets/fonts/Minecraftia-Regular.ttf");
     }
 
+    /**
+     * Initializes and creates the play scene with the specified configuration.
+     * This method sets up the game world, player, environment, camera, HUD elements
+     * (e.g., score, lives, energy, mana), and objects within the scene.
+     * It also defines behaviors for certain elements like the player and environmental effects.
+     *
+     * @param config the configuration object containing parameters such as window size,
+     *               play area dimensions, and scene-specific settings.
+     */
     @Override
     public void create(Config config) {
 
@@ -169,6 +232,28 @@ public class PlayScene extends AbstractScene {
         setActiveCamera(camera);
     }
 
+    /**
+     * Generates and adds a specified number of game objects to the scene with configurable properties.
+     *
+     * @param templateName the template name used as a base for naming the generated objects. Each
+     *                     object's name will be formatted with an index appended to the template name.
+     * @param windowSize   the dimensions of the window or area within which the game objects will
+     *                     be positioned randomly.
+     * @param nb           the number of game objects to generate and add to the scene.
+     * @param maxW         the maximum width of the generated objects. Each object's width will be
+     *                     randomly determined up to this value.
+     * @param maxH         the maximum height of the generated objects. Each object's height will be
+     *                     randomly determined up to this value.
+     * @param color        the fill color of the generated objects.
+     * @param mass         the mass value assigned to the generated objects, affecting their physics
+     *                     behavior.
+     * @param mat          the material assigned to the generated objects, which includes properties
+     *                     such as density, friction, and elasticity.
+     * @param pt           the physics type of the generated objects, specifying whether objects are
+     *                     static, dynamic, or have no physics applied.
+     * @param priority     the priority level of the generated objects, which can influence their
+     *                     processing order or importance within the scene.
+     */
     private void generate(String templateName, Rectangle2D windowSize,
                           int nb, double maxW, double maxH,
                           Color color,

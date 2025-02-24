@@ -49,7 +49,7 @@ public class SceneManager implements GSystem {
             scene = (Scene) constructor.newInstance(this.game, sceneName);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException |
                  IllegalAccessException e) {
-            Log.error("Unable to load Scene class for %s : %s", className, e.getMessage());
+            Log.error(SceneManager.class, "Unable to load Scene class for %s : %s", className, e.getMessage());
         }
         return scene;
     }
