@@ -5,6 +5,7 @@ import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.io.InputListener;
 import com.snapgames.framework.scene.Scene;
 import com.snapgames.framework.utils.Config;
+import com.snapgames.framework.utils.Log;
 import examples.chapter11.gameloop.StandardGameLoop2;
 import examples.chapter11.gfx.Renderer;
 import examples.chapter11.physic.PhysicEngine;
@@ -132,7 +133,7 @@ public class MonProgramme11 implements GameInterface {
 
         // init the rendering engine to display all scene entities on screen.
         renderEngine = new Renderer(this, config, sceneManager);
-        
+
         renderEngine.initialize(this);
         renderEngine.setInputListener(inputListener);
 
@@ -226,12 +227,12 @@ public class MonProgramme11 implements GameInterface {
 
     @Override
     public void setDebug(int i) {
-
+        Log.setDebugLevel(i);
     }
 
     @Override
     public int getDebug() {
-        return debug;
+        return Log.getDebugLevel();
     }
 
     @Override

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+    width="210mm" height="297mm"
+    viewBox="0 0 210 297">
+    <!-- Premier quart - Fond noir avec titre -->
+    <rect x="0" y="0" width="210" height="297" fill="black" />
+    <line x1="105" y1="20" x2="105" y2="74.25" stroke="white" stroke-width="0.5" />
+
+    <text x="10" y="22" font-family="Verdana" font-size="8" fill="white" text-anchor="right">
+        Frédéric Delorme
+    </text>
+    <text x="10" y="32" font-family="Verdana" font-size="7" fill="white" text-anchor="right">
+        2025
+    </text>
+
+    <text x="110" y="22" font-family="Verdana" font-size="10" fill="white" width="20">
+        Développer mon</text>
+    <text x="110" y="32" font-family="Verdana" font-size="10" fill="white" width="20">
+        jeu en Java</text>
+    <text x="110" y="46" font-family="Verdana" font-size="10" fill="white" width="20">
+        Avec le JDK 23
+    </text>
+    <!-- Deuxième moitié - Image centrale -->
+    <image x="0" y="74.25" width="210" height="148.5" fill="black" href="capture-collision-1.png" />
+
+    <!-- Dernier quart - Fond noir avec auteur et année -->
+    <image x="0" y="225.25" width="210" height="74.25" fill="black" href="snapgames-edition-logo-black.png" />
+
+</svg>
