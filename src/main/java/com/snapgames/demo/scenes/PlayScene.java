@@ -1,5 +1,6 @@
 package com.snapgames.demo.scenes;
 
+import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.behaviors.Behavior;
 import com.snapgames.framework.Game;
 import com.snapgames.framework.behaviors.WaveWaterSimulator;
@@ -22,7 +23,7 @@ public class PlayScene extends AbstractScene {
 
     private Font scoreFont, textFont;
 
-    public PlayScene(Game app, String name) {
+    public PlayScene(GameInterface app, String name) {
         super(app, name);
     }
 
@@ -55,7 +56,7 @@ public class PlayScene extends AbstractScene {
                 .add(new Behavior<Entity<?>>() {
                     @Override
                     public void input(InputListener inputListener, Entity<?> player) {
-                        double speed = 0.05;
+                        double speed = 0.01;
                         if (inputListener.isKeyPressed(KeyEvent.VK_UP)) {
                             player.addForce(0.0, -speed * 2);
                         }
