@@ -20,20 +20,43 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 /**
- * The PlayScene class extends the AbstractScene and represents a specific game scene
- * where the main gameplay elements and logic are implemented. This scene includes
- * various entities like a player, camera, UI elements, world areas, and dynamically
- * generated objects.
+ * Represents the main playable scene in the game. This class defines and initializes
+ * the various elements of the scene, including the player, environment, UI components,
+ * and objects. It handles the game's logic, scene setup, and interactions between
+ * entities within the playable area.
  */
 public class PlayScene extends AbstractScene {
 
     private Font scoreFont, textFont;
     private BufferedImage playerImg, tilesImg, moonImg;
 
+    /**
+     * Constructs a PlayScene instance, initializing it with the specified game interface
+     * and scene name. The PlayScene class is a specific implementation of a game scene
+     * that contains and manages game objects, entities, and graphical elements for the
+     * gameplay experience.
+     *
+     * @param app  the GameInterface instance that provides game state management and debugging functionalities.
+     * @param name the name of the scene, used as an identifier and to distinguish it from other scenes.
+     */
     public PlayScene(GameInterface app, String name) {
         super(app, name);
     }
 
+    /**
+     * Loads various resources required for the play scene, including fonts, tile images,
+     * player sprite images, and background images. These resources are fetched using
+     * the {@code ResourceManager.get} method and cached for use within the scene.
+     *
+     * This method prepares the graphical assets necessary for rendering elements
+     * like text, tiles, and sprites, ensuring they are available when the scene is active.
+     *
+     * The method retrieves and assigns the following resources:
+     * - Fonts used for score display and other textual information.
+     * - Tile images for the game environment.
+     * - Player sprite for character representation.
+     * - The moon image for background or visual effect purposes.
+     */
     public void load() {
         scoreFont = ResourceManager.get("/assets/fonts/upheavtt.ttf");
         textFont = ResourceManager.get("/assets/fonts/Minecraftia-Regular.ttf");
@@ -128,10 +151,10 @@ public class PlayScene extends AbstractScene {
 
         // add World specific Area
         WorldArea water = (WorldArea) new WorldArea("water")
-                .setFillColor(new Color(0.1f, 0.1f, 0.7f, 0.8f))
+                .setFillColor(new Color(0.3f, 0.4f, 0.7f, 0.8f))
                 .setColor(Color.BLUE)
-                .setSize(world.width, 64)
-                .setPosition(0, world.height - 64)
+                .setSize(world.width, 32)
+                .setPosition(0, world.height - 32)
                 .setPhysicType(PhysicType.STATIC)
                 .setMaterial(new Material("water", 1.0, 0.67, 0.90))
                 .addForce(0.02, -0.21)
@@ -144,7 +167,7 @@ public class PlayScene extends AbstractScene {
         WorldArea sky = (WorldArea) new WorldArea("sky")
                 .setFillColor(new Color(0.0f, 0.1f, 0.7f))
                 .setColor(null)
-                .setSize(world.width, world.height - 64)
+                .setSize(world.width, world.height - 32)
                 .setPosition(0, 0)
                 .addForce(0.01, 0.0)
                 .setPriority(2)
@@ -231,6 +254,24 @@ public class PlayScene extends AbstractScene {
         setActiveCamera(camera);
     }
 
+    /**
+     * Generates and adds a specified number of game objects to the scene. Each object is
+     * created based on the provided template name, graphical and physical properties,
+     * and scene configuration. The objects have randomized sizes and positions within
+     * the specified window size constraints.
+     *
+     * @param templateName the base name for each game object, which will be formatted with an index.
+     * @param windowSize   the dimensions of the area within which the game objects will be placed.
+     * @param nb           the number of game objects to be generated.
+     * @param maxW         the maximum width for the randomly generated game objects.
+     * @param maxH         the maximum height for the randomly generated game objects.
+     * @param color        the fill color of the game objects.
+     * @param mass         the mass of each game object.
+     * @param mat          the material specifying the physical properties of the objects.
+     * @param pt           the physics type of the game objects, either static, dynamic, or none.
+     * @param priority     the priority level of the game objects, affecting their rendering order.
+     * @param layer        the layer index to position the objects in the scene hierarchy.
+     */
     private void generate(String templateName, Rectangle2D windowSize,
                           int nb, double maxW, double maxH,
                           Color color,

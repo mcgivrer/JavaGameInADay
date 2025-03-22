@@ -74,9 +74,11 @@ public class PhysicEngine implements GSystem {
                     if (entity.getPhysicType().equals(PhysicType.DYNAMIC)) {
                         applyWorldPhysicRules(entity, world);
                         updatePhysicEntity(entity, world, elapsed);
+
                     }
                     entity.getBehaviors().forEach(b -> b.update(entity, elapsed));
                     constrainToWorldArea(entity, world);
+                    entity.update(elapsed);
                 });
         if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
             scene.getActiveCamera().update(elapsed);

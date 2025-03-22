@@ -33,12 +33,51 @@ import static com.snapgames.framework.utils.Log.isDebugGreaterThan;
  * the game world, entities, and debug information.
  */
 public class Renderer implements GSystem {
+    /**
+     * The {@code app} field represents the {@link GameInterface} instance associated with this
+     * {@code Renderer}. It acts as the primary connection between the rendering system and the
+     * game application logic, facilitating game state management, debugging processes, and
+     * interaction control.
+     *
+     * This field is initialized during the creation of a {@code Renderer} instance and remains
+     * constant throughout its lifecycle. It is used by the renderer to access game-specific
+     * methods and configurations critical for rendering operations and game flow control.
+     */
     private final GameInterface app;
 
+    /**
+     * Represents the main application window used by the renderer.
+     * This {@code JFrame} serves as the primary graphical user interface
+     * container for displaying rendered content and handling user interactions.
+     * It is initialized and managed by methods within the {@code Renderer} class,
+     * such as window creation and fullscreen toggling.
+     */
     private JFrame window;
+    /**
+     * An off-screen {@code BufferedImage} used as a drawing surface during rendering operations.
+     * This image serves as a back buffer where graphical elements are drawn before being
+     * rendered onto the main display. Utilizing a draw buffer helps in minimizing flickering
+     * and achieving smoother rendering by performing all graphical operations off-screen
+     * and then displaying the resulting image in a single operation.
+     */
     private BufferedImage drawbuffer;
+    /**
+     * The {@code debugFont} field represents the font used for rendering
+     * debugging information in the renderer. This font is typically utilized
+     * in visual debug overlays to display textual data such as entity
+     * properties, performance metrics, or other diagnostics during development
+     * and debugging sessions.
+     */
     private Font debugFont;
 
+    /**
+     * Indicates whether the Renderer operates in full-screen mode.
+     * This flag is used to control and toggle between full-screen
+     * and windowed display modes within the application.
+     *
+     * By default, the value is {@code false}, meaning the application
+     * starts in windowed mode unless explicitly set to full-screen.
+     */
     private boolean fullScreen = false;
 
     /**
@@ -62,7 +101,7 @@ public class Renderer implements GSystem {
      */
     private void createWindow(String title, Dimension size) {
         newWindow(title, size, false);
-        debugFont = window.getGraphics().getFont().deriveFont(9.0f);
+        debugFont = window.getGraphics().getFont().deriveFont(8.0f);
         debug(Renderer.class, "Window %s created with size of %dx%d", title, size.width, size.height);
     }
 
@@ -111,7 +150,13 @@ public class Renderer implements GSystem {
     }
 
     /**
+     * Associates an {@code InputListener} with the application's primary window to handle
+     * keyboard input events. This method adds the given {@code InputListener} instance
+     * as a {@code KeyListener} to the window, enabling dynamic interactions between
+     * user inputs and the game environment.
      *
+     * @param il the {@code InputListener} instance to be registered as a key event listener
+     *           for the window. This object processes specific key events and game interactions.
      */
     public void setInputListener(InputListener il) {
         window.addKeyListener(il);
@@ -119,6 +164,13 @@ public class Renderer implements GSystem {
         debug(Renderer.class, "adding this %s as a KeyListener", il.getClass());
     }
 
+    /**
+     * Renders the given scene by processing and drawing its entities, layers, and world boundaries
+     * onto a graphics context. Handles entity layering, camera transformations,
+     * and debugging information if enabled.
+     *
+     * @param scene the Scene object to be rendered, containing entities and camera settings
+     */
     private void render(Scene scene) {
 
         Graphics2D g = (Graphics2D) drawbuffer.createGraphics();
@@ -193,6 +245,15 @@ public class Renderer implements GSystem {
         }
     }
 
+    /**
+     * Draws debugging information for a given entity onto the provided graphics context.
+     * The method displays visual representations and textual data, such as position,
+     * size, velocity, acceleration, and forces, depending on the debug level.
+     *
+     * @param g      the {@code Graphics2D} object used for rendering the debug information
+     * @param scene  the {@code Scene} containing the entity being debugged
+     * @param e      the {@code Entity} object for which the debug information is to be drawn
+     */
     private void drawDebugInfoEntity(Graphics2D g, Scene scene, Entity<?> e) {
         Vector2d velocity = e.getVelocity();
         Vector2d acc = e.getAcceleration();
@@ -200,12 +261,14 @@ public class Renderer implements GSystem {
         g.setColor(Color.ORANGE);
         g.draw(e);
         g.setFont(debugFont);
-        g.drawString("#:%d:%s".formatted(e.getId(), e.getName()), (int) e.getWidth(), 0);
+        g.translate(e.getX() + e.getWidth(), e.getY());
+        g.drawString("#:%d:%s".formatted(e.getId(), e.getName()), 0, 0);
         if (isDebugGreaterThan(3)) {
-            g.drawString("p:%3.0f,%3.0f".formatted(e.getX(), e.getY()), (int) e.getWidth(), 10);
-            g.drawString("s:%3.2f,%3.2f".formatted(e.getWidth(), e.getHeight()), (int) e.getWidth(), 20);
-            g.drawString("av:%3.2f,%3.2f".formatted(e.getVelocity().x, e.getVelocity().y), (int) e.getWidth(), 30);
+            g.drawString("p:%3.0f,%3.0f".formatted(e.getX(), e.getY()), 0, 10);
+            g.drawString("s:%3.2f,%3.2f".formatted(e.getWidth(), e.getHeight()), 0, 20);
+            g.drawString("av:%3.2f,%3.2f".formatted(e.getVelocity().x, e.getVelocity().y), 0, 30);
         }
+        g.translate(-(e.getX() + e.getWidth()), -(e.getY()));
         // draw velocity vector
         drawVector(g, (e.x + (e.width * 0.5)), (e.y + (e.height * 0.5)), velocity.getX() * 100, velocity.getY() * 100, Color.CYAN);
         // draw acceleration vector
@@ -216,6 +279,17 @@ public class Renderer implements GSystem {
         });
     }
 
+    /**
+     * Draws a vector represented by its starting point, direction, and color
+     * on the provided {@code Graphics2D} object.
+     *
+     * @param g   the {@code Graphics2D} object to use for rendering the vector
+     * @param x   the x-coordinate of the starting point of the vector
+     * @param y   the y-coordinate of the starting point of the vector
+     * @param dx  the horizontal displacement (direction and magnitude) of the vector
+     * @param dy  the vertical displacement (direction and magnitude) of the vector
+     * @param c   the {@code Color} used to draw the vector
+     */
     private void drawVector(Graphics2D g, double x, double y, double dx, double dy, Color c) {
         g.setColor(c);
         g.drawLine(
@@ -224,6 +298,15 @@ public class Renderer implements GSystem {
 
     }
 
+    /**
+     * Draws a specific entity onto the provided graphics context. The method determines
+     * the type of the entity and calls the appropriate rendering logic for it. Additionally,
+     * it applies behaviors associated with the entity, allowing custom drawing operations.
+     *
+     * @param g     the {@code Graphics2D} object used for rendering the entity
+     * @param scene the {@code Scene} containing the entity, used for context-specific rendering
+     * @param e     the {@code Entity} to be drawn, whose type determines the specific rendering logic
+     */
     public void drawEntity(Graphics2D g, Scene scene, Entity<?> e) {
         switch (e.getClass().getSimpleName()) {
             case "GameObject", "WorldArea" -> {
@@ -251,6 +334,14 @@ public class Renderer implements GSystem {
         e.getBehaviors().forEach(b -> b.draw(g, e));
     }
 
+    /**
+     * Draws a sprite entity onto the provided {@code Graphics2D} context. The method
+     * determines the sprite's rendering logic based on its velocity. If the velocity's x-component
+     * is positive, the sprite is drawn normally. Otherwise, the sprite is rendered flipped horizontally.
+     *
+     * @param g the {@code Graphics2D} object used for rendering the sprite
+     * @param e the {@code SpriteObject} to be drawn, containing the image and positional data
+     */
     private void drawSprite(Graphics2D g, SpriteObject e) {
         if (e.getVelocity().x > 0) {
             g.drawImage(e.getImage(), (int) e.x, (int) e.y, null);
@@ -259,10 +350,25 @@ public class Renderer implements GSystem {
         }
     }
 
+    /**
+     * Draws the specified {@code ImageObject} onto the provided {@code Graphics2D} context.
+     * This method uses the image data and positional information stored in the
+     * {@code ImageObject} to render it onto the graphics context at the desired coordinates.
+     *
+     * @param g the {@code Graphics2D} object used to render the image
+     * @param e the {@code ImageObject} containing the image and positional data
+     */
     private void drawImage(Graphics2D g, ImageObject e) {
         g.drawImage(e.getImage(), (int) e.x, (int) e.y, null);
     }
 
+    /**
+     * Draws an entity onto the provided {@code Graphics2D} context. If the entity has
+     * a defined fill color, the method sets the color and fills the entity's shape.
+     *
+     * @param g the {@code Graphics2D} object used to render the entity
+     * @param e the {@code Entity} whose shape and fill color are used for drawing
+     */
     private static void drawObject(Graphics2D g, Entity<?> e) {
         if (e.getFillColor() != null) {
             g.setColor(e.getFillColor());
@@ -270,6 +376,14 @@ public class Renderer implements GSystem {
         }
     }
 
+    /**
+     * Draws the specified {@code TextObject} onto the provided {@code Graphics2D} context.
+     * This method sets the color and font (if defined) from the {@code TextObject},
+     * and renders the text at the given coordinates.
+     *
+     * @param g  the {@code Graphics2D} object used for rendering the text
+     * @param te the {@code TextObject} containing the text, position, font, and color to be drawn
+     */
     private static void drawText(Graphics2D g, TextObject te) {
         g.setColor(te.getColor());
         if (Optional.ofNullable(te.getFont()).isPresent()) {
@@ -278,6 +392,16 @@ public class Renderer implements GSystem {
         g.drawString(te.getText(), (int) te.x, (int) te.y);
     }
 
+    /**
+     * Draws a graphical gauge representation on the provided {@code Graphics2D} context.
+     * The gauge is visually constructed using rectangles to represent the frame,
+     * borders, and filled area. The fill level reflects the current value of the
+     * {@code GaugeObject} in relation to its minimum and maximum values.
+     *
+     * @param g  the {@code Graphics2D} object used for rendering the gauge
+     * @param gg the {@code GaugeObject} defining the gauge properties, such as position,
+     *           dimensions, color, minimum value, maximum value, and current value
+     */
     private void drawGauge(Graphics2D g, GaugeObject gg) {
         g.setColor(new Color(0.0f, 0.0f, 0.0f, 0.6f));
         g.drawRect((int) gg.getX(), (int) gg.getY(), (int) gg.getWidth(), (int) gg.getHeight());
@@ -290,6 +414,15 @@ public class Renderer implements GSystem {
                 (int) (gg.getWidth() - 5 * ((gg.getMaxValue() - gg.getMinValue()) / gg.getValue())), (int) gg.getHeight() - 5);
     }
 
+    /**
+     * Draws a grid on the scene using the specified {@code Graphics2D} context. The grid
+     * is defined by the properties of the provided {@code GridObject}, and adapts to the
+     * dimensions of the scene's world and grid object settings.
+     *
+     * @param g    the {@code Graphics2D} object used for rendering the grid
+     * @param scene the {@code Scene} object containing the world settings and dimensions
+     * @param go   the {@code GridObject} specifying the grid's properties, such as color, tile width, and tile height
+     */
     private void drawGrid(Graphics2D g, Scene scene, GridObject go) {
         g.setColor(go.getColor());
         for (int iy = 0; iy < scene.getWorld().getHeight(); iy += go.getTileWidth()) {
@@ -301,6 +434,15 @@ public class Renderer implements GSystem {
         }
     }
 
+    /**
+     * Releases resources held by the renderer, particularly the associated window,
+     * and performs cleanup actions required for proper disposal.
+     *
+     * This method checks if the window is valid, enabled, and active, and then
+     * disposes of it to free up system resources. Additionally, it logs debug
+     * messages to indicate the status of the window disposal and the end of the
+     * disposal process.
+     */
     public void dispose() {
         if (window != null && window.isEnabled() && window.isActive()) {
             window.dispose();
@@ -310,15 +452,36 @@ public class Renderer implements GSystem {
         debug(Renderer.class, "End of processing.");
     }
 
+    /**
+     * Retrieves the primary application window managed by the {@code Renderer}.
+     *
+     * @return the {@code JFrame} instance representing the main application window.
+     */
     public JFrame getWindow() {
         return window;
     }
 
+    /**
+     * Retrieves a collection of classes that the Renderer depends on for its functionality.
+     * These dependencies represent essential components required by the Renderer to operate
+     * correctly, such as configuration, scene management, physics processing, and input handling.
+     *
+     * @return a collection of {@code Class<?>} objects representing the dependencies of the Renderer.
+     */
     @Override
     public Collection<Class<?>> getDependencies() {
         return List.of(Config.class, SceneManager.class, PhysicEngine.class, InputListener.class);
     }
 
+    /**
+     * Initializes the Renderer by setting up the rendering buffer, creating the main application
+     * window, and associating an input listener. This method retrieves configuration properties
+     * needed for setting up the buffer size, window size, and title from the system configuration.
+     * It also assigns an input listener to handle keyboard events.
+     *
+     * @param game the {@code GameInterface} instance that this renderer is associated with,
+     *             representing the game application to be rendered.
+     */
     @Override
     public void initialize(GameInterface game) {
         Config config = SystemManager.get(Config.class);
@@ -333,6 +496,15 @@ public class Renderer implements GSystem {
         setInputListener(inputListener);
     }
 
+    /**
+     * Toggles the full-screen mode of the application.
+     *
+     * This method switches the application's display mode between full-screen and windowed mode.
+     * It temporarily pauses the application during the transition, updates the current window instance,
+     * and reinitializes the window with the desired display mode.
+     *
+     * The current window size and title are preserved while transitioning modes.
+     */
     public void switchFullScreenMode() {
         app.setPause(true);
         fullScreen = !fullScreen;
