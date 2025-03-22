@@ -1,6 +1,5 @@
 package com.snapgames.framework.io;
 
-import com.snapgames.framework.Game;
 import com.snapgames.framework.GameInterface;
 import com.snapgames.framework.gfx.Renderer;
 import com.snapgames.framework.physic.PhysicEngine;
@@ -19,15 +18,35 @@ import java.util.Map;
 
 import static com.snapgames.framework.utils.Log.debug;
 
+/**
+ * The InputListener class implements the KeyListener, Serializable, and
+ * GSystem interfaces to handle keyboard input events and manage specific
+ * actions and game systems accordingly. It monitors key presses, releases,
+ * and interactions between the user and the game environment.
+ */
 public class InputListener implements KeyListener, Serializable, GSystem {
     private final GameInterface app;
     public boolean[] keys = new boolean[1024];
 
+    /**
+     * Constructs a new InputListener instance for monitoring and handling input events
+     * in the game. This listener integrates with the provided game application interface
+     * to process relevant input actions such as key presses and releases.
+     *
+     * @param app the instance of GameInterface representing the main application, which
+     *            this input listener will use for executing game-related actions and commands.
+     */
     public InputListener(GameInterface app) {
         this.app = app;
         debug(InputListener.class, "Start of processing");
     }
 
+    /**
+     * Checks if a specific key is currently pressed.
+     *
+     * @param keyCode the code of the key to check, based on {@link KeyEvent} constants.
+     * @return true if the specified key is pressed, false otherwise.
+     */
     public boolean isKeyPressed(int keyCode) {
         return keys[keyCode];
     }
@@ -42,6 +61,13 @@ public class InputListener implements KeyListener, Serializable, GSystem {
         keys[e.getKeyCode()] = true;
     }
 
+    /**
+     * Handles the event triggered when a keyboard key is released. This method processes
+     * various key combinations for implementing actions such as exiting the game, resetting
+     * the scene, toggling debug modes, pausing the game, and switching full-screen modes.
+     *
+     * @param e the KeyEvent object containing information about the key that was released
+     */
     @Override
     public void keyReleased(KeyEvent e) {
 

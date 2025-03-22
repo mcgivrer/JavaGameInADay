@@ -10,6 +10,7 @@ import com.snapgames.framework.system.GSystem;
 import com.snapgames.framework.system.SystemManager;
 import com.snapgames.framework.utils.Config;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -65,6 +66,7 @@ public class PhysicEngine implements GSystem {
     private void update(Scene scene, double elapsed) {
         scene.getEntities().values().stream()
                 .filter(Entity::isActive)
+                .sorted(Comparator.comparingInt(Entity::getLayer))
                 .forEach(entity -> {
                     World world = scene.getWorld();
                     if (entity.getPhysicType().equals(PhysicType.DYNAMIC)) {
@@ -129,8 +131,8 @@ public class PhysicEngine implements GSystem {
 
             case DYNAMIC -> {
 
-                entity.setAcceleration(new Vector2d().addAll(entity.getForces()).maximize(0.3));
-                entity.setVelocity(entity.getVelocity().add(entity.getAcceleration().multiply(0.5 * elapsed)).maximize(0.5));
+                entity.setAcceleration(new Vector2d().addAll(entity.getForces()).maximize(0.1));
+                entity.setVelocity(entity.getVelocity().add(entity.getAcceleration().maximize(2.5)));
                 entity.setPosition(entity.getPosition().add(entity.getVelocity().multiply(elapsed)));
 
                 entity.getForces().clear();

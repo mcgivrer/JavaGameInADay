@@ -186,21 +186,38 @@ public class Renderer implements GSystem {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, drawbuffer.getWidth(), drawbuffer.getHeight());
 
-        if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
-            g.translate(-scene.getActiveCamera().x, -scene.getActiveCamera().y);
-        }
-        // draw the scene
+        // Create layers
+        Map<Integer, RenderLayer> layers = new HashMap<>();
+        // dispatch Entities into layers
         scene.getEntities().values().stream()
                 .filter(e -> !(e instanceof Camera))
                 .filter(Entity::isActive)
                 .filter(e -> e.getCameraIsStickedTo() == null)
-                .sorted(Comparator.comparingInt(Entity::getPriority))
                 .forEach(e -> {
-                    drawEntity(g, scene, e);
-                    if (app.isDebugGreaterThan(0)) {
-                        drawDebugInfoEntity(g, scene, e);
+                    if (!layers.containsKey(e.getLayer())) {
+                        RenderLayer layer = new RenderLayer("layer_%d".formatted(e.getLayer()));
+                        layers.put(e.getLayer(), layer);
                     }
+                    layers.get(e.getLayer()).add(e);
                 });
+
+        if (Optional.ofNullable(scene.getActiveCamera()).isPresent()) {
+            g.translate(-scene.getActiveCamera().x, -scene.getActiveCamera().y);
+        }
+        // draw the scene
+        layers.entrySet().stream()
+                .sorted(Comparator.comparingInt(Map.Entry::getKey))
+                .forEach(l -> l.getValue().getChildren().stream()
+                        .filter(e -> !(e instanceof Camera))
+                        .filter(e -> ((Entity<?>) e).isActive())
+                        .filter(e -> ((Entity<?>) e).getCameraIsStickedTo() == null)
+                        .sorted((a, b) -> Integer.compare(((Entity<?>) a).getPriority(), ((Entity<?>) a).getPriority()))
+                        .forEach(e -> {
+                            drawEntity(g, scene, ((Entity<?>) e));
+                            if (app.isDebugGreaterThan(0)) {
+                                drawDebugInfoEntity(g, scene, ((Entity<?>) e));
+                            }
+                        }));
 
         // draw World borders
         g.setColor(Color.DARK_GRAY);
@@ -307,6 +324,12 @@ public class Renderer implements GSystem {
             case "GameObject", "WorldArea" -> {
                 drawObject(g, e);
             }
+            case "ImageObject" -> {
+                drawImage(g, (ImageObject) e);
+            }
+            case "SpriteObject" -> {
+                drawSprite(g, (SpriteObject) e);
+            }
             case "TextObject" -> {
                 drawText(g, (TextObject) e);
             }
@@ -323,6 +346,18 @@ public class Renderer implements GSystem {
         e.getBehaviors().forEach(b -> b.draw(g, e));
     }
 
+    private void drawSprite(Graphics2D g, SpriteObject e) {
+        if (e.getVelocity().x > 0) {
+            g.drawImage(e.getImage(), (int) e.x, (int) e.y, null);
+        } else {
+            g.drawImage(e.getImage(), (int) (e.x + e.getWidth()), (int) e.y, (int) -e.getWidth(), (int) e.getHeight(), null);
+        }
+    }
+
+    private void drawImage(Graphics2D g, ImageObject e) {
+        g.drawImage(e.getImage(), (int) e.x, (int) e.y, null);
+    }
+
     /**
      * Draws the specified entity using the provided {@code Graphics2D} object.
      * If the entity has a fill color defined, it will be filled with the corresponding
@@ -334,7 +369,7 @@ public class Renderer implements GSystem {
     private static void drawObject(Graphics2D g, Entity<?> e) {
         if (e.getFillColor() != null) {
             g.setColor(e.getFillColor());
-            g.fill(e);
+            g.fill(e.getShape());
         }
     }
 
@@ -368,7 +403,7 @@ public class Renderer implements GSystem {
      *           dimensions, colors, and value) used to draw the gauge
      */
     private void drawGauge(Graphics2D g, GaugeObject gg) {
-        g.setColor(Color.BLACK);
+        g.setColor(new Color(0.0f, 0.0f, 0.0f, 0.6f));
         g.drawRect((int) gg.getX(), (int) gg.getY(), (int) gg.getWidth(), (int) gg.getHeight());
         g.drawRect((int) gg.getX() + 2, (int) gg.getY() + 2, (int) gg.getWidth() - 4, (int) gg.getHeight() - 4);
         g.setColor(gg.getColor());
